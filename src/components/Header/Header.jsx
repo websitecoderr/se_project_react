@@ -32,7 +32,11 @@ function Header({ handleAddClick, city, isLoading }) {
       <Link to="/profile" className="header__profile-link">
         <div className="header__user-container">
           <p className="header__username">Terrence Tegegine</p>
-          <img src={avatar} alt="Terrence Tegegine" className="header__avatar" />
+          <img
+            src={avatar}
+            alt="Terrence Tegegine"
+            className="header__avatar"
+          />
         </div>
       </Link>
     </header>

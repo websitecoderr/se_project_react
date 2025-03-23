@@ -8,14 +8,29 @@ function ModalWithForm({
   closeActiveModal,
   onSubmit,
 }) {
+  const handleOverlayClick = (e) => {
+    // Close the modal only if clicking the overlay (not inner content)
+    if (e.target.classList.contains("modal")) {
+      closeActiveModal();
+    }
+  };
+
+  console.log("Modal className:", `modal ${isOpen ? "modal_opened" : ""}`);
+
   return (
-    <div className={`modal ${isOpen ? "modal_opened" : ""}`}>
-      <div className="modal__content">
+    <div
+      className={`modal ${isOpen ? "modal_opened" : ""}`}
+      onClick={handleOverlayClick} // Handler for overlay clicks
+    >
+      <div
+        className="modal__content"
+        onClick={(e) => e.stopPropagation()} // Prevent inner content clicks from closing the modal
+      >
         <h2 className="modal__title">{title}</h2>
         <button
           type="button"
           className="modal__close"
-          onClick={closeActiveModal}
+          onClick={closeActiveModal} // Close modal via close button
         >
           <svg
             width="16"
@@ -30,7 +45,13 @@ function ModalWithForm({
             />
           </svg>
         </button>
-        <form className="modal__form" onSubmit={onSubmit}>
+        <form
+          className="modal__form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit(e);
+          }}
+        >
           {children}
           <button type="submit" className="modal__submit">
             {buttonText}

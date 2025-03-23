@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useCurrentTemperatureUnit } from "../Context/CurrentTemperatureUnitContext";
+import { useCurrentTemperatureUnit } from "../../Context/CurrentTemperatureUnitContext";
 import "./ToggleSwitch.css";
 
 const ToggleSwitch = () => {
-  const { currentTemperatureUnit, handleToggleSwitchChange } = useCurrentTemperatureUnit();
+  const { currentTemperatureUnit, handleToggleSwitchChange } =
+    useCurrentTemperatureUnit();
   const [isChecked, setIsChecked] = useState(currentTemperatureUnit === "C");
 
   useEffect(() => {
@@ -35,7 +36,9 @@ const ToggleSwitch = () => {
         </span>
         <span
           className={`toggle-switch__text toggle-switch__text_C ${
-            currentTemperatureUnit === "C" ? "toggle-switch__text_color_white" : ""
+            currentTemperatureUnit === "C"
+              ? "toggle-switch__text_color_white"
+              : ""
           }`}
         >
           C

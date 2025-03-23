@@ -9,22 +9,57 @@ import AddItemModal from "../AddItemModal/AddItemModal";
 import ItemModal from "../ItemModal/ItemModal";
 import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmationModal";
 import { getWeather } from "../../utils/weatherApi";
-import { CurrentTemperatureUnitProvider } from "../Context/CurrentTemperatureUnitContext";
-import { defaultClothingItems } from "../../utils/constants";
+import { CurrentTemperatureUnitProvider } from "../../Context/CurrentTemperatureUnitContext";
+import {
+  fetchItemsFromApi,
+  addItemToApi,
+  deleteItemFromApi,
+} from "../../utils/api";
 
 function App() {
   const [weatherData, setWeatherData] = useState({});
   const [activeModal, setActiveModal] = useState("");
   const [selectedCard, setSelectedCard] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [clothingItems, setClothingItems] = useState(defaultClothingItems);
+  const [clothingItems, setClothingItems] = useState([]);
   const [cardToDelete, setCardToDelete] = useState(null);
+
+  const handleConfirmDelete = () => {
+    console.log("Attempting to delete card:", cardToDelete);
+
+    if (!cardToDelete?.id) {
+      // Changed from _id to id
+      console.error("No id found on card to delete");
+      return;
+    }
+
+    deleteItemFromApi(cardToDelete.id) // Changed from _id to id
+      .then(() => {
+        const updatedClothingItems = clothingItems.filter(
+          (item) => item.id !== cardToDelete.id // Changed from _id to id
+        );
+        setClothingItems(updatedClothingItems);
+        setCardToDelete(null);
+        closeActiveModal();
+      })
+      .catch((error) => console.error("Error deleting item:", error));
+  };
+
+  useEffect(() => {
+    fetchItemsFromApi()
+      .then((items) => {
+        const sortedItems = items.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setClothingItems(sortedItems);
+      })
+      .catch((error) => console.error("Error fetching items:", error));
+  }, []);
 
   useEffect(() => {
     const fetchWeather = async (lat, lon) => {
       try {
         const data = await getWeather(lat, lon);
-
         if (data) {
           setWeatherData({
             ...data,
@@ -66,6 +101,22 @@ function App() {
     }
   };
 
+  const handleAddItemSubmit = (item) => {
+    const newItem = {
+      name: item.name,
+      weather: item.weather,
+      imageUrl: item.imageUrl,
+    };
+
+    addItemToApi(newItem)
+      .then((addedItem) => {
+        console.log("Added item:", addedItem);
+        setClothingItems((prevItems) => [addedItem, ...prevItems]);
+        closeActiveModal();
+      })
+      .catch((error) => console.error("Error adding item:", error));
+  };
+
   const handleCardClick = (card) => {
     setActiveModal("preview");
     setSelectedCard(card);
@@ -79,30 +130,9 @@ function App() {
     setActiveModal("");
   };
 
-  const handleAddItemSubmit = (item) => {
-    const newItem = {
-      _id: Date.now(), // Generate a temporary ID
-      name: item.name,
-      weather: item.weather,
-      link: item.imageUrl,
-    };
-
-    setClothingItems([newItem, ...clothingItems]);
-    closeActiveModal();
-  };
-
   const handleCardDelete = (card) => {
     setCardToDelete(card);
     setActiveModal("confirm-delete");
-  };
-
-  const handleConfirmDelete = () => {
-    const updatedClothingItems = clothingItems.filter(
-      (item) => item._id !== cardToDelete._id
-    );
-    setClothingItems(updatedClothingItems);
-    setCardToDelete(null);
-    closeActiveModal();
   };
 
   return (
@@ -127,6 +157,7 @@ function App() {
                       handleCardClick={handleCardClick}
                       isLoading={isLoading}
                       clothingItems={clothingItems}
+                      onCreateModal={handleAddClick} // Add this line
                     />
                   }
                 />

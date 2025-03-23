@@ -12,7 +12,7 @@ import snowDay from "../../assets/snow-day.svg";
 import snowNight from "../../assets/snow-night.svg";
 import fogDay from "../../assets/fog-day.svg";
 import fogNight from "../../assets/fog-night.svg";
-import { useCurrentTemperatureUnit } from "../Context/CurrentTemperatureUnitContext";
+import { useCurrentTemperatureUnit } from "../../Context/CurrentTemperatureUnitContext";
 
 function WeatherCard({ weatherData, isLoading }) {
   const { currentTemperatureUnit } = useCurrentTemperatureUnit();
@@ -45,7 +45,8 @@ function WeatherCard({ weatherData, isLoading }) {
     }
   };
 
-  const temperature = weatherData?.temp?.[currentTemperatureUnit] || weatherData?.main?.temp;
+  const temperature =
+    weatherData?.temp?.[currentTemperatureUnit] || weatherData?.main?.temp;
   const displayTemperature =
     currentTemperatureUnit === "C"
       ? `${Math.round(weatherData?.temp?.C)} °C`

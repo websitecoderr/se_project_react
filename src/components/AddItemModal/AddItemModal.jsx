@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 
 const AddItemModal = ({ isOpen, onAddItem, onCloseModal }) => {
+  console.log("AddItemModal isOpen:", isOpen);
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [weather, setWeather] = useState("");
 
   useEffect(() => {
     if (isOpen) {
-      // Reset form when modal opens
       setName("");
       setImageUrl("");
       setWeather("");

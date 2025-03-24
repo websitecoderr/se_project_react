@@ -19,7 +19,7 @@ const ClothesSection = ({
       <ul className="clothes-section__cards">
         {clothingItems.map((item) => (
           <ItemCard
-            key={item.id}
+            key={item._id}
             item={item}
             onCardClick={onSelectCard}
             onCardDelete={onCardDelete}

@@ -3,21 +3,31 @@ import WeatherCard from "../WeatherCard/WeatherCard";
 import ItemCard from "../ItemCard/ItemCard";
 import { useCurrentTemperatureUnit } from "../../Context/CurrentTemperatureUnitContext";
 
-function Main({ weatherData, handleCardClick, isLoading, clothingItems }) {
+function Main({
+  weatherData = {},
+  handleCardClick,
+  isLoading,
+  clothingItems = [],
+}) {
   const { currentTemperatureUnit } = useCurrentTemperatureUnit();
+
+  const TEMP_UNIT_C = "°C";
+  const TEMP_UNIT_F = "°F";
 
   const displayTemperature =
     currentTemperatureUnit === "C"
-      ? `${Math.round(weatherData?.temp?.C)} °C`
-      : `${Math.round(weatherData?.temp?.F)} °F`;
+      ? `${Math.round(weatherData.temp?.C || 0)} ${TEMP_UNIT_C}`
+      : `${Math.round(weatherData.temp?.F || 0)} ${TEMP_UNIT_F}`;
 
   return (
     <main>
       <WeatherCard weatherData={weatherData} isLoading={isLoading} />
+
       <section className="cards">
         <p className="cards__text">
-          Today is {weatherData?.temp ? displayTemperature : "..."} / You may
-          want to wear:
+          Today is{" "}
+          {weatherData.temp ? displayTemperature : "temperature unavailable"} /
+          You may want to wear:
         </p>
         <ul className="cards__list">
           {clothingItems.map((item) => (

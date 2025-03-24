@@ -1,6 +1,10 @@
 import "./ItemModal.css";
 
 function ItemModal({ isOpen, onClose, card, onDelete }) {
+  if (!card) {
+    return null;
+  }
+
   const handleDelete = () => {
     onDelete(card);
   };
@@ -22,7 +26,11 @@ function ItemModal({ isOpen, onClose, card, onDelete }) {
             />
           </svg>
         </button>
-        <img src={card.link || card.imageUrl} alt={card.name} className="modal__image" />
+        <img
+          src={card.link || card.imageUrl}
+          alt={card.name}
+          className="modal__image"
+        />
         <div className="modal__footer">
           <div className="modal__info">
             <h2 className="modal__caption">{card.name}</h2>

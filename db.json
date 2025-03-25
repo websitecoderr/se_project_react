@@ -111,6 +111,20 @@
       "weather": "hot",
       "imageUrl": "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/T-Shirt.png?etag=44ed1963c44ab19cd2f5011522c5fc09",
       "id": "ce8f"
+    },
+    {
+      "id": "7b1h",
+      "name": "code",
+      "weather": "cold",
+      "imageUrl": "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/Cap.png?etag=f3dad389b22909cafa73cff9f9a3d591",
+      "_id": 17
+    },
+    {
+      "id": "bbsh",
+      "name": "code",
+      "weather": "cold",
+      "imageUrl": "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/wtwr-project/Cap.png?etag=f3dad389b22909cafa73cff9f9a3d591",
+      "_id": 18
     }
   ]
 }

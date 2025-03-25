@@ -8,6 +8,20 @@ const ClothesSection = ({
   onCreateModal,
   onCardDelete,
 }) => {
+  // Log the full `clothingItems` array for debugging
+  console.log("clothingItems (full array):", clothingItems);
+
+  // Log the keys to ensure each item has a valid `key` property
+  console.log(
+    "clothingItems (keys):",
+    clothingItems.map((item) => item._id || item.id || "MISSING KEY")
+  );
+
+  // Log the properties of the first item (if it exists)
+  if (clothingItems.length > 0) {
+    console.log("First item properties:", Object.keys(clothingItems[0]));
+  }
+
   return (
     <div className="clothes-section">
       <div className="clothes-section__header">
@@ -19,7 +33,7 @@ const ClothesSection = ({
       <ul className="clothes-section__cards">
         {clothingItems.map((item) => (
           <ItemCard
-            key={item._id}
+            key={item._id || item.id} // Fallback to `id` if `_id` is missing
             item={item}
             onCardClick={onSelectCard}
             onCardDelete={onCardDelete}

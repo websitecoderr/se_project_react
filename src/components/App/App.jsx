@@ -28,15 +28,26 @@ function App() {
   const [cardToDelete, setCardToDelete] = useState(null);
 
   const handleConfirmDelete = async () => {
-    if (!cardToDelete?._id) {
-      console.error("No `_id` found on card to delete");
+    if (!cardToDelete) {
+      console.error("No card selected for deletion");
+      return;
+    }
+
+    const itemId = cardToDelete._id || cardToDelete.id;
+    console.log("Attempting to delete item with ID:", itemId);
+
+    if (!itemId) {
+      console.error("No ID found on card to delete");
       return;
     }
 
     try {
-      await deleteItemFromApi(cardToDelete._id);
+      await deleteItemFromApi(itemId);
       setClothingItems((prevItems) =>
-        prevItems.filter((item) => item._id !== cardToDelete._id)
+        prevItems.filter((item) => {
+          const currentItemId = item._id || item.id;
+          return currentItemId !== itemId;
+        })
       );
       setCardToDelete(null);
       closeActiveModal();

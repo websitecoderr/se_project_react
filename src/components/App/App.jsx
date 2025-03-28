@@ -14,7 +14,7 @@ import {
   fetchItemsFromApi,
   addItemToApi,
   deleteItemFromApi,
-} from "../../utils/api";
+} from "../../utils/Api";
 
 function App() {
   const [weatherData, setWeatherData] = useState({
@@ -33,21 +33,18 @@ function App() {
       return;
     }
 
-    const itemId = cardToDelete._id || cardToDelete.id;
-    console.log("Attempting to delete item with ID:", itemId);
+    const itemId = cardToDelete.id;
+    console.log("Attempting to delete item with id:", itemId);
 
     if (!itemId) {
-      console.error("No ID found on card to delete");
+      console.error("No id found on card to delete");
       return;
     }
 
     try {
       await deleteItemFromApi(itemId);
       setClothingItems((prevItems) =>
-        prevItems.filter((item) => {
-          const currentItemId = item._id || item.id;
-          return currentItemId !== itemId;
-        })
+        prevItems.filter((item) => item.id !== itemId)
       );
       setCardToDelete(null);
       closeActiveModal();

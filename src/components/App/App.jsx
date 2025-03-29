@@ -33,7 +33,7 @@ function App() {
       return;
     }
 
-    const itemId = cardToDelete.id;
+    const itemId = cardToDelete._id;
     console.log("Attempting to delete item with id:", itemId);
 
     if (!itemId) {
@@ -44,7 +44,7 @@ function App() {
     try {
       await deleteItemFromApi(itemId);
       setClothingItems((prevItems) =>
-        prevItems.filter((item) => item.id !== itemId)
+        prevItems.filter((item) => item._id !== itemId)
       );
       setCardToDelete(null);
       closeActiveModal();

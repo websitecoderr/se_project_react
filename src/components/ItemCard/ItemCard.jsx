@@ -1,6 +1,13 @@
+import { useContext } from "react";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import "./ItemCard.css";
 
-function ItemCard({ item, onCardClick }) {
+function ItemCard({ item, onCardClick, onLikeClick }) {
+  const currentUser = useContext(CurrentUserContext);
+
+  // Check if the item is liked by the current user
+  const isLiked = item.likes?.some((like) => like === currentUser?._id);
+
   return (
     <li className="cards__item">
       <img
@@ -13,6 +20,15 @@ function ItemCard({ item, onCardClick }) {
         <span>{item.name}</span>
       </p>
       <p className="cards__weather">Weather: {item.weather}</p>
+
+      {currentUser && (
+        <button
+          className={`like-button ${isLiked ? "liked" : ""}`}
+          onClick={() => onLikeClick(item)}
+        >
+          {isLiked ? "❤️" : "🤍"}
+        </button>
+      )}
     </li>
   );
 }

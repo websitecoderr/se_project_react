@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 
 const AddItemModal = ({ isOpen, onAddItem, onCloseModal }) => {
-  
   console.log("AddItemModal isOpen:", isOpen);
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");

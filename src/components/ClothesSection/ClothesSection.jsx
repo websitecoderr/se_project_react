@@ -1,47 +1,38 @@
-import React from "react";
-import "./ClothesSection.css";
+import { useContext, useMemo } from "react";
+import { CurrentUserContext } from "../../App/App";
 import ItemCard from "../ItemCard/ItemCard";
 
-const ClothesSection = ({
-  clothingItems,
-  onSelectCard,
-  onCreateModal,
-  onCardDelete,
-}) => {
-  // Log the full `clothingItems` array for debugging
-  console.log("clothingItems (full array):", clothingItems);
+function ClothesSection({ cards, onSelectCard, onCardDelete }) {
+  const currentUser = useContext(CurrentUserContext);
 
-  // Log the keys to ensure each item has a valid `key` property
-  console.log(
-    "clothingItems (keys):",
-    clothingItems.map((item) => item._id || item.id || "MISSING KEY")
+  const userCards = useMemo(
+    () => cards.filter((card) => card.owner === currentUser?._id),
+    [cards, currentUser]
   );
-
-  // Log the properties of the first item (if it exists)
-  if (clothingItems.length > 0) {
-    console.log("First item properties:", Object.keys(clothingItems[0]));
-  }
 
   return (
     <div className="clothes-section">
       <div className="clothes-section__header">
-        <h2 className="clothes-section__title">Your items</h2>
-        <button className="clothes-section__add-button" onClick={onCreateModal}>
-          + Add new
-        </button>
+        <h2 className="clothes-section__title">Your Items</h2>
       </div>
-      <ul className="clothes-section__cards">
-        {clothingItems.map((item) => (
-          <ItemCard
-            key={item._id || item.id} // Fallback to `id` if `_id` is missing
-            item={item}
-            onCardClick={onSelectCard}
-            onCardDelete={onCardDelete}
-          />
-        ))}
-      </ul>
+      <div className="clothes-section__cards">
+        {userCards.length > 0 ? (
+          userCards.map((card) => (
+            <ItemCard
+              key={card._id}
+              item={card}
+              onSelectCard={onSelectCard}
+              onCardDelete={onCardDelete}
+            />
+          ))
+        ) : (
+          <p className="clothes-section__empty">
+            You don't have any items yet.
+          </p>
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default ClothesSection;

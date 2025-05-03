@@ -1,19 +1,29 @@
 import "./Header.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
-import avatar from "../../assets/avatar.svg";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 
-function Header({ handleAddClick, city, isLoading }) {
+function Header({ handleAddClick, handleSignOut, city, isLoading }) {
+  const currentUser = useContext(CurrentUserContext);
   const [date, setDate] = useState("");
 
   useEffect(() => {
-    const options = { month: "long", day: "numeric" };
-    setDate(new Date().toLocaleDateString("en-US", options));
+    const updateDate = () => {
+      const options = { month: "long", day: "numeric" };
+      setDate(new Date().toLocaleDateString("en-US", options));
+    };
+
+    updateDate();
+    const interval = setInterval(updateDate, 60000);
+    return () => clearInterval(interval);
   }, []);
 
-  const displayLocation = isLoading ? "Loading..." : city || "Unknown Location";
+  const displayLocation = useMemo(
+    () => (isLoading ? "Loading..." : city || "Unknown Location"),
+    [isLoading, city]
+  );
 
   return (
     <header className="header">
@@ -22,23 +32,48 @@ function Header({ handleAddClick, city, isLoading }) {
       </Link>
       <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
       <ToggleSwitch />
-      <button
-        onClick={handleAddClick}
-        type="button"
-        className="header__add-clothes-btn"
-      >
-        + Add Clothes
-      </button>
-      <Link to="/profile" className="header__profile-link">
+
+      {currentUser ? (
         <div className="header__user-container">
-          <p className="header__username">Terrence Tegegine</p>
-          <img
-            src={avatar}
-            alt="Terrence Tegegine"
-            className="header__avatar"
-          />
+          <button
+            onClick={handleAddClick}
+            type="button"
+            className="header__add-clothes-btn"
+          >
+            + Add Clothes
+          </button>
+          <Link to="/profile" className="header__profile-link">
+            <p className="header__username">{currentUser.name}</p>
+            {currentUser.avatar ? (
+              <img
+                src={currentUser.avatar}
+                alt={currentUser.name}
+                className="header__avatar"
+              />
+            ) : (
+              <div className="header__avatar-placeholder">
+                {currentUser.name?.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </Link>
+          <button
+            onClick={handleSignOut}
+            type="button"
+            className="header__button"
+          >
+            Sign Out
+          </button>
         </div>
-      </Link>
+      ) : (
+        <div className="header__auth-buttons">
+          <button type="button" className="header__button">
+            Log In
+          </button>
+          <button type="button" className="header__button">
+            Sign Up
+          </button>
+        </div>
+      )}
     </header>
   );
 }

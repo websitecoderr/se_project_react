@@ -95,3 +95,21 @@ export const checkToken = async () => {
   });
   return checkResponse(response);
 };
+
+export const updateUserProfile = async (name, avatarUrl, token) => {
+  try {
+    const response = await fetch(`${baseUrl}/users/me`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name, avatar: avatarUrl }),
+    });
+
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    throw error;
+  }
+};

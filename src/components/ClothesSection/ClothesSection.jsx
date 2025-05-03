@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { CurrentUserContext } from "../../App/App";
+import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ItemCard from "../ItemCard/ItemCard";
 
 function ClothesSection({ cards, onSelectCard, onCardDelete }) {

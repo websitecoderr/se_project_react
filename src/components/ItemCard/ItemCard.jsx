@@ -1,11 +1,10 @@
 import { useContext } from "react";
-import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
 import "./ItemCard.css";
 
 function ItemCard({ item, onCardClick, onLikeClick }) {
   const currentUser = useContext(CurrentUserContext);
 
-  // Check if the item is liked by the current user
   const isLiked = item.likes?.some((like) => like === currentUser?._id);
 
   return (

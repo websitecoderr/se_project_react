@@ -21,7 +21,7 @@
   position: absolute;
   border-radius: 50%;
   left: 0;
-  transition: all 0.3s; /* Fixed property name and timing */
+  transition: all 0.3s;
 }
 
 .toggle-switch__text {

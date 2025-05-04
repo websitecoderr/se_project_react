@@ -185,63 +185,50 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <CurrentUserContext.Provider value={currentUser}>
-        <CurrentTemperatureUnitProvider>
-          <Header
-            handleAddClick={() => setActiveModal("add-garment")}
-            handleSignOut={handleSignOut}
-            city={weatherData.city}
-            isLoading={isLoading}
-          />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Main
-                  weatherData={weatherData}
-                  clothingItems={clothingItems}
-                  onCardClick={handleCardClick}
-                  onCardLike={handleCardLike}
-                />
-              }
+    <>
+      {isLoggedIn && <p>Welcome back, user!</p>}
+  
+      <BrowserRouter>
+        <CurrentUserContext.Provider value={currentUser}>
+          <CurrentTemperatureUnitProvider>
+            <Header
+              handleAddClick={() => setActiveModal("add-garment")}
+              handleSignOut={handleSignOut}
+              city={weatherData.city}
+              isLoading={isLoading}
             />
-            <Route
-              path="/profile"
-              element={
-                <Profile
-                  clothingItems={clothingItems}
-                  onCardClick={handleCardClick}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                />
-              }
-            />
-          </Routes>
-          <Footer />
-          <EditProfileModal
-            isOpen={activeModal === "edit-profile"}
-            onClose={closeActiveModal}
-          />
-          <AddItemModal
-            isOpen={activeModal === "add-garment"}
-            onAddItem={handleAddItemSubmit}
-            onClose={closeActiveModal}
-          />
-          <ItemModal
-            isOpen={activeModal === "preview"}
-            card={selectedCard}
-            onClose={closeActiveModal}
-          />
-          <DeleteConfirmationModal
-            isOpen={activeModal === "confirm-delete"}
-            onConfirm={handleConfirmDelete}
-            onClose={closeActiveModal}
-          />
-        </CurrentTemperatureUnitProvider>
-      </CurrentUserContext.Provider>
-    </BrowserRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Main
+                    weatherData={weatherData}
+                    clothingItems={clothingItems}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                  />
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <Profile
+                    clothingItems={clothingItems}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                  />
+                }
+              />
+            </Routes>
+            <Footer />
+            <EditProfileModal isOpen={activeModal === "edit-profile"} onClose={closeActiveModal} />
+            <AddItemModal isOpen={activeModal === "add-garment"} onAddItem={handleAddItemSubmit} onClose={closeActiveModal} />
+            <ItemModal isOpen={activeModal === "preview"} card={selectedCard} onClose={closeActiveModal} />
+            <DeleteConfirmationModal isOpen={activeModal === "confirm-delete"} onConfirm={handleConfirmDelete} onClose={closeActiveModal} />
+          </CurrentTemperatureUnitProvider>
+        </CurrentUserContext.Provider>
+      </BrowserRouter>
+    </>
   );
-}
-
-export default App;
+  

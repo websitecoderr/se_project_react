@@ -10,7 +10,7 @@
 }
 
 .toggle-switch__checkbox {
-  transition: all 1s;
+  transition: all 0.3s;
   opacity: 0;
 }
 
@@ -21,7 +21,7 @@
   position: absolute;
   border-radius: 50%;
   left: 0;
-  transform: all 1s;
+  transition: all 0.3s; /* Fixed property name and timing */
 }
 
 .toggle-switch__text {

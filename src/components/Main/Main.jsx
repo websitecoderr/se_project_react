@@ -5,7 +5,7 @@ import { useCurrentTemperatureUnit } from "../../Context/CurrentTemperatureUnitC
 
 function Main({
   weatherData = {},
-  handleCardClick,
+  onCardClick,
   isLoading,
   clothingItems = [],
 }) {
@@ -44,7 +44,7 @@ function Main({
               <ItemCard
                 key={item._id || item.id}
                 item={item}
-                onCardClick={handleCardClick}
+                onCardClick={onCardClick}
               />
             ))
           ) : (

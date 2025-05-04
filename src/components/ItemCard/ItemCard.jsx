@@ -1,8 +1,7 @@
 import { useContext } from "react";
-import { CurrentUserContext } from "../../context/CurrentUserContext";
-import "./ItemCard.css";
+import { CurrentUserContext } from "../../Context/CurrentUserContext";
 
-function ItemCard({ item, onCardClick, onLikeClick }) {
+function ItemCard({ item, onCardClick, onCardLike }) {
   const currentUser = useContext(CurrentUserContext);
 
   const isLiked = item.likes?.some((like) => like === currentUser?._id);
@@ -10,11 +9,12 @@ function ItemCard({ item, onCardClick, onLikeClick }) {
   return (
     <li className="cards__item">
       <img
-        onClick={() => onCardClick(item)}
+        onClick={() => onCardClick?.(item)}
         src={item.imageUrl || item.link}
         alt={item.name}
         className="cards__image"
       />
+
       <p className="cards__name">
         <span>{item.name}</span>
       </p>
@@ -23,7 +23,7 @@ function ItemCard({ item, onCardClick, onLikeClick }) {
       {currentUser && (
         <button
           className={`like-button ${isLiked ? "liked" : ""}`}
-          onClick={() => onLikeClick(item)}
+          onClick={() => onCardLike?.(item)}
         >
           {isLiked ? "❤️" : "🤍"}
         </button>

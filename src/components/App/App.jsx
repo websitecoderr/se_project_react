@@ -21,10 +21,8 @@ import {
   getToken,
   removeToken,
   checkToken,
-  signin,
-  signup,
-  updateUserProfile,
 } from "../../utils/Api";
+import ItemCard from "../ItemCard/ItemCard";
 
 function App() {
   const [weatherData, setWeatherData] = useState({
@@ -118,6 +116,12 @@ function App() {
     console.log("User has been signed out successfully!");
   };
 
+  const handleCardClick = (item) => {
+    console.log("Card clicked:", item);
+    setSelectedCard(item);
+    setActiveModal("preview");
+  };
+
   const handleAddItemSubmit = async (item) => {
     if (!currentUser?.token) {
       setErrorMessage("Please log in to add items");
@@ -161,9 +165,7 @@ function App() {
 
     try {
       const isLiked = card.likes?.some((id) => id === currentUser._id);
-
       const updatedCard = await likeItem(card._id, isLiked, currentUser.token);
-
       setClothingItems((prevItems) =>
         prevItems.map((item) => (item._id === card._id ? updatedCard : item))
       );
@@ -199,6 +201,7 @@ function App() {
                 <Main
                   weatherData={weatherData}
                   clothingItems={clothingItems}
+                  onCardClick={handleCardClick}
                   onCardLike={handleCardLike}
                 />
               }
@@ -208,6 +211,7 @@ function App() {
               element={
                 <Profile
                   clothingItems={clothingItems}
+                  onCardClick={handleCardClick}
                   onCardLike={handleCardLike}
                   onCardDelete={handleCardDelete}
                 />

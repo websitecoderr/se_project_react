@@ -7,15 +7,14 @@ function ModalWithForm({
   isOpen,
   onClose,
   onSubmit,
+  styleState
 }) {
+
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("modal")) {
       onClose();
     }
   };
-
-  console.log("Modal className:", `modal ${isOpen ? "modal_opened" : ""}`);
-
   return (
     <div
       className={`modal ${isOpen ? "modal_opened" : ""}`}
@@ -45,7 +44,7 @@ function ModalWithForm({
           }}
         >
           {children}
-          <button type="submit" className="modal__submit">
+          <button type="submit" className="modal__submit" id="modal_submit" style={styleState ? { background: "black" } : { background: "#0000004d" }}>
             {buttonText}
           </button>
         </form>

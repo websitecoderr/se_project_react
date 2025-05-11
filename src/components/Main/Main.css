@@ -5,4 +5,14 @@
   padding: 0;
   list-style-type: none;
   gap: 21px;
+  justify-content: space-between;
+}
+
+.modal__preview {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.modal__input[type="file"] {
+  padding: 10px 0;
 }

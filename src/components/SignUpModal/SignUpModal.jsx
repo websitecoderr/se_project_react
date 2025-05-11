@@ -1,21 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 
-const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
+const SignUpModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  setIsSignUpModalOpen,
+  setIsLoginModalOpen,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [styleState, setStyleState] = useState(false);
+
+  const changeModal = () => {
+    setIsSignUpModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
+  useEffect(() => {
+    setStyleState(!!(email && password && avatar && name));
+  }, [email, password, avatar, name]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+    if (!email || !password || !name || !avatar) {
+      setError("All fields are required.");
       return;
     }
 
-    onSubmit({ email, password });
+    onSubmit({ email, password, avatar, name });
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      setError("Please select an image.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatar(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -25,10 +57,12 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      styleState={styleState}
     >
       {error && <p className="modal__error">{error}</p>}
+
       <label className="modal__label">
-        Email
+        Email*
         <input
           type="email"
           name="email"
@@ -39,8 +73,9 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
           onChange={(e) => setEmail(e.target.value)}
         />
       </label>
+
       <label className="modal__label">
-        Password
+        Password*
         <input
           type="password"
           name="password"
@@ -51,18 +86,35 @@ const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </label>
+
       <label className="modal__label">
-        Confirm Password
+        Name*
         <input
-          type="password"
-          name="confirmPassword"
+          type="text"
+          name="name"
           className="modal__input"
-          placeholder="Confirm Password"
+          placeholder="Name"
           required
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
       </label>
+
+      <label className="modal__label">
+        Avatar*
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleAvatarChange}
+          required
+        />
+      </label>
+
+      <p className="signup-link">
+        <a href="#" onClick={changeModal}>
+          or Log In
+        </a>
+      </p>
     </ModalWithForm>
   );
 };

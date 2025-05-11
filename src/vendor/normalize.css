@@ -21,9 +21,15 @@
  */
 
 body {
-  margin: 0;
+  margin: auto;
+  max-width: 1440px;
+  padding: 0px 40px;
 }
 
+input[type="file"]
+ {
+    outline: none;
+}
 /**
  * Render the `main` element consistently in IE.
  */

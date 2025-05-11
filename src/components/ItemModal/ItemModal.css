@@ -57,7 +57,7 @@ img.modal__image {
 .modal__delete-button {
   background-color: transparent;
   border: none;
-  color: #FF4D00;
+  color: #ff4d00;
   font-size: 16px;
   line-height: 20px;
   cursor: pointer;
@@ -68,4 +68,26 @@ img.modal__image {
 .modal__delete-button:hover {
   opacity: 0.6;
   background-color: white;
+}
+
+.modal__image-container {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+}
+
+.modal__image--loading {
+  opacity: 0.5;
+}
+
+.modal__image-loading,
+.modal__image-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 4px;
 }

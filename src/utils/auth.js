@@ -1,64 +1,30 @@
-const checkResponse = (response) => {
+const BASE_URL = "http://localhost:3001";
+
+const checkResponse = async (response) => {
   if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
+    throw new Error(`Error: ${response.status} - ${response.statusText}`);
   }
   return response.json();
 };
 
-export const signup = ({ name, avatar, email, password }) => {
-  const baseUrl = "http://localhost:3001";
+export const checkToken = async () => {
+  const token = localStorage.getItem("jwt");
+  if (!token) {
+    return Promise.reject("No token found");
+  }
 
-  return fetch(`${baseUrl}/signup`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ name, avatar, email, password }),
-  })
-    .then(checkResponse)
-    .catch((err) => console.error("Signup error:", err));
-};
-
-export const signin = ({ email, password }) => {
-  const baseUrl = "http://localhost:3001";
-
-  return fetch(`${baseUrl}/signin`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  })
-    .then(checkResponse)
-    .then((data) => {
-      if (data.token) {
-        localStorage.setItem("jwt", data.token);
-      }
-      return data;
-    })
-    .catch((err) => console.error("Signin error:", err));
-};
-
-export const checkToken = (token) => {
-  const baseUrl = "http://localhost:3001";
-
-  return fetch(`${baseUrl}/check-token`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Token validation failed! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Token validation error:", error.message);
+  try {
+    const response = await fetch(`${BASE_URL}/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
+
+    return await checkResponse(response);
+  } catch (error) {
+    console.error("Token validation error:", error.message);
+    return Promise.reject("Invalid or expired token.");
+  }
 };

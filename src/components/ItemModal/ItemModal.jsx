@@ -3,12 +3,22 @@ import { useContext } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 
 function ItemModal({ isOpen, onClose, card, onDelete }) {
-  const currentUser = useContext(CurrentUserContext);
+  const { currentUser } = useContext(CurrentUserContext);
+
+  console.log("Card data:", card);
+  console.log("Image URL:", card?.imageUrl || "No image available");
+
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return "https://picsum.photos/150/150";
+
+    return imageUrl.startsWith("http")
+      ? imageUrl
+      : `http://localhost:3001${imageUrl}`;
+  };
+
   const isOwn = currentUser && card?.owner === currentUser._id;
 
-  if (!card) {
-    return null;
-  }
+  if (!isOpen || !card) return null;
 
   return (
     <div className={`modal ${isOpen ? "modal_opened" : ""}`}>
@@ -22,21 +32,32 @@ function ItemModal({ isOpen, onClose, card, onDelete }) {
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M8 6.58579L13.2929 1.29289L14.7071 2.70711L9.41421 8L14.7071 13.2929L13.2929 14.7071L8 9.41421L2.70711 14.7071L1.29289 13.2929L6.58579 8L1.29289 2.70711L2.70711 1.29289L8 6.58579Z"
+              d="M8 6.58579L13.2929 1.29289L14.7071 2.70711L9.41421 8L14.7071 13.2929L13.2929 14.7071L8 9.41421L2.70711 14.7071L1.29289 13.29289L6.58579 8L1.29289 2.70711L2.70711 1.29289L8 6.58579Z"
               fill="white"
             />
           </svg>
         </button>
+
         <img
-          src={card.link || card.imageUrl}
-          alt={card.name}
+          src={getImageUrl(card?.imageUrl)}
+          alt={card?.name || "No name available"}
           className="modal__image"
+          onError={(e) => {
+            console.error("Image failed to load:", e.target.src);
+            e.target.src = "https://picsum.photos/150/150";
+          }}
         />
+
         <div className="modal__footer">
           <div className="modal__info">
-            <h2 className="modal__caption">{card.name}</h2>
-            <p className="modal__weather">Weather: {card.weather}</p>
+            <h2 className="modal__caption">
+              {card?.name || "No name available"}
+            </h2>
+            <p className="modal__weather">
+              Weather: {card?.weather || "Unknown"}
+            </p>
           </div>
+
           {isOwn && (
             <button
               type="button"

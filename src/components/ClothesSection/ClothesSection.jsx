@@ -1,19 +1,26 @@
 import { useContext, useMemo } from "react";
-import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ItemCard from "../ItemCard/ItemCard";
-
-function ClothesSection({ cards, onSelectCard, onCardDelete }) {
-  const currentUser = useContext(CurrentUserContext);
-
+import { checkResponse } from "../../utils/Api";
+import { jwtDecode } from "jwt-decode";
+import "./style.css";
+function ClothesSection({ onSelectCard, onCardDelete, filteredClothingItems,onCreateModal,handleAddClick }) {
+  
+let currentUser =jwtDecode(localStorage.getItem("jwt"))
   const userCards = useMemo(
-    () => cards.filter((card) => card.owner === currentUser?._id),
-    [cards, currentUser]
+    () => filteredClothingItems.filter((card) => card.owner === currentUser._id),
+    [filteredClothingItems, currentUser]
   );
-
   return (
     <div className="clothes-section">
-      <div className="clothes-section__header">
+      <div className="clothes-section__headers" style={{display:"flex"}}>
         <h2 className="clothes-section__title">Your Items</h2>
+        <button
+              onClick={handleAddClick}
+              type="button"
+              className="header__add-clothes-btn"
+            >
+              + Add New
+            </button>
       </div>
       <div className="clothes-section__cards">
         {userCards.length > 0 ? (
@@ -23,6 +30,7 @@ function ClothesSection({ cards, onSelectCard, onCardDelete }) {
               item={card}
               onSelectCard={onSelectCard}
               onCardDelete={onCardDelete}
+              checkResponse={checkResponse}
             />
           ))
         ) : (

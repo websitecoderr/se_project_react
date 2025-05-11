@@ -2,10 +2,11 @@ import "./Header.css";
 import { useState, useContext, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
-import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import LoginModal from "../LoginModal/LoginModal";
 import SignUpModal from "../SignUpModal/SignUpModal";
+import { jwtDecode } from "jwt-decode";
 
 function Header({
   handleAddClick,
@@ -14,10 +15,20 @@ function Header({
   handleSignUp,
   city,
   isLoading,
+  isLoginModalOpen,
+  setIsLoginModalOpen,
+  isSignUpModalOpen,
+  setIsSignUpModalOpen,
+  passwordColor,
+  setPasswordColor,
 }) {
-  const currentUser = useContext(CurrentUserContext);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const User = useContext(CurrentUserContext);
+  const currentUser = User.currentUser;
+
+  let data = localStorage.getItem("jwt")
+    ? jwtDecode(localStorage.getItem("jwt"))
+    : "";
+
   const [date, setDate] = useState("");
 
   useEffect(() => {
@@ -39,13 +50,17 @@ function Header({
   return (
     <>
       <header className="header">
-        <Link to="/">
-          <img className="header__logo" src={logo} alt="App logo" />
-        </Link>
-        <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
+        <div className="logo">
+          {" "}
+          <Link to="/">
+            <img className="header__logo" src={logo} alt="App logo" />
+          </Link>
+          <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
+        </div>
 
         {currentUser ? (
           <div className="header__user-container">
+            <ToggleSwitch />
             <button
               onClick={handleAddClick}
               type="button"
@@ -54,26 +69,19 @@ function Header({
               + Add Clothes
             </button>
             <Link to="/profile" className="header__profile-link">
-              <p className="header__username">{currentUser.name}</p>
-              {currentUser.avatar ? (
+              <p className="header__username">{data ? data.name : ""}</p>
+              {data.avatar ? (
                 <img
-                  src={currentUser.avatar}
-                  alt={`Avatar of ${currentUser.name}`}
-                  className="header__avatar"
+                  src={`http://localhost:3001${data.avatar}`}
+                  alt={`Avatar of ${data ? data.avatar : ""}`}
+                  className="header__avatar header__avatar-placeholder"
                 />
               ) : (
                 <div className="header__avatar-placeholder">
-                  {currentUser.name?.charAt(0).toUpperCase()}
+                  {data ? data.name : ""?.charAt(0).toUpperCase()}
                 </div>
               )}
             </Link>
-            <button
-              onClick={handleSignOut}
-              type="button"
-              className="header__button"
-            >
-              Sign Out
-            </button>
           </div>
         ) : (
           <div className="header__right-container">
@@ -102,11 +110,17 @@ function Header({
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onSubmit={handleLogin}
+        passwordColor={passwordColor}
+        setPasswordColor={setPasswordColor}
+        setIsSignUpModalOpen={setIsSignUpModalOpen}
+        setIsLoginModalOpen={setIsLoginModalOpen}
       />
       <SignUpModal
         isOpen={isSignUpModalOpen}
         onClose={() => setIsSignUpModalOpen(false)}
         onSubmit={handleSignUp}
+        setIsSignUpModalOpen={setIsSignUpModalOpen}
+        setIsLoginModalOpen={setIsLoginModalOpen}
       />
     </>
   );

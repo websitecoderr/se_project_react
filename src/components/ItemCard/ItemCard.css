@@ -26,6 +26,8 @@ li.cards__item {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
+  width: 325px;
+  height: 328px;
 }
 
 p.cards__name {

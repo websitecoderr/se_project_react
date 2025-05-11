@@ -14,16 +14,15 @@ import fogDay from "../../assets/fog-day.svg";
 import fogNight from "../../assets/fog-night.svg";
 import { useCurrentTemperatureUnit } from "../../Context/CurrentTemperatureUnitContext";
 
-function WeatherCard({ weatherData, isLoading }) {
+const  WeatherCard = ({ weatherData, isLoading }) => {
   const { currentTemperatureUnit } = useCurrentTemperatureUnit();
-
+  
   const getWeatherIcon = () => {
     if (!weatherData?.weather?.[0]?.main) return sunnyDay;
-
     const isNight =
-      weatherData.dt < weatherData.sys.sunrise ||
-      weatherData.dt > weatherData.sys.sunset;
-
+    Number(Date.now().toString()) < 1683464400 ||
+    Number(Date.now().toString()) > 1683472800;
+    
     switch (weatherData.weather[0].main) {
       case "Clear":
         return isNight ? sunnyNight : sunnyDay;

@@ -1,0 +1,33 @@
+.clothes-section__cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+li.cards__item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    width: 325px;
+    height: 328px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #e9e9e9
+}
+.clothes-section__header {
+    display: flex !important;
+    justify-content: start;
+    align-items: center;
+  }
+.clothes-section__title {
+    display: flex !important;
+    justify-content: start;
+    align-items: center;
+    margin:20px 0px !important;
+    font-size: 20px !important;
+  }
+
+
+  

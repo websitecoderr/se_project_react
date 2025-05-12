@@ -6,15 +6,17 @@ import ChangeProfileModal from "../ChangeProfileModal/ChangeProfileModal";
 
 const SideBar = ({ handleSignOut }) => {
   let data = localStorage.getItem("jwt") ? jwtDecode(localStorage.getItem("jwt")) : "";
-  let token = localStorage.getItem("jwt")
+  let token = localStorage.getItem("jwt");
+
   const [changeProfile, setChangeProfile] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const [name, setName] = useState(data.name);
   const [errorMessage, setErrorMessage] = useState("");
+
   const updateUser = async (userData) => {
     try {
       const formData = new FormData();
-      formData.append('image', userData.avatar);
+      formData.append("image", userData.avatar);
       formData.append("name", userData.name);
       const response = await fetch("http://localhost:3001/users/me", {
         method: "PUT",
@@ -25,29 +27,31 @@ const SideBar = ({ handleSignOut }) => {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed.");
+        throw new Error(data.message || "Update failed.");
       }
-      alert("Registration successful!");
-      // setIsSignUpModalOpen(false)
-      // setIsLoginModalOpen(true)
-      setAvatar("")
-      setName("")
+
+      alert("Profile updated successfully!");
+      setAvatar("");
+      setName("");
+      setErrorMessage(""); 
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.message); 
     }
-    
-  }
+  };
 
   return (
     <div className="sidebar">
       <div className="sidebar__user">
         <img
-          src={`http://localhost:3001${data.avatar}`}
+          src={data.avatar ? `http://localhost:3001${data.avatar}` : avatarDefault} 
           alt="User avatar"
           className="sidebar__avatar"
         />
-        <p className="sidebar__username">{data ? data.name : ""}</p>
+        <p className="sidebar__username">{data?.name || "User"}</p>
       </div>
+
+      {errorMessage && <p className="sidebar__error">{errorMessage}</p>}
+
       <div>
         <button
           onClick={() => setChangeProfile(true)}
@@ -64,6 +68,7 @@ const SideBar = ({ handleSignOut }) => {
           Sign Out
         </button>
       </div>
+
       <ChangeProfileModal
         isOpen={changeProfile}
         onClose={() => setChangeProfile(false)}
@@ -71,8 +76,8 @@ const SideBar = ({ handleSignOut }) => {
         imgurl={`http://localhost:3001${data.avatar}`}
         avatar={avatar}
         setAvatar={setAvatar}
-        name = {name}
-        setName = {setName}
+        name={name}
+        setName={setName}
       />
     </div>
   );

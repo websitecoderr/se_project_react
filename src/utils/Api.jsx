@@ -1,18 +1,21 @@
 const API_BASE_URL = "http://localhost:3001";
 import { jwtDecode } from "jwt-decode";
 
-export const checkResponse = (response) => {
-  if (response.ok) {
-    return response.json();
-  }
-  throw new Error(`Error: ${response.status} ${response.statusText}`);
+// ✅ Improved response validation to catch API errors properly
+export const checkResponse = async (response) => {
+  const data = await response.json();
+  if (response.ok) return data;
+
+  throw new Error(`Error: ${response.status} ${response.statusText} - ${data.message || "Unknown error"}`);
 };
 
+// ✅ Fetch items from API
 export const fetchItemsFromApi = async () => {
   const response = await fetch(`${API_BASE_URL}/items`);
   return checkResponse(response);
 };
 
+// ✅ Add new item to API
 export const addItemToApi = async (newCard) => {
   const token = localStorage.getItem("jwt");
   const response = await fetch(`${API_BASE_URL}/items`, {
@@ -26,6 +29,7 @@ export const addItemToApi = async (newCard) => {
   return checkResponse(response);
 };
 
+// ✅ Delete item from API
 export const deleteItemFromApi = async (id) => {
   const token = localStorage.getItem("jwt");
   const response = await fetch(`${API_BASE_URL}/items/${id}`, {
@@ -38,6 +42,7 @@ export const deleteItemFromApi = async (id) => {
   return checkResponse(response);
 };
 
+// ✅ Like or dislike an item
 export const likeItem = async (id, isLiked) => {
   const token = localStorage.getItem("jwt");
   const method = isLiked ? "DELETE" : "PUT";
@@ -51,59 +56,46 @@ export const likeItem = async (id, isLiked) => {
   return checkResponse(response);
 };
 
+// ✅ Sign in user
 export const signin = async ({ email, password }) => {
   try {
     const response = await fetch(`${API_BASE_URL}/signin`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
-    // ✅ Ensure response handling is correct
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Login failed.");
-    }
+    const data = await checkResponse(response);
+    if (data.token) setToken(data.token); // ✅ Stores token only if available
 
-    return checkResponse(response); // ✅ Ensure this function is properly defined
-
+    return data;
   } catch (error) {
     console.error("❌ Login request failed:", error.message);
     return { success: false, message: error.message || "Unexpected error occurred." };
   }
 };
 
-
-export const setToken = (token) => {
-  localStorage.setItem("jwt", token);
-};
+// ✅ Token management functions
+export const setToken = (token) => localStorage.setItem("jwt", token);
 
 export const getToken = () => {
   const token = localStorage.getItem("jwt");
-  if (typeof token === "string" && token.trim() !== "") {
-    try {
-      return jwtDecode(token);
-    } catch (error) {
-      console.error("Invalid token:", error);
-      return null;
-    }
-  } else {
-    console.warn("Token is missing or invalid");
+  if (!token || !token.trim()) return null;
+
+  try {
+    return jwtDecode(token);
+  } catch (error) {
+    console.error("Invalid token:", error);
     return null;
   }
 };
 
-export const removeToken = () => {
-  localStorage.removeItem("jwt");
-};
+export const removeToken = () => localStorage.removeItem("jwt");
 
+// ✅ Check token validity
 export const checkToken = async () => {
   const token = getToken();
-  if (!token) {
-    throw new Error("No token found");
-  }
+  if (!token) throw new Error("No token found");
 
   const response = await fetch(`${API_BASE_URL}/users/me`, {
     method: "GET",
@@ -115,6 +107,7 @@ export const checkToken = async () => {
   return checkResponse(response);
 };
 
+// ✅ Update item weather
 export const updateItemWeather = async (itemId, weatherType) => {
   const token = localStorage.getItem("jwt");
   const response = await fetch(`${API_BASE_URL}/items/${itemId}/weather`, {
@@ -130,24 +123,27 @@ export const updateItemWeather = async (itemId, weatherType) => {
 };
 
 export const registerUser = async ({ name, email, password, avatar }) => {
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("email", email);
-  formData.append("password", password);
-  if (avatar) {
-    formData.append("avatar", avatar);
+  try {
+    const response = await fetch(`${API_BASE_URL}/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        avatar,
+        email,
+        password
+      }),
+    });
+
+    const data = await checkResponse(response);
+    if (data.token) {
+      localStorage.setItem("jwt", data.token);
+    }
+    return data;
+  } catch (error) {
+    console.error("❌ Registration error:", error.message);
+    throw error;
   }
-
-  const response = await fetch(`${API_BASE_URL}/signup`, {
-    method: "POST",
-    body: formData, // Don't set Content-Type header - browser will set it automatically with boundary
-  });
-
-  const data = await checkResponse(response);
-
-  if (data.token) {
-    setToken(data.token); // Use your existing setToken function
-  }
-
-  return data;
 };

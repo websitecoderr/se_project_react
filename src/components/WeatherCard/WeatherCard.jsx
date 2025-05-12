@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./WeatherCard.css";
 import sunnyDay from "../../assets/sunny-day.svg";
 import sunnyNight from "../../assets/sunny-night.svg";
@@ -14,15 +14,20 @@ import fogDay from "../../assets/fog-day.svg";
 import fogNight from "../../assets/fog-night.svg";
 import { useCurrentTemperatureUnit } from "../../Context/CurrentTemperatureUnitContext";
 
-const  WeatherCard = ({ weatherData, isLoading }) => {
+const WeatherCard = ({ weatherData, isLoading }) => {
   const { currentTemperatureUnit } = useCurrentTemperatureUnit();
-  
-  const getWeatherIcon = () => {
+
+  const TEMP_UNIT_C = "°C";
+  const TEMP_UNIT_F = "°F";
+
+  const isNight = useMemo(() => {
+    const currentHour = new Date().getHours();
+    return currentHour >= 18 || currentHour < 6; 
+  }, []);
+
+  const getWeatherIcon = useMemo(() => {
     if (!weatherData?.weather?.[0]?.main) return sunnyDay;
-    const isNight =
-    Number(Date.now().toString()) < 1683464400 ||
-    Number(Date.now().toString()) > 1683472800;
-    
+
     switch (weatherData.weather[0].main) {
       case "Clear":
         return isNight ? sunnyNight : sunnyDay;
@@ -42,14 +47,14 @@ const  WeatherCard = ({ weatherData, isLoading }) => {
       default:
         return isNight ? cloudyNight : cloudyDay;
     }
-  };
+  }, [isNight, weatherData]);
 
-  const temperature =
-    weatherData?.temp?.[currentTemperatureUnit] || weatherData?.main?.temp;
-  const displayTemperature =
-    currentTemperatureUnit === "C"
-      ? `${Math.round(weatherData?.temp?.C)} °C`
-      : `${Math.round(temperature)} °F`;
+  const displayTemperature = useMemo(() => {
+    if (!weatherData.temp) return "Temperature unavailable";
+    return currentTemperatureUnit === "C"
+      ? `${Math.round(weatherData.temp?.C || 0)} ${TEMP_UNIT_C}`
+      : `${Math.round(weatherData.temp?.F || 0)} ${TEMP_UNIT_F}`;
+  }, [currentTemperatureUnit, weatherData]);
 
   return (
     <section className="weather-card">
@@ -57,11 +62,9 @@ const  WeatherCard = ({ weatherData, isLoading }) => {
         <p>Loading weather...</p>
       ) : (
         <>
-          <p className="weather-card__temp">
-            {temperature ? displayTemperature : "..."}
-          </p>
+          <p className="weather-card__temp">{displayTemperature}</p>
           <img
-            src={getWeatherIcon()}
+            src={getWeatherIcon}
             alt="Weather icon"
             className="weather-card__image"
           />
@@ -69,6 +72,6 @@ const  WeatherCard = ({ weatherData, isLoading }) => {
       )}
     </section>
   );
-}
+};
 
 export default WeatherCard;

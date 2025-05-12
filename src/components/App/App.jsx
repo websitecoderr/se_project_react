@@ -260,12 +260,14 @@ return (
             <Footer />
 
             {isSignUpModalOpen && (
-              <SignUpModal
-                isOpen={isSignUpModalOpen}
-                onClose={() => setIsSignUpModalOpen(false)}
-                onSubmit={handleSignUp}
-              />
-            )}
+  <SignUpModal
+    isOpen={isSignUpModalOpen}
+    onClose={() => setIsSignUpModalOpen(false)}
+    onSubmit={handleSignUp}
+    setIsSignUpModalOpen={setIsSignUpModalOpen}
+    setIsLoginModalOpen={setIsLoginModalOpen}
+  />
+)}
 
             {activeModal === "edit-profile" && (
               <EditProfileModal isOpen onClose={() => setActiveModal("")} />

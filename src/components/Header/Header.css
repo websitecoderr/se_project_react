@@ -16,32 +16,33 @@
 }
 
 .header__add-clothes-btn {
-  margin: 0 20px;
+  margin: 0; 
   background: none;
   border: 0;
   font-weight: 700;
   color: #000;
   cursor: pointer;
-  padding: 0;
+  padding: 8px 16px;
   width: 116px;
 }
 
 .header__profile-link {
   text-decoration: none;
-  color: inherit;
+  color: black;
   display: flex;
   align-items: center;
 }
 
-.header__user-container {
+.header__profile-container {
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
 .header__username {
   margin: 0;
-  width: 157px;
+  font-size: 20px;  /* Matching your header font size */
+  color: black;
+  /* Remove the fixed width */
 }
 
 .header__avatar-placeholder {
@@ -91,7 +92,9 @@
 }
 
 .logo {
-  display: flex;
+display: flex;
+align-items: center;
+gap: 12px;  /* Add consistent spacing */
 }
 
 :where(.css-dev-only-do-not-override-1m63z2v).ant-switch .ant-switch-handle::before {
@@ -137,4 +140,37 @@
   cursor: pointer;
   transition: all 0.2s;
   user-select: none;
+}
+
+.header__avatar {
+  width: 40px;   
+  height: 40px;  
+  border-radius: 50%;  
+  object-fit: cover;   
+}
+
+.header__profile-link {
+  text-decoration: none;
+  color: black;
+  display: flex;
+  align-items: center;
+}
+
+.header__profile-container {
+display: flex;
+align-items: center;
+gap: 8px;  /* Space between name and avatar */
+}
+
+.header__username {
+  margin: 0;
+  font-size: 16px;
+  color: black;
+}
+
+.header__user-container,
+.header__right-container {
+display: flex;
+align-items: center;
+gap: 12px;
 }

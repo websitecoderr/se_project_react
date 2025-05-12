@@ -10,7 +10,6 @@ import { jwtDecode } from "jwt-decode";
 
 function Header({
   handleAddClick,
-  handleSignOut,
   handleLogin,
   handleSignUp,
   city,
@@ -22,12 +21,12 @@ function Header({
   passwordColor,
   setPasswordColor,
 }) {
-  const User = useContext(CurrentUserContext);
-  const currentUser = User.currentUser;
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
-  let data = localStorage.getItem("jwt")
-    ? jwtDecode(localStorage.getItem("jwt"))
-    : "";
+  const storedUser = useMemo(() => {
+    const token = localStorage.getItem("jwt");
+    return token ? jwtDecode(token) : null;
+  }, [isLoginModalOpen, isSignUpModalOpen]);
 
   const [date, setDate] = useState("");
 
@@ -42,6 +41,14 @@ function Header({
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setCurrentUser(decoded);
+    }
+  }, [setCurrentUser]);
+
   const displayLocation = useMemo(
     () => (isLoading ? "Loading..." : city || "Unknown Location"),
     [isLoading, city]
@@ -51,14 +58,13 @@ function Header({
     <>
       <header className="header">
         <div className="logo">
-          {" "}
           <Link to="/">
             <img className="header__logo" src={logo} alt="App logo" />
           </Link>
           <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
         </div>
 
-        {currentUser ? (
+        {currentUser || storedUser ? (
           <div className="header__user-container">
             <ToggleSwitch />
             <button
@@ -68,20 +74,22 @@ function Header({
             >
               + Add Clothes
             </button>
-            <Link to="/profile" className="header__profile-link">
-              <p className="header__username">{data ? data.name : ""}</p>
-              {data.avatar ? (
-                <img
-                  src={`http://localhost:3001${data.avatar}`}
-                  alt={`Avatar of ${data ? data.avatar : ""}`}
-                  className="header__avatar header__avatar-placeholder"
-                />
-              ) : (
-                <div className="header__avatar-placeholder">
-                  {data ? data.name : ""?.charAt(0).toUpperCase()}
-                </div>
-              )}
-            </Link>
+            <div className="header__profile-container">
+              <Link to="/profile" className="header__profile-link">
+                <span className="header__username">
+                  {currentUser?.name || storedUser?.name || "Profile"}
+                </span>
+                {currentUser?.avatar || storedUser?.avatar ? (
+                  <img
+                    src={currentUser?.avatar || storedUser?.avatar}
+                    alt="User Avatar"
+                    className="header__avatar"
+                  />
+                ) : (
+                  <span className="header__avatar-placeholder">No Avatar</span>
+                )}
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="header__right-container">

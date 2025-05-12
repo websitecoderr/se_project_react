@@ -35,21 +35,6 @@ const SignUpModal = ({
     onSubmit({ email, password, avatar, name });
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-
-    if (!file) {
-      setError("Please select an image.");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setAvatar(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
   return (
     <ModalWithForm
       title="Sign Up"
@@ -101,12 +86,15 @@ const SignUpModal = ({
       </label>
 
       <label className="modal__label">
-        Avatar*
+        Avatar URL*
         <input
-          type="file"
-          accept="image/*"
-          onChange={handleAvatarChange}
+          type="url"
+          name="avatar"
+          className="modal__input"
+          placeholder="Avatar URL"
           required
+          value={avatar}
+          onChange={(e) => setAvatar(e.target.value)}
         />
       </label>
 

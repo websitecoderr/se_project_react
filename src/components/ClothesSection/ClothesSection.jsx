@@ -1,6 +1,7 @@
 import { useContext, useMemo } from "react";
 import ItemCard from "../ItemCard/ItemCard";
-import { checkResponse } from "../../utils/Api";
+import { checkResponse } from "../../utils/api";
+import './ClothesSection.css';
 import { jwtDecode } from "jwt-decode";
 import "./style.css";
 function ClothesSection({ onSelectCard, onCardDelete, filteredClothingItems,onCreateModal,handleAddClick }) {

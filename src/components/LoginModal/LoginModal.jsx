@@ -90,7 +90,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, onSwitch }) => {
           className="modal__switch-link"
           onClick={onSwitch}
         >
-          or Sign Up
+          or <strong>Sign Up</strong>
         </button>
       </div>
     </ModalWithForm>

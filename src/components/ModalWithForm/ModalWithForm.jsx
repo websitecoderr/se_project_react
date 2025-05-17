@@ -44,10 +44,7 @@ function ModalWithForm({
           }}
         >
           {children}
-          <button type="submit" className="modal__submit" id="modal_submit" style={styleState ? { background: "black" } : { background: "#0000004d" }}>
-            {buttonText}
-          </button>
-        </form>
+         </form>
       </div>
     </div>
   );

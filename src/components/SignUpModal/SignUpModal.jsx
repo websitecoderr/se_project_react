@@ -22,7 +22,7 @@ const SignUpModal = ({
   };
 
   useEffect(() => {
-    setStyleState(!!(email && password && avatar && name));
+    setStyleState(email && password && avatar && name);
   }, [email, password, avatar, name]);
 
   const handleSubmit = (e) => {
@@ -101,9 +101,23 @@ const SignUpModal = ({
         </label>
       </div>
 
-      <p className="signup-link">
-        <a href="#" onClick={changeModal}>or Log In</a>
-      </p>
+      <div className="modal__footer-row">
+        <button
+          type="submit"
+          className="modal__button"
+          disabled={!styleState}
+          style={{ background: styleState ? "#000" : "#D3D3D3", color: "#fff" }}
+        >
+          Sign Up
+        </button>
+        <button
+          type="button"
+          className="modal__switch-link"
+          onClick={changeModal}
+        >
+          or <strong>Log In</strong>
+        </button>
+      </div>
     </ModalWithForm>
   );
 };

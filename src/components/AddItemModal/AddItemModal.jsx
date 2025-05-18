@@ -3,55 +3,32 @@ import ModalWithForm from "../ModalWithForm/ModalWithForm";
 
 const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
   const [name, setName] = useState("");
-  const [imageFile, setImageFile] = useState(null); // New state for file
-  const [imagePreview, setImagePreview] = useState(""); // New state for preview
+  const [imageUrl, setImageUrl] = useState(""); 
   const [weather, setWeather] = useState("");
   const [styleState, setStyleState] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       setName("");
-      setImageFile(null);
-      setImagePreview("");
+      setImageUrl("");
       setWeather("");
     }
   }, [isOpen]);
+
   useEffect(() => {
-    if (name !== "" && imageFile !== "" && weather) {
-      setStyleState(true)
-    } else {
-      setStyleState(false)
-    }
-  }, [name, imageFile, weather])
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
+    setStyleState(name.trim() !== "" && imageUrl.trim() !== "" && weather !== "");
+  }, [name, imageUrl, weather]);
 
-  // New image handler
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
-    if (file) {
-      // Create preview URL
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-    }
-  };
-
-  const handleWeatherChange = (e) => {
-    setWeather(e.target.value);
-  };
+  const handleNameChange = (e) => setName(e.target.value);
+  const handleImageChange = (e) => setImageUrl(e.target.value);
+  const handleWeatherChange = (e) => setWeather(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Create FormData object to send file
-    const formData = new FormData();
-    formData.append("name", name);
-    setName("")
-    formData.append("weather", weather);
-    setWeather("")
-    formData.append("image", imageFile);
-    setImageFile(null)
-    onAddItem(formData);
+    onAddItem({ name, weather, image: imageUrl });
+    setName("");
+    setWeather("");
+    setImageUrl("");
   };
 
   return (
@@ -79,10 +56,11 @@ const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
       <label htmlFor="image" className="modal__label">
         Image
         <input
-          type="file"
+          type="url"
           className="modal__input"
           id="image"
-          accept="image/*"
+          placeholder="Enter image URL"
+          value={imageUrl}
           onChange={handleImageChange}
           required
         />
@@ -102,10 +80,10 @@ const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
           <span>Cold</span>
         </label>
       </label>
-      {imagePreview && (
+      {imageUrl && (
         <div className="modal__preview">
           <img
-            src={imagePreview}
+            src={imageUrl}
             alt="Preview"
             style={{
               maxWidth: "200px",
@@ -115,10 +93,6 @@ const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
           />
         </div>
       )}
-      {/* Rest of your weather fieldset remains the same */}
-      <fieldset className="modal__radio-buttons">
-        {/* ... your existing weather radio buttons ... */}
-      </fieldset>
     </ModalWithForm>
   );
 };

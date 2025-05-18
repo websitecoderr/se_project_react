@@ -1,62 +1,148 @@
 const API_BASE_URL = "http://localhost:3001";
 import { jwtDecode } from "jwt-decode";
 
-// ✅ Improved response validation to catch API errors properly
 export const checkResponse = async (response) => {
   const data = await response.json();
   if (response.ok) return data;
 
-  throw new Error(`Error: ${response.status} ${response.statusText} - ${data.message || "Unknown error"}`);
+  throw new Error(
+    `Error: ${response.status} ${response.statusText} | URL: ${response.url} | Details: ${JSON.stringify(data)}`
+  );
 };
 
-// ✅ Fetch items from API
+export const getToken = () => {
+  const token = localStorage.getItem("jwt")?.trim() || null;
+  if (!token) return null;
+
+  try {
+    const decoded = jwtDecode(token);
+
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      console.warn("Token expired, removing...");
+      removeToken();
+      return null;
+    }
+
+    return token;
+  } catch (error) {
+    console.error("Invalid token:", error.message);
+    removeToken();
+    return null;
+  }
+};
+export const setToken = (token) => localStorage.setItem("jwt", token);
+export const removeToken = () => localStorage.removeItem("jwt");
+
+export const checkToken = async () => {
+  const token = getToken();
+  if (!token) return { success: false, message: "No token found" };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Token validation failed:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
 export const fetchItemsFromApi = async () => {
-  const response = await fetch(`${API_BASE_URL}/items`);
-  return checkResponse(response);
+  try {
+    const response = await fetch(`${API_BASE_URL}/items`);
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Error fetching items:", error.message);
+    return { success: false, message: error.message };
+  }
 };
 
-// ✅ Add new item to API
 export const addItemToApi = async (newCard) => {
-  const token = localStorage.getItem("jwt");
-  const response = await fetch(`${API_BASE_URL}/items`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newCard),
-  });
-  return checkResponse(response);
+  const token = getToken();
+  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/items`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCard),
+    });
+
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Error adding item:", error.message);
+    return { success: false, message: error.message };
+  }
 };
 
-// ✅ Delete item from API
 export const deleteItemFromApi = async (id) => {
-  const token = localStorage.getItem("jwt");
-  const response = await fetch(`${API_BASE_URL}/items/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-  return checkResponse(response);
+  const token = getToken();
+  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/items/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Error deleting item:", error.message);
+    return { success: false, message: error.message };
+  }
 };
 
-// ✅ Like or dislike an item
 export const likeItem = async (id, isLiked) => {
-  const token = localStorage.getItem("jwt");
-  const method = isLiked ? "DELETE" : "PUT";
-  const response = await fetch(`${API_BASE_URL}/items/${id}/likes`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return checkResponse(response);
+  const token = getToken();
+  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+
+  try {
+    const method = isLiked ? "DELETE" : "PUT";
+    const response = await fetch(`${API_BASE_URL}/items/${id}/likes`, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Error liking item:", error.message);
+    return { success: false, message: error.message };
+  }
 };
 
-// ✅ Sign in user
+export const updateItemWeather = async (itemId, weatherType) => {
+  const token = getToken();
+  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/items/${itemId}/weather`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ weather: weatherType }),
+    });
+
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Error updating item weather:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
 export const signin = async ({ email, password }) => {
   try {
     const response = await fetch(`${API_BASE_URL}/signin`, {
@@ -66,60 +152,13 @@ export const signin = async ({ email, password }) => {
     });
 
     const data = await checkResponse(response);
-    if (data.token) setToken(data.token); // ✅ Stores token only if available
+    if (data.token) setToken(data.token);
 
-    return data;
+    return { success: true, ...data };
   } catch (error) {
     console.error("❌ Login request failed:", error.message);
     return { success: false, message: error.message || "Unexpected error occurred." };
   }
-};
-
-// ✅ Token management functions
-export const setToken = (token) => localStorage.setItem("jwt", token);
-
-export const getToken = () => {
-  const token = localStorage.getItem("jwt");
-  if (!token || !token.trim()) return null;
-
-  try {
-    return jwtDecode(token);
-  } catch (error) {
-    console.error("Invalid token:", error);
-    return null;
-  }
-};
-
-export const removeToken = () => localStorage.removeItem("jwt");
-
-// ✅ Check token validity
-export const checkToken = async () => {
-  const token = getToken();
-  if (!token) throw new Error("No token found");
-
-  const response = await fetch(`${API_BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-  });
-  return checkResponse(response);
-};
-
-// ✅ Update item weather
-export const updateItemWeather = async (itemId, weatherType) => {
-  const token = localStorage.getItem("jwt");
-  const response = await fetch(`${API_BASE_URL}/items/${itemId}/weather`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ weather: weatherType }),
-  });
-
-  return checkResponse(response);
 };
 
 export const registerUser = async ({ name, email, password, avatar }) => {
@@ -133,17 +172,37 @@ export const registerUser = async ({ name, email, password, avatar }) => {
         name,
         avatar,
         email,
-        password
+        password,
       }),
     });
 
     const data = await checkResponse(response);
-    if (data.token) {
-      localStorage.setItem("jwt", data.token);
-    }
-    return data;
+    if (data.token) setToken(data.token);
+
+    return { success: true, ...data };
   } catch (error) {
     console.error("❌ Registration error:", error.message);
-    throw error;
+    return { success: false, message: error.message || "Unexpected error occurred." };
+  }
+};
+
+export const updateProfile = async (profileData) => {
+  const token = getToken();
+  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileData),
+    });
+
+    return checkResponse(response);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return { success: false, message: error.message || "Unexpected error occurred." };
   }
 };

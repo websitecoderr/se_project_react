@@ -7,9 +7,8 @@ function ModalWithForm({
   isOpen,
   onClose,
   onSubmit,
-  styleState
+  styleState,
 }) {
-
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("modal")) {
       onClose();
@@ -44,7 +43,10 @@ function ModalWithForm({
           }}
         >
           {children}
-         </form>
+          <button type="submit" className="modal__button">
+            {buttonText}
+          </button>
+        </form>
       </div>
     </div>
   );

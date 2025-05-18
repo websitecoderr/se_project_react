@@ -1,40 +1,49 @@
 import React, { useEffect, useState } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
-import "./style.css"
-const ChangeProfileModal = ({ isOpen, onClose, onSubmit, imgurl, avatar, setAvatar, name, setName }) => {
-  const [img, setImg] = useState(imgurl)
+import "./style.css";
+
+const ChangeProfileModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  avatar,
+  setAvatar,
+  name,
+  setName,
+}) => {
   const [styleState, setStyleState] = useState(false);
-  const [error] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (avatar !== "" && name !== "") {
-      setStyleState(true)
-    } else {
-      setStyleState(false)
-    }
-  }, [avatar, name])
+    setStyleState(avatar?.trim() !== "" && name?.trim() !== "");
+  }, [avatar, name]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ avatar, name });
+
+    const trimmedAvatar = avatar?.trim();
+    const trimmedName = name?.trim();
+
+    if (!trimmedAvatar || !trimmedName) {
+      setError("Both fields are required.");
+      return;
+    }
+
+    setError("");
+    onSubmit({ avatar: trimmedAvatar, name: trimmedName });
   };
-
-  const someConditionFails = true; 
-if (someConditionFails) {
-  console.log("Condition failed.");
-}
-
-
 
   return (
     <ModalWithForm
-      title="Change profile data"
-      buttonText="Save changes"
+      title="Change Profile Data"
+      buttonText="Save Changes"
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
       styleState={styleState}
     >
       {error && <p className="modal__error">{error}</p>}
+
       <label className="modal__label">
         Name*
         <input
@@ -43,33 +52,28 @@ if (someConditionFails) {
           className="modal__input"
           placeholder="Name"
           required
-          value={name}
+          value={name || ""}
           onChange={(e) => setName(e.target.value)}
         />
       </label>
-      {
-        img != "" ? <label className="modal__label">
-          Avatar URL*
-          <input
-            type="text"
-            name="name"
-            className="modal__input"
-            placeholder="Name"
-            required
-            value={img}
-            onChange={(e) => setImg(e.target.value)}
-          />
-        </label> : <label className="modal__label">
-          Avatar URL*
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              setAvatar(e.target.files[0]);
-            }}
-          />
-        </label>
-      }
+
+      <label className="modal__label">
+        Avatar URL*
+        <input
+          type="text"
+          name="avatar"
+          className="modal__input"
+          placeholder="Enter image URL"
+          value={avatar || ""}
+          onChange={(e) => setAvatar(e.target.value)}
+        />
+      </label>
+
+      {avatar && (
+        <div className="avatar-preview">
+          <img src={avatar} alt="Profile Preview" className="avatar-image" />
+        </div>
+      )}
     </ModalWithForm>
   );
 };

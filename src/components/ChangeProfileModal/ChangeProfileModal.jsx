@@ -6,7 +6,7 @@ const ChangeProfileModal = ({
   isOpen,
   onClose,
   onSubmit,
-  avatar = "", 
+  avatar = "",
   setAvatar,
   name = "",
   setName,
@@ -20,7 +20,7 @@ const ChangeProfileModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
     const trimmedName = name.trim();
     const trimmedAvatar = avatar.trim();
@@ -51,7 +51,7 @@ const ChangeProfileModal = ({
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      isValid={isFormValid} 
+      isValid={isFormValid}
     >
       {error && <p className="modal__error">{error}</p>}
 
@@ -63,7 +63,7 @@ const ChangeProfileModal = ({
           className="modal__input"
           placeholder="Enter your name"
           required
-          value={name} 
+          value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </label>
@@ -76,25 +76,28 @@ const ChangeProfileModal = ({
           className="modal__input"
           placeholder="Enter image URL"
           required
-          value={avatar} 
+          value={avatar}
           onChange={(e) => setAvatar(e.target.value)}
         />
       </label>
 
       {avatar && (
         <div className="avatar-preview">
-          <img 
-            src={avatar} 
-            alt="Profile Preview" 
+          <img
+            src={avatar}
+            alt="Profile Preview"
             className="avatar-image"
-            onError={(e) => { 
-              e.target.onerror = null; 
-              e.target.src = "/assets/avatar-placeholder.png"; 
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/assets/avatar-placeholder.png";
             }}
           />
         </div>
       )}
-  
+
+      <button type="submit" className="modal__submit-btn" disabled={false}>
+        Save changes
+      </button>
     </ModalWithForm>
   );
 };

@@ -5,13 +5,14 @@ import ClothesSection from "../ClothesSection/ClothesSection";
 
 const Profile = ({
   clothingItems = [], 
-  onSelectCard, 
   onCreateModal,
   onCardDelete,
   weatherData = {},
   handleAddClick,
   handleSignOut,
-  setActiveModal
+  setActiveModal,
+  onCardClick  
+
 }) => {  
   
   const filteredClothingItems = useMemo(() => {
@@ -27,11 +28,12 @@ const Profile = ({
     <div className="profile">
       <SideBar handleSignOut={handleSignOut} setActiveModal={setActiveModal}/>
       <ClothesSection
-        onSelectCard={onSelectCard} 
         onCreateModal={onCreateModal}
         onCardDelete={onCardDelete}
         filteredClothingItems={filteredClothingItems}
         handleAddClick={handleAddClick}
+        onCardClick={onCardClick}
+
       />
     </div>
   );

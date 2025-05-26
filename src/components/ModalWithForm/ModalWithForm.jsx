@@ -1,3 +1,4 @@
+import React from "react";
 import "./ModalWithForm.css";
 
 function ModalWithForm({
@@ -6,8 +7,6 @@ function ModalWithForm({
   isOpen,
   onClose,
   onSubmit,
-  buttonText = "Save changes",
-  buttonDisabled = false,
   styleState = true,
   onSwitch = null,
   switchText = "Sign Up",
@@ -26,7 +25,7 @@ function ModalWithForm({
       onClick={handleOverlayClick}
     >
       <div className="modal__content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="modal__title">{title}</h2>
+        {/* Close Button */}
         <button type="button" className="modal__close" onClick={onClose}>
           <svg
             width="16"
@@ -42,6 +41,8 @@ function ModalWithForm({
           </svg>
         </button>
 
+        <h2 className="modal__title">{title}</h2>
+
         <form
           className="modal__form"
           onSubmit={(e) => {
@@ -52,28 +53,19 @@ function ModalWithForm({
           }}
         >
           {children}
-          <div className="modal__button-container">
-            {" "}
-            {onSwitch && (
-              <div className="modal__switch-container">
-                <span>or</span>
-                <button
-                  type="button"
-                  className="modal__switch-link"
-                  onClick={onSwitch}
-                >
-                  <strong>{switchText}</strong>
-                </button>
-              </div>
-            )}
-            <button
-              type="submit"
-              className="modal__button"
-              disabled={buttonDisabled}
-            >
-              {buttonText}
-            </button>
-          </div>
+
+          {onSwitch && (
+            <div className="modal__switch-container">
+              <span>or</span>
+              <button
+                type="button"
+                className="modal__switch-link"
+                onClick={onSwitch}
+              >
+                <strong>{switchText}</strong>
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>

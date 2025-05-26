@@ -214,6 +214,13 @@ function App() {
     setActiveModal("login");
   };
 
+  const handleCardClick = (item) => {
+    console.log("handleCardClick called with:", item);
+    console.log("Setting activeModal to preview");
+    setSelectedCard(item);
+    setActiveModal("preview");
+  };
+
   return (
     <div className="app">
       <BrowserRouter>
@@ -234,7 +241,7 @@ function App() {
                   <Main
                     weatherData={weatherData}
                     clothingItems={clothingItems}
-                    onCardClick={setSelectedCard}
+                    onCardClick={handleCardClick}
                     onCardLike={handleCardLike}
                     onCardDelete={handleCardDelete}
                     setClothingItems={setClothingItems}
@@ -246,7 +253,7 @@ function App() {
                 element={
                   <Profile
                     clothingItems={clothingItems}
-                    onCardClick={setSelectedCard}
+                    onCardClick={handleCardClick}
                     onCardLike={handleCardLike}
                     onCardDelete={handleCardDelete}
                     weatherData={weatherData}
@@ -288,6 +295,7 @@ function App() {
               isOpen={activeModal === "preview"}
               onClose={() => setActiveModal("")}
               item={selectedCard}
+              onDelete={handleCardDelete}
             />
             <DeleteConfirmationModal
               isOpen={activeModal === "confirm-delete"}

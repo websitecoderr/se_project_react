@@ -1,15 +1,15 @@
 import ItemCard from "../ItemCard/ItemCard";
-import './ClothesSection.css';  
+import "./ClothesSection.css";
 
-function ClothesSection({ 
-  onSelectCard, 
-  onCardDelete, 
-  filteredClothingItems, 
-  handleAddClick 
+function ClothesSection({
+  onCardClick, 
+  onCardDelete,
+  filteredClothingItems,
+  handleAddClick,
 }) {
   return (
     <div className="clothes-section">
-      <div className="clothes-section__headers" style={{display:"flex"}}>
+      <div className="clothes-section__headers" style={{ display: "flex" }}>
         <h2 className="clothes-section__title">Your Items</h2>
         <button
           onClick={handleAddClick}
@@ -25,7 +25,7 @@ function ClothesSection({
             <ItemCard
               key={card._id}
               item={card}
-              onSelectCard={onSelectCard}
+              onCardClick={onCardClick} 
               onCardDelete={onCardDelete}
             />
           ))

@@ -94,6 +94,9 @@ const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
           <img src={imageUrl} alt="Preview" className="modal__preview-image" />
         </div>
       )}
+        <button type="submit" className="modal__submit-btn" disabled={false}>
+          Save changes
+        </button>
     </ModalWithForm>
   );
 };

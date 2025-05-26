@@ -1,42 +1,37 @@
-import { useContext, useMemo } from "react";
 import ItemCard from "../ItemCard/ItemCard";
-import { checkResponse } from "../../utils/api";
-import './ClothesSection.css';
-import { jwtDecode } from "jwt-decode";
-import "./style.css";
-function ClothesSection({ onSelectCard, onCardDelete, filteredClothingItems,onCreateModal,handleAddClick }) {
-  
-let currentUser =jwtDecode(localStorage.getItem("jwt"))
-  const userCards = useMemo(
-    () => filteredClothingItems.filter((card) => card.owner === currentUser._id),
-    [filteredClothingItems, currentUser]
-  );
+import './ClothesSection.css';  
+
+function ClothesSection({ 
+  onSelectCard, 
+  onCardDelete, 
+  filteredClothingItems, 
+  handleAddClick 
+}) {
   return (
     <div className="clothes-section">
       <div className="clothes-section__headers" style={{display:"flex"}}>
         <h2 className="clothes-section__title">Your Items</h2>
         <button
-              onClick={handleAddClick}
-              type="button"
-              className="header__add-clothes-btn"
-            >
-              + Add New
-            </button>
+          onClick={handleAddClick}
+          type="button"
+          className="header__add-clothes-btn"
+        >
+          + Add New
+        </button>
       </div>
       <div className="clothes-section__cards">
-        {userCards.length > 0 ? (
-          userCards.map((card) => (
+        {filteredClothingItems.length > 0 ? (
+          filteredClothingItems.map((card) => (
             <ItemCard
               key={card._id}
               item={card}
               onSelectCard={onSelectCard}
               onCardDelete={onCardDelete}
-              checkResponse={checkResponse}
             />
           ))
         ) : (
           <p className="clothes-section__empty">
-            You don't have any items yet.
+            You don&apos;t have any items yet.
           </p>
         )}
       </div>

@@ -11,10 +11,11 @@
   margin: 0;
 }
 
-.card__image {
-width: 100%;
-height: 100%;
-object-fit: cover; 
+.cards__image {  /* Change from card__image to cards__image to match JSX */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* Change from contain to cover */
+  display: block;     /* Add this to remove any extra space */
 }
 
 p.cards__weather {
@@ -27,7 +28,7 @@ p.cards__weather {
     padding: 10px;
 }
 
-li.cards__item {
+.cards__item {
   position: relative;
   overflow: hidden;
   border-radius: 20px;
@@ -35,10 +36,7 @@ li.cards__item {
   height: 328px;
 }
 
-.cards__item {
-width: 100%;
-height: 100vh; 
-}
+
 
 p.cards__name {
   position: absolute;
@@ -46,9 +44,31 @@ p.cards__name {
   text-align: center;
   width: 100%;
 }
+p.cards__name span:first-child {
+background: #fff;
+padding: 10px;
+border-radius: 4px;
+}
 
-p.cards__name span {
-  background: #fff;
-  padding: 10px;
-  border-radius: 4px;
+.like-button {
+  background: transparent;  
+  border: none;            
+  padding: 0;             
+  margin-left: 8px;       
+}
+
+.like-button.liked {
+  background: transparent;  
+}
+
+
+.cards__item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  width: 325px;
+  height: 328px;
+  display: flex;      
+  align-items: center; 
+  justify-content: center; 
 }

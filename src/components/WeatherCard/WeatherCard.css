@@ -25,3 +25,11 @@
     object-position: right top;
     width: 100%;
 }
+
+ 
+@media (max-width: 767px) {
+    .weather-card__temp {
+        font-size: 16px;
+        
+    }
+  }

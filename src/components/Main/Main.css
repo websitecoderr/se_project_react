@@ -7,6 +7,11 @@
   gap: 21px;
   justify-content: space-between;
 }
+.cards__text{
+  margin-top: 20px;
+  font-weight: bold;
+
+}
 
 .modal__preview {
   margin: 10px 0;
@@ -16,3 +21,58 @@
 .modal__input[type="file"] {
   padding: 10px 0;
 }
+
+     .card-custom {
+      height: 323px;
+      background-color: #E9E9E9;
+      border: 1px solid #A3A3A3;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+       
+    }
+    .label {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: white;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 16px;
+       
+    }
+    .favorite {
+      position: absolute;
+    top: 8px;
+    right: 95px;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    }
+
+    .favorite::before {
+      content: "♡";
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .favorite:hover::before {
+      content: "♥";
+      color: red;
+    }
+
+    .card-img {
+      width: 100px;
+      object-fit: contain;
+      margin-top: 30px;
+      transition: transform 0.3s ease;
+    }
+
+    .card-custom:hover .card-img {
+      transform: scale(1.15);}

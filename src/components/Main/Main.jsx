@@ -17,20 +17,52 @@ function Main({
   const TEMP_UNIT_F = "°F";
 
   const displayTemperature = useMemo(() => {
-    if (!weatherData.temp) return "temperature unavailable";
+    if (!weatherData?.temp) return "temperature unavailable";
     return currentTemperatureUnit === "C"
       ? `${Math.round(weatherData.temp?.C || 0)} ${TEMP_UNIT_C}`
       : `${Math.round(weatherData.temp?.F || 0)} ${TEMP_UNIT_F}`;
   }, [currentTemperatureUnit, weatherData]);
 
   const filteredClothingItems = useMemo(() => {
-    const temperatureF = weatherData.temp?.F || 0;
-    return clothingItems.filter((item) =>
-      (temperatureF > 75 && item.weather === "hot") ||
-      (temperatureF <= 75 && temperatureF >= 59 && item.weather === "warm") ||
-      (temperatureF < 59 && item.weather === "cold")
+    console.log("Weather Data:", weatherData);
+    console.log("Is Loading:", isLoading);
+    console.log("All Clothing Items:", clothingItems);
+
+    if (isLoading || !weatherData?.temp?.F) {
+      console.warn("Loading or missing temperature data");
+      return []; 
+    }
+
+    const temperatureF = weatherData.temp.F;
+    console.log("Current temperature (F):", temperatureF);
+
+    console.log("Clothing items with weather properties:", 
+      clothingItems.map(item => ({
+        name: item.name,
+        weather: item.weather,
+        _id: item._id
+      }))
     );
-  }, [weatherData.temp, clothingItems]);
+
+    const filtered = clothingItems.filter((item) => {
+      if (!item.weather) {
+        console.warn("Item missing weather property:", item);
+        return false;
+      }
+
+      const isHot = temperatureF > 75 && item.weather === "hot";
+      const isWarm = temperatureF <= 75 && temperatureF >= 59 && item.weather === "warm";
+      const isCold = temperatureF < 59 && item.weather === "cold";
+
+      console.log(`Item ${item.name}: hot=${isHot}, warm=${isWarm}, cold=${isCold}`);
+
+      return isHot || isWarm || isCold;
+    });
+
+    console.log("Filtered items:", filtered);
+    return filtered;
+
+  }, [weatherData?.temp?.F, clothingItems, isLoading]);
 
   return (
     <main>

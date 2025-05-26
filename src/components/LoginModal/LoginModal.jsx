@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import "./LoginModal.css";
-import { signin } from "../../utils/Api.jsx";
+import { signin } from "../../utils/Api.js";
 
-const LoginModal = ({ isOpen, onClose, onLoginSuccess, onSwitch }) => {
+const LoginModal = ({
+  isOpen,
+  onClose,
+  onLoginSuccess,
+  setIsLoginModalOpen,
+  setIsSignUpModalOpen,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -17,6 +23,11 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, onSwitch }) => {
 
   const isButtonDisabled = !email || !password;
 
+  const handleSwitch = () => {
+    setIsLoginModalOpen(false);
+    setIsSignUpModalOpen(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -24,17 +35,20 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, onSwitch }) => {
       return;
     }
     try {
-      const data = await signin({ email, password }); 
+      const data = await signin({ email, password });
       if (!data?.token) throw new Error("Invalid response from server.");
 
       localStorage.setItem("token", data.token);
       setErrorMessage("");
-      
+
       if (onLoginSuccess) onLoginSuccess(data.email);
       onClose();
     } catch (error) {
       console.error("Login error:", error);
-      setErrorMessage(error.response?.data?.message || "Login failed. Please check your credentials.");
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Login failed. Please check your credentials."
+      );
     }
   };
 
@@ -49,48 +63,42 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, onSwitch }) => {
     >
       {errorMessage && <div className="modal__error-text">{errorMessage}</div>}
 
-      <label className="modal__label">
-        Email
-        <input
-          type="email"
-          name="email"
-          className={`modal__input${errorMessage ? " modal__input_error" : ""}`}
-          placeholder="Email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          ref={emailRef}
-        />
-      </label>
+      <div className="modal__fields">
+        <label className="modal__label">
+          Email*
+          <input
+            type="email"
+            name="email"
+            className="modal__input"
+            placeholder="Email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            ref={emailRef}
+          />
+        </label>
 
-      <label className="modal__label">
-        Password
-        <input
-          type="password"
-          name="password"
-          className={`modal__input${errorMessage ? " modal__input_error" : ""}`}
-          placeholder="Password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
+        <label className="modal__label">
+          Password*
+          <input
+            type="password"
+            name="password"
+            className="modal__input"
+            placeholder="Password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+      </div>
 
-      <div className="modal__footer-row">
-        <button
-          type="submit"
-          className="modal__button"
-          disabled={isButtonDisabled}
-          style={{ background: isButtonDisabled ? "#D3D3D3" : "#000", color: "#fff" }}
-        >
-          Log In
-        </button>
+      <div className="modal__switch-container">
         <button
           type="button"
           className="modal__switch-link"
-          onClick={onSwitch}
+          onClick={handleSwitch}
         >
-          or <strong>Sign Up</strong>
+          or <span>Sign up</span>
         </button>
       </div>
     </ModalWithForm>

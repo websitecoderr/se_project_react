@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
+import "./AddItemModal.css";
 
-const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
+const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
   const [name, setName] = useState("");
-  const [imageUrl, setImageUrl] = useState(""); 
+  const [imageUrl, setImageUrl] = useState("");
   const [weather, setWeather] = useState("");
-  const [styleState, setStyleState] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -16,31 +17,33 @@ const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
   }, [isOpen]);
 
   useEffect(() => {
-    setStyleState(name.trim() !== "" && imageUrl.trim() !== "" && weather !== "");
+    setIsFormValid(
+      name.trim() !== "" && imageUrl.trim() !== "" && weather !== ""
+    );
   }, [name, imageUrl, weather]);
-
-  const handleNameChange = (e) => setName(e.target.value);
-  const handleImageChange = (e) => setImageUrl(e.target.value);
-  const handleWeatherChange = (e) => setWeather(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddItem({ name, weather, image: imageUrl });
-    setName("");
-    setWeather("");
-    setImageUrl("");
-  };
+    console.log("Submitting with values:", {
+      name: name,
+      weather: weather,
+      imageUrl: imageUrl,
+    });
+    onSubmit({ name, weather, imageUrl });
+    onClose();
+  }; // Close handleSubmit here
 
+  // Move the return statement outside of handleSubmit
   return (
     <ModalWithForm
       title="New garment"
       buttonText="Add garment"
       isOpen={isOpen}
       onClose={onClose}
-      closeActiveModal={onCloseModal}
       onSubmit={handleSubmit}
-      styleState={styleState}
+      buttonDisabled={!isFormValid}
     >
+      {/* Rest of your JSX remains the same */}
       <label htmlFor="name" className="modal__label">
         Name
         <input
@@ -49,10 +52,11 @@ const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
           id="name"
           placeholder="Name"
           value={name}
-          onChange={handleNameChange}
+          onChange={(e) => setName(e.target.value)}
           required
         />
       </label>
+
       <label htmlFor="image" className="modal__label">
         Image
         <input
@@ -61,36 +65,33 @@ const AddItemModal = ({ isOpen, onAddItem, onCloseModal, onClose }) => {
           id="image"
           placeholder="Enter image URL"
           value={imageUrl}
-          onChange={handleImageChange}
+          onChange={(e) => setImageUrl(e.target.value)}
           required
         />
       </label>
+
       <label htmlFor="weather" className="modal__label">
         Select the weather type:
-        <label style={{ display: "flex", gap: "5px" }}>
-          <input type="radio" name="weather" value="hot" style={{ width: "10px" }} onChange={handleWeatherChange} />
-          <span>Hot</span>
-        </label>
-        <label style={{ display: "flex", gap: "5px" }}>
-          <input type="radio" name="weather" value="warm" style={{ width: "10px" }} onChange={handleWeatherChange} />
-          <span>Warm</span>
-        </label>
-        <label style={{ display: "flex", gap: "5px" }}>
-          <input type="radio" name="weather" value="cold" style={{ width: "10px" }} onChange={handleWeatherChange} />
-          <span>Cold</span>
-        </label>
+        <div className="modal__radio-group">
+          {["hot", "warm", "cold"].map((type) => (
+            <label key={type} className="modal__radio-label">
+              <input
+                type="radio"
+                name="weather"
+                value={type}
+                onChange={(e) => setWeather(e.target.value)}
+              />
+              <div className="modal__radio-button">
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </div>
+            </label>
+          ))}
+        </div>
       </label>
+
       {imageUrl && (
         <div className="modal__preview">
-          <img
-            src={imageUrl}
-            alt="Preview"
-            style={{
-              maxWidth: "200px",
-              maxHeight: "200px",
-              objectFit: "contain",
-            }}
-          />
+          <img src={imageUrl} alt="Preview" className="modal__preview-image" />
         </div>
       )}
     </ModalWithForm>

@@ -11,7 +11,8 @@ const Profile = ({
   weatherData = {},
   handleAddClick,
   handleSignOut,
-}) => {
+  setActiveModal
+}) => {  
   
   const filteredClothingItems = useMemo(() => {
     const temperatureF = weatherData.temp?.F || 0;
@@ -24,7 +25,7 @@ const Profile = ({
 
   return (
     <div className="profile">
-      <SideBar handleSignOut={handleSignOut} />
+      <SideBar handleSignOut={handleSignOut} setActiveModal={setActiveModal}/>
       <ClothesSection
         onSelectCard={onSelectCard} 
         onCreateModal={onCreateModal}

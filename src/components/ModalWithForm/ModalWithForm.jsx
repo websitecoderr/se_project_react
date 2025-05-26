@@ -2,21 +2,27 @@ import "./ModalWithForm.css";
 
 function ModalWithForm({
   children,
-  buttonText,
   title,
   isOpen,
   onClose,
   onSubmit,
-  styleState,
+  buttonText = "Save changes",
+  buttonDisabled = false,
+  styleState = true,
+  onSwitch = null,
+  switchText = "Sign Up",
 }) {
   const handleOverlayClick = (e) => {
-    if (e.target.classList.contains("modal")) {
+    if (isOpen && e.target.classList.contains("modal")) {
       onClose();
     }
   };
+
   return (
     <div
-      className={`modal ${isOpen ? "modal_opened" : ""}`}
+      className={`modal ${isOpen ? "modal_opened" : ""} ${
+        styleState ? "modal_active" : "modal_disabled"
+      }`}
       onClick={handleOverlayClick}
     >
       <div className="modal__content" onClick={(e) => e.stopPropagation()}>
@@ -35,17 +41,39 @@ function ModalWithForm({
             />
           </svg>
         </button>
+
         <form
           className="modal__form"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(e);
+            if (styleState) {
+              onSubmit(e);
+            }
           }}
         >
           {children}
-          <button type="submit" className="modal__button">
-            {buttonText}
-          </button>
+          <div className="modal__button-container">
+            {" "}
+            {onSwitch && (
+              <div className="modal__switch-container">
+                <span>or</span>
+                <button
+                  type="button"
+                  className="modal__switch-link"
+                  onClick={onSwitch}
+                >
+                  <strong>{switchText}</strong>
+                </button>
+              </div>
+            )}
+            <button
+              type="submit"
+              className="modal__button"
+              disabled={buttonDisabled}
+            >
+              {buttonText}
+            </button>
+          </div>
         </form>
       </div>
     </div>

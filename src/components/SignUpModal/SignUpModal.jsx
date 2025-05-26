@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import "./SignUpModal.css";
 
@@ -14,16 +14,13 @@ const SignUpModal = ({
   const [avatar, setAvatar] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-  const [styleState, setStyleState] = useState(false);
 
-  const changeModal = () => {
+  const isButtonDisabled = !email || !password || !name || !avatar;
+
+  const handleSwitch = () => {
     setIsSignUpModalOpen(false);
     setIsLoginModalOpen(true);
   };
-
-  useEffect(() => {
-    setStyleState(email && password && avatar && name);
-  }, [email, password, avatar, name]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,7 +40,7 @@ const SignUpModal = ({
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      styleState={styleState}
+      buttonDisabled={isButtonDisabled}
     >
       {error && <p className="modal__error">{error}</p>}
 
@@ -100,22 +97,14 @@ const SignUpModal = ({
           />
         </label>
       </div>
-
-      <div className="modal__footer-row">
-        <button
-          type="submit"
-          className="modal__button"
-          disabled={!styleState}
-          style={{ background: styleState ? "#000" : "#D3D3D3", color: "#fff" }}
-        >
-          Sign Up
-        </button>
+      
+      <div className="modal__switch-container">
         <button
           type="button"
           className="modal__switch-link"
-          onClick={changeModal}
+          onClick={handleSwitch}
         >
-          or <strong>Log In</strong>
+          or Log in
         </button>
       </div>
     </ModalWithForm>

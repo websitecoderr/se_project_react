@@ -30,6 +30,7 @@ export const getToken = () => {
     return null;
   }
 };
+
 export const setToken = (token) => localStorage.setItem("jwt", token);
 export const removeToken = () => localStorage.removeItem("jwt");
 
@@ -62,26 +63,32 @@ export const fetchItemsFromApi = async () => {
   }
 };
 
-export const addItemToApi = async (newCard) => {
-  const token = getToken();
-  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+export const addItemToApi = async ({name, weather, imageUrl}) => {
+  const token = getToken()
+  if (!token) return Promise.reject("Unauthorized: No token provided.");
 
   try {
     const response = await fetch(`${API_BASE_URL}/items`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newCard),
+      body: JSON.stringify({
+        name,
+        weather,
+        imageUrl
+      })
     });
 
     return checkResponse(response);
   } catch (error) {
-    console.error("Error adding item:", error.message);
-    return { success: false, message: error.message };
+    console.error("Error adding item:", error);
+    return Promise.reject(error);
   }
 };
+
+
 
 export const deleteItemFromApi = async (id) => {
   const token = getToken();
@@ -168,12 +175,7 @@ export const registerUser = async ({ name, email, password, avatar }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        name,
-        avatar,
-        email,
-        password,
-      }),
+      body: JSON.stringify({ name, avatar, email, password }),
     });
 
     const data = await checkResponse(response);
@@ -186,23 +188,23 @@ export const registerUser = async ({ name, email, password, avatar }) => {
   }
 };
 
-export const updateProfile = async (profileData) => {
+export const updateProfile = async ({ name, avatarUrl }) => {
   const token = getToken();
-  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+  if (!token) return Promise.reject("Unauthorized: No token provided.");
 
   try {
     const response = await fetch(`${API_BASE_URL}/users/me`, {
-      method: "PATCH",
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(profileData),
+      body: JSON.stringify({ name, avatar: avatarUrl }),
     });
 
     return checkResponse(response);
   } catch (error) {
     console.error("Error updating profile:", error);
-    return { success: false, message: error.message || "Unexpected error occurred." };
+    return Promise.reject(error);
   }
 };

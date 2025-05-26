@@ -2,11 +2,11 @@ import "./ItemModal.css";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 
-function ItemModal({ isOpen, onClose, card, onDelete }) {
+function ItemModal({ isOpen, onClose, item, onDelete }) {
   const { currentUser } = useContext(CurrentUserContext);
 
-  console.log("Card data:", card);
-  console.log("Image URL:", card?.imageUrl || "No image available");
+  console.log("Item data:", item); 
+  console.log("Image URL:", item?.imageUrl || "No image available");  
 
   const getImageUrl = (imageUrl) => {
     if (!imageUrl) return "https://picsum.photos/150/150";
@@ -16,9 +16,9 @@ function ItemModal({ isOpen, onClose, card, onDelete }) {
       : `http://localhost:3001${imageUrl}`;
   };
 
-  const isOwn = currentUser && card?.owner === currentUser._id;
+  const isOwn = currentUser && item?.owner === currentUser._id;  
 
-  if (!isOpen || !card) return null;
+  if (!isOpen || !item) return null;  
 
   return (
     <div className={`modal ${isOpen ? "modal_opened" : ""}`}>
@@ -39,8 +39,8 @@ function ItemModal({ isOpen, onClose, card, onDelete }) {
         </button>
 
         <img
-          src={getImageUrl(card?.imageUrl)}
-          alt={card?.name || "No name available"}
+          src={getImageUrl(item?.imageUrl)} 
+          alt={item?.name || "No name available"}  
           className="modal__image"
           onError={(e) => {
             console.error("Image failed to load:", e.target.src);
@@ -51,10 +51,10 @@ function ItemModal({ isOpen, onClose, card, onDelete }) {
         <div className="modal__footer">
           <div className="modal__info">
             <h2 className="modal__caption">
-              {card?.name || "No name available"}
+              {item?.name || "No name available"} 
             </h2>
             <p className="modal__weather">
-              Weather: {card?.weather || "Unknown"}
+              Weather: {item?.weather || "Unknown"}
             </p>
           </div>
 
@@ -62,7 +62,7 @@ function ItemModal({ isOpen, onClose, card, onDelete }) {
             <button
               type="button"
               className="modal__delete-button"
-              onClick={() => onDelete(card)}
+              onClick={() => onDelete(item)}  
             >
               Delete item
             </button>

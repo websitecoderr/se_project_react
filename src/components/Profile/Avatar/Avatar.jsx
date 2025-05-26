@@ -1,6 +1,7 @@
 import React from "react";
 import "./Avatar.css";
 
+const API_BASE_URL = 'http://localhost:3001'; 
 const normalizeAvatarUrl = (url) => {
   console.log("Received URL:", url);
   if (!url) return null;

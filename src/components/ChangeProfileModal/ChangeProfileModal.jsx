@@ -6,41 +6,52 @@ const ChangeProfileModal = ({
   isOpen,
   onClose,
   onSubmit,
-  avatar,
+  avatar = "", 
   setAvatar,
-  name,
+  name = "",
   setName,
 }) => {
-  const [styleState, setStyleState] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setStyleState(avatar?.trim() !== "" && name?.trim() !== "");
+    setIsFormValid(name.trim() !== "" && avatar.trim() !== "");
   }, [avatar, name]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); 
 
-    const trimmedAvatar = avatar?.trim();
-    const trimmedName = name?.trim();
+    const trimmedName = name.trim();
+    const trimmedAvatar = avatar.trim();
 
-    if (!trimmedAvatar || !trimmedName) {
-      setError("Both fields are required.");
+    if (!trimmedName) {
+      setError("Name is required");
       return;
     }
 
-    setError("");
-    onSubmit({ avatar: trimmedAvatar, name: trimmedName });
+    if (!trimmedAvatar) {
+      setError("Avatar URL is required");
+      return;
+    }
+
+    try {
+      await onSubmit({ name: trimmedName, avatar: trimmedAvatar });
+      setError("");
+      onClose();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setError("Failed to update profile. Please try again.");
+    }
   };
 
   return (
     <ModalWithForm
       title="Change Profile Data"
-      buttonText="Save Changes"
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      styleState={styleState}
+      isValid={isFormValid} 
     >
       {error && <p className="modal__error">{error}</p>}
 
@@ -50,9 +61,9 @@ const ChangeProfileModal = ({
           type="text"
           name="name"
           className="modal__input"
-          placeholder="Name"
+          placeholder="Enter your name"
           required
-          value={name || ""}
+          value={name} 
           onChange={(e) => setName(e.target.value)}
         />
       </label>
@@ -64,16 +75,26 @@ const ChangeProfileModal = ({
           name="avatar"
           className="modal__input"
           placeholder="Enter image URL"
-          value={avatar || ""}
+          required
+          value={avatar} 
           onChange={(e) => setAvatar(e.target.value)}
         />
       </label>
 
       {avatar && (
         <div className="avatar-preview">
-          <img src={avatar} alt="Profile Preview" className="avatar-image" />
+          <img 
+            src={avatar} 
+            alt="Profile Preview" 
+            className="avatar-image"
+            onError={(e) => { 
+              e.target.onerror = null; 
+              e.target.src = "/assets/avatar-placeholder.png"; 
+            }}
+          />
         </div>
       )}
+  
     </ModalWithForm>
   );
 };

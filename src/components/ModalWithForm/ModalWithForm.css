@@ -37,6 +37,9 @@
   cursor: pointer;
   width: 16px;
   height: 16px;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .modal__close:hover {
@@ -54,11 +57,6 @@
   box-sizing: border-box;
 }
 
-.modal__form {
-  display: flex;
-  flex-direction: column;
-}
-
 .modal__label {
   display: flex;
   flex-direction: column;
@@ -73,15 +71,24 @@
 }
 
 .modal__input {
+  width: 100%;
   border: none;
   border-bottom: 1px solid #000;
-  padding: 0 0 4px;
+  padding: 8px 0;
   font-size: 16px;
   line-height: 20px;
 }
 
 .modal__input::placeholder {
-  color: rgba(0, 0, 0, 0.5);
+  color: #808080;
+  font-weight: 500;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
 }
 
 .modal__radio-buttons {
@@ -121,3 +128,82 @@
 .modal__submit:hover {
   background-color: rgba(0, 0, 0, 0.6) !important;
 }
+
+.modal__submit-btn {
+  padding: 8px 16px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: -5px;
+}
+
+.modal__submit-btn:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.modal__submit-btn:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.modal__fields {
+  width: 100%;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.modal__label {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.modal__switch-link {
+  border: none;
+  background: none;
+  color: #00000080;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0; 
+}
+
+.modal__switch-link:hover {
+  opacity: 0.6;
+}
+
+.modal__switch-container {
+  display: flex; 
+  align-items: center; 
+  text-align: none;
+  color: #808080;
+  margin-top: 8px;
+  gap: 4px;
+  color: #808080;
+  margin-left: 100px;
+  position: relative;
+  z-index: 1;
+}
+
+
+
+.modal__switch-link:hover {
+  color: rgba(0, 0, 0, 0.3); 
+}
+
+.modal__button-container {
+  display: flex;
+  padding: 0 5px; 
+  margin-top: -25px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+

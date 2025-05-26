@@ -14,14 +14,13 @@ function Header({
   handleSignUp,
   city,
   isLoading,
-  isLoginModalOpen,
-  setIsLoginModalOpen,
-  isSignUpModalOpen,
-  setIsSignUpModalOpen,
   passwordColor,
   setPasswordColor,
 }) {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const storedUser = useMemo(() => {
     const token = localStorage.getItem("jwt");
@@ -68,7 +67,10 @@ function Header({
           <div className="header__user-container">
             <ToggleSwitch />
             <button
-              onClick={handleAddClick}
+              onClick={() => {
+                console.log("Button clicked in Header");
+                handleAddClick();
+              }}
               type="button"
               className="header__add-clothes-btn"
             >

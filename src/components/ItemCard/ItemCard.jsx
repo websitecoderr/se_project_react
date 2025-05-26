@@ -1,58 +1,63 @@
 const API_BASE_URL = "http://localhost:3001";
-import React, {useState} from "react";
-import { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import { jwtDecode } from "jwt-decode";
 import { checkResponse } from "../../utils/Api";
-import "./ItemCard.css"
-function ItemCard({ item, onCardClick,setClothingItems }) {
-  const [state,setState] = useState(true)
-  const currentUser = useContext(CurrentUserContext);
-  let tokens = localStorage.getItem("jwt") ? jwtDecode(localStorage.getItem("jwt")) : "";
-  
-  let isLiked = item.likes.map((items) => {
-    return tokens._id == items
-  })
-  const onCardLike = async (card) => {
-    let red = document.getElementById(`${item._id}like`).innerHTML
-    red=="🤍"?document.getElementById(`${item._id}like`).innerHTML="❤️":document.getElementById(`${item._id}like`).innerHTML="🤍"
-state?setState(false):setState;
-    let token = localStorage.getItem("jwt");
-    const method = isLiked[0]==true ? "DELETE" : "PUT";
-    const response = await fetch(`${API_BASE_URL}/items/${item._id}/likes`, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return checkResponse(response);
- 
+import "./ItemCard.css";
 
-  }
+function ItemCard({ item, onCardClick, setClothingItems }) {
+  const currentUser = useContext(CurrentUserContext);
+  const token = localStorage.getItem("jwt");
+  const decodedToken = token ? jwtDecode(token) : null;
+  const isLiked = item.likes.some((likeId) => decodedToken?._id === likeId);
+  
+  const [liked, setLiked] = useState(isLiked);
+
+  const onCardLike = async () => {
+    setLiked((prevLiked) => !prevLiked);
+
+    const method = liked ? "DELETE" : "PUT";
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/items/${item._id}/likes`, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const updatedItem = await checkResponse(response);
+      setClothingItems((prevItems) =>
+        prevItems.map((prevItem) => (prevItem._id === item._id ? updatedItem : prevItem))
+      );
+    } catch (error) {
+      console.error("Error liking item:", error);
+    }
+  };
+
   return (
-    <li className="cards__item">
+    <div className="cards__item">
       <img
         onClick={() => onCardClick?.(item)}
-        src={`http://localhost:3001${item.imageUrl}`}
+        src={`${item.imageUrl}`}
         alt={item.name}
         className="cards__image"
       />
       <p className="cards__name">
         <span>{item.name}</span>
-        {currentUser.currentUser?(
-        <span
-          className={`like-button ${isLiked==true ? "liked" : ""}`}
-          onClick={() => onCardLike(item)}
-          style={{cursor:"pointer"}}
-          id={`${item._id}like`}
-        >
-          {isLiked[0]==true ? "❤️" : "🤍"}
-        </span>
-      ):""}
+        {currentUser.currentUser && (
+          <span
+            className={`like-button ${liked ? "liked" : ""}`}
+            onClick={onCardLike}
+            style={{ cursor: "pointer" }}
+          >
+            {liked ? "❤️" : "🤍"}
+          </span>
+        )}
       </p>
       <p className="cards__weather">Weather: {item.weather}</p>
-    </li>
+    </div>
   );
 }
 

@@ -51,7 +51,8 @@ const ChangeProfileModal = ({
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      isValid={isFormValid}
+      buttonText="Save Changes" 
+      buttonDisabled={!isFormValid} 
     >
       {error && <p className="modal__error">{error}</p>}
 
@@ -94,10 +95,6 @@ const ChangeProfileModal = ({
           />
         </div>
       )}
-
-      <button type="submit" className="modal__submit-btn" disabled={false}>
-        Save changes
-      </button>
     </ModalWithForm>
   );
 };

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import "./LoginModal.css";
-import { signin } from "../../utils/Api.js";
 
 const LoginModal = ({
   isOpen,
   onClose,
   onLoginSuccess,
+  handleSignIn, 
   setIsLoginModalOpen,
   setIsSignUpModalOpen,
 }) => {
@@ -29,28 +29,20 @@ const LoginModal = ({
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setErrorMessage("Both fields are required.");
-      return;
-    }
-    try {
-      const data = await signin({ email, password });
-      if (!data?.token) throw new Error("Invalid response from server.");
+  e.preventDefault();
+  if (!email || !password) {
+    setErrorMessage("Both fields are required.");
+    return;
+  }
 
-      localStorage.setItem("token", data.token);
-      setErrorMessage("");
+  try {
+    const userData = await handleSignIn(email, password); 
+    onLoginSuccess(userData); 
+  } catch (error) {
+    setErrorMessage("Login failed. Please check your credentials.");
+  }
+};
 
-      if (onLoginSuccess) onLoginSuccess(data.email);
-      onClose();
-    } catch (error) {
-      console.error("Login error:", error);
-      setErrorMessage(
-        error.response?.data?.message ||
-          "Login failed. Please check your credentials."
-      );
-    }
-  };
 
   return (
     <ModalWithForm
@@ -93,9 +85,6 @@ const LoginModal = ({
       </div>
 
       <div className="modal__switch-container">
-        <button type="submit" className="modal__submit-btn" disabled={false}>
-          Login
-        </button>
         <button
           type="button"
           className="modal__switch-link"

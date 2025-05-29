@@ -31,9 +31,8 @@ const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
     });
     onSubmit({ name, weather, imageUrl });
     onClose();
-  }; // Close handleSubmit here
+  }; 
 
-  // Move the return statement outside of handleSubmit
   return (
     <ModalWithForm
       title="New garment"
@@ -43,7 +42,6 @@ const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
       onSubmit={handleSubmit}
       buttonDisabled={!isFormValid}
     >
-      {/* Rest of your JSX remains the same */}
       <label htmlFor="name" className="modal__label">
         Name
         <input
@@ -94,9 +92,7 @@ const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
           <img src={imageUrl} alt="Preview" className="modal__preview-image" />
         </div>
       )}
-        <button type="submit" className="modal__submit-btn" disabled={false}>
-          Save changes
-        </button>
+      
     </ModalWithForm>
   );
 };

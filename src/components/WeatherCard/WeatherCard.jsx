@@ -22,7 +22,7 @@ const WeatherCard = ({ weatherData, isLoading }) => {
 
   const isNight = useMemo(() => {
     const currentHour = new Date().getHours();
-    return currentHour >= 18 || currentHour < 6; 
+    return currentHour >= 18 || currentHour < 6;
   }, []);
 
   const getWeatherIcon = useMemo(() => {
@@ -50,11 +50,20 @@ const WeatherCard = ({ weatherData, isLoading }) => {
   }, [isNight, weatherData]);
 
   const displayTemperature = useMemo(() => {
-    if (!weatherData.temp) return "Temperature unavailable";
+    if (
+      !weatherData?.temp ||
+      typeof weatherData.temp !== "object" ||
+      (!("C" in weatherData.temp) && !("F" in weatherData.temp))
+    ) {
+      return "Temperature unavailable"; // ✅ Return only when data is invalid
+    }
+
     return currentTemperatureUnit === "C"
-      ? `${Math.round(weatherData.temp?.C || 0)} ${TEMP_UNIT_C}`
-      : `${Math.round(weatherData.temp?.F || 0)} ${TEMP_UNIT_F}`;
-  }, [currentTemperatureUnit, weatherData]);
+      ? `${Math.round(weatherData.temp.C)} ${TEMP_UNIT_C}`
+      : `${Math.round(weatherData.temp.F)} ${TEMP_UNIT_F}`;
+  }, [currentTemperatureUnit, weatherData]); // ✅ Correct placement of dependencies
+
+  console.log("Weather data:", weatherData);
 
   return (
     <section className="weather-card">

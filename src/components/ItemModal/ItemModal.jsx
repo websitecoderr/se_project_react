@@ -5,8 +5,8 @@ import { CurrentUserContext } from "../../Context/CurrentUserContext";
 function ItemModal({ isOpen, onClose, item, onDelete }) {
   const { currentUser } = useContext(CurrentUserContext);
 
-  console.log("Item data:", item); 
-  console.log("Image URL:", item?.imageUrl || "No image available");  
+  console.log("Item data:", item);
+  console.log("Image URL:", item?.imageUrl || "No image available");
 
   const getImageUrl = (imageUrl) => {
     if (!imageUrl) return "https://picsum.photos/150/150";
@@ -16,9 +16,9 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
       : `http://localhost:3001${imageUrl}`;
   };
 
-  const isOwn = currentUser && item?.owner === currentUser._id;  
+  const isOwn = currentUser && item?.owner === currentUser._id;
 
-  if (!isOpen || !item) return null;  
+  if (!isOpen || !item) return null;
 
   return (
     <div className={`modal ${isOpen ? "modal_opened" : ""}`}>
@@ -39,8 +39,8 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
         </button>
 
         <img
-          src={getImageUrl(item?.imageUrl)} 
-          alt={item?.name || "No name available"}  
+          src={getImageUrl(item?.imageUrl)}
+          alt={item?.name || "No name available"}
           className="modal__image"
           onError={(e) => {
             console.error("Image failed to load:", e.target.src);
@@ -51,7 +51,7 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
         <div className="modal__footer">
           <div className="modal__info">
             <h2 className="modal__caption">
-              {item?.name || "No name available"} 
+              {item?.name || "No name available"}
             </h2>
             <p className="modal__weather">
               Weather: {item?.weather || "Unknown"}
@@ -62,7 +62,7 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
             <button
               type="button"
               className="modal__delete-button"
-              onClick={() => onDelete(item)}  
+              onClick={() => onDelete(item)}
             >
               Delete item
             </button>

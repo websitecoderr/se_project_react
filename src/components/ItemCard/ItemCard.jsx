@@ -8,16 +8,18 @@ const API_BASE_URL = "http://localhost:3001";
 
 function ItemCard({ item, onCardClick, setClothingItems, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
-  console.log("Current user in ItemCard:", currentUser); 
+  console.log("Current user in ItemCard:", currentUser);
+
+  console.log("Item data:", item);
 
   const token = localStorage.getItem("jwt");
   const decodedToken = token ? jwtDecode(token) : null;
   const isLiked = item.likes?.some((likeId) => decodedToken?._id === likeId);
-  const isOwner = decodedToken?._id === item.owner;
+  const isOwner = decodedToken?._id === item.userId;
 
   console.log("Debug owner check:", {
     decodedTokenId: decodedToken?._id,
-    itemOwnerId: item.owner,
+    itemOwnerId: item.userId,
     isOwner: isOwner,
   });
 
@@ -63,31 +65,34 @@ function ItemCard({ item, onCardClick, setClothingItems, onCardDelete }) {
           alt={item.name}
           className="cards__image"
         />
-        <div className="overlay">{item.name}</div>
+
+        <div className="overlay">
+          <span className="item-name">{item.name}</span>
+
+          <button
+            className={`like-button ${liked ? "liked" : ""}`}
+            onClick={onCardLike}
+            style={{
+              cursor: "pointer",
+              border: "none",
+              background: "transparent",
+            }}
+          >
+            {liked ? "❤️" : "🤍"}
+          </button>
+        </div>
       </div>
 
       <div className="cards__info">
-        {currentUser?.currentUser && (
-          <div className="button-container">
-            <span
-              className={`like-button ${liked ? "liked" : ""}`}
-              onClick={onCardLike}
-              style={{ cursor: "pointer" }}
+        {currentUser && isOwner && (
+          <div className="modal">
+            <button
+              type="button"
+              className="modal__delete-button"
+              onClick={handleDeleteClick}
             >
-              {liked ? "❤️" : "🤍"}
-            </span>
-
-            {isOwner && (
-              <div className="modal">
-                <button
-                  type="button"
-                  className="modal__delete-button"
-                  onClick={handleDeleteClick}
-                >
-                  Delete item
-                </button>
-              </div>
-            )}
+              Delete item
+            </button>
           </div>
         )}
       </div>

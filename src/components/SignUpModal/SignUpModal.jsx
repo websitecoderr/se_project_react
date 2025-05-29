@@ -99,13 +99,7 @@ const SignUpModal = ({
       </div>
       
       <div className="modal__switch-container">
-        <button
-            type="submit"
-            className="modal__submit-btn"
-            disabled={isButtonDisabled}
-          >
-            Sign up
-          </button>
+      
              <button
           type="button"
           className="modal__switch-link"

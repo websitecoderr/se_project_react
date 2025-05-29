@@ -10,6 +10,8 @@ function ModalWithForm({
   styleState = true,
   onSwitch = null,
   switchText = "Sign Up",
+  buttonText = "Submit", 
+  buttonDisabled = false, 
 }) {
   const handleOverlayClick = (e) => {
     if (isOpen && e.target.classList.contains("modal")) {
@@ -25,7 +27,6 @@ function ModalWithForm({
       onClick={handleOverlayClick}
     >
       <div className="modal__content" onClick={(e) => e.stopPropagation()}>
-        {/* Close Button */}
         <button type="button" className="modal__close" onClick={onClose}>
           <svg
             width="16"
@@ -53,6 +54,15 @@ function ModalWithForm({
           }}
         >
           {children}
+
+          
+          <button
+            type="submit"
+            className="modal__submit-button"
+            disabled={buttonDisabled} 
+          >
+            {buttonText} 
+          </button>
 
           {onSwitch && (
             <div className="modal__switch-container">

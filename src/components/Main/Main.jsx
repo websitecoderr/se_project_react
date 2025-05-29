@@ -8,7 +8,7 @@ function Main({
   weatherData = {},
   onCardClick,
   isLoading,
-  clothingItems = [], 
+  clothingItems = [],
   setClothingItems,
 }) {
   const { currentTemperatureUnit } = useCurrentTemperatureUnit();
@@ -30,17 +30,18 @@ function Main({
 
     if (isLoading || !weatherData?.temp?.F) {
       console.warn("Loading or missing temperature data");
-      return []; 
+      return [];
     }
 
     const temperatureF = weatherData.temp.F;
     console.log("Current temperature (F):", temperatureF);
 
-    console.log("Clothing items with weather properties:", 
-      clothingItems.map(item => ({
+    console.log(
+      "Clothing items with weather properties:",
+      clothingItems.map((item) => ({
         name: item.name,
         weather: item.weather,
-        _id: item._id
+        _id: item._id,
       }))
     );
 
@@ -51,17 +52,19 @@ function Main({
       }
 
       const isHot = temperatureF > 75 && item.weather === "hot";
-      const isWarm = temperatureF <= 75 && temperatureF >= 59 && item.weather === "warm";
+      const isWarm =
+        temperatureF <= 75 && temperatureF >= 59 && item.weather === "warm";
       const isCold = temperatureF < 59 && item.weather === "cold";
 
-      console.log(`Item ${item.name}: hot=${isHot}, warm=${isWarm}, cold=${isCold}`);
+      console.log(
+        `Item ${item.name}: hot=${isHot}, warm=${isWarm}, cold=${isCold}`
+      );
 
       return isHot || isWarm || isCold;
     });
 
     console.log("Filtered items:", filtered);
     return filtered;
-
   }, [weatherData?.temp?.F, clothingItems, isLoading]);
 
   return (
@@ -74,7 +77,7 @@ function Main({
         <ul className="cards__list">
           {filteredClothingItems.length > 0 ? (
             filteredClothingItems.map((item) => (
-              <li key={item._id || item.id}> 
+              <li key={item._id || item.id}>
                 <ItemCard
                   item={item}
                   onCardClick={onCardClick}
@@ -83,7 +86,7 @@ function Main({
               </li>
             ))
           ) : (
-            <li className="cards__empty-text"> 
+            <li className="cards__empty-text">
               No clothing suggestions available for this weather.
             </li>
           )}

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CurrentUserProvider } from "../../Context/CurrentUserContext";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
 import { CurrentTemperatureUnitProvider } from "../../Context/CurrentTemperatureUnitContext.jsx";
 import {
   fetchItemsFromApi,
@@ -248,19 +249,22 @@ function App() {
                   />
                 }
               />
+
               <Route
                 path="/profile"
                 element={
-                  <Profile
-                    clothingItems={clothingItems}
-                    onCardClick={handleCardClick}
-                    onCardLike={handleCardLike}
-                    onCardDelete={handleCardDelete}
-                    weatherData={weatherData}
-                    handleSignOut={handleSignOut}
-                    setActiveModal={setActiveModal}
-                    handleAddClick={handleAddClick}
-                  />
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <Profile
+                      clothingItems={clothingItems}
+                      onCardClick={handleCardClick}
+                      onCardLike={handleCardLike}
+                      onCardDelete={handleCardDelete}
+                      weatherData={weatherData}
+                      handleSignOut={handleSignOut}
+                      setActiveModal={setActiveModal}
+                      handleAddClick={handleAddClick}
+                    />
+                  </ProtectedRoute>
                 }
               />
             </Routes>
@@ -276,9 +280,17 @@ function App() {
             <LoginModal
               isOpen={activeModal === "login"}
               onClose={() => setActiveModal("")}
-              onSubmit={handleSignIn}
-              onSwitch={handleLoginModalSwitch}
+              onLoginSuccess={(userData) => {
+                setCurrentUser(userData);
+                setIsLoggedIn(true);
+                setActiveModal("");
+              }}
+              setIsLoginModalOpen={setActiveModal}
+              setIsSignUpModalOpen={() => setActiveModal("signup")}
+              handleSignIn={handleSignIn}
+              handleLoginModalSwitch={handleLoginModalSwitch}
             />
+
             <AddItemModal
               isOpen={activeModal === "add-garment"}
               onClose={() => setActiveModal("")}

@@ -10,8 +10,8 @@ function ModalWithForm({
   styleState = true,
   onSwitch = null,
   switchText = "Sign Up",
-  buttonText = "Submit", 
-  buttonDisabled = false, 
+  buttonText = "Submit",
+  buttonDisabled = true,
 }) {
   const handleOverlayClick = (e) => {
     if (isOpen && e.target.classList.contains("modal")) {
@@ -48,20 +48,25 @@ function ModalWithForm({
           className="modal__form"
           onSubmit={(e) => {
             e.preventDefault();
+            console.log("styleState:", styleState);
+            console.log("onSubmit function:", onSubmit);
+            console.log("typeof onSubmit:", typeof onSubmit);
             if (styleState) {
-              onSubmit(e);
+              const formData = Object.fromEntries(
+                new FormData(e.target).entries()
+              );
+              onSubmit(formData); 
             }
           }}
         >
           {children}
 
-          
           <button
             type="submit"
             className="modal__submit-button"
-            disabled={buttonDisabled} 
+            disabled={buttonDisabled}
           >
-            {buttonText} 
+            {buttonText}
           </button>
 
           {onSwitch && (

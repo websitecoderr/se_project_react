@@ -207,12 +207,10 @@ function App() {
     console.log("New activeModal value should be 'add-garment'");
   };
 
-  const handleLoginModalSwitch = () => {
-    setActiveModal("signup");
-  };
-
-  const handleSignUpModalSwitch = () => {
-    setActiveModal("login");
+  const handleModalSwitch = () => {
+    setActiveModal((prevModal) =>
+      prevModal === "signup" ? "login" : "signup"
+    );
   };
 
   const handleCardClick = (item) => {
@@ -230,9 +228,11 @@ function App() {
             <Header
               handleAddClick={handleAddClick}
               handleSignOut={handleSignOut}
+              onSignUpClick={handleSignUp}
               city={weatherData?.city}
               isLoggedIn={isLoggedIn}
               setActiveModal={setActiveModal}
+              handleModalSwitch={handleModalSwitch}
             />
 
             <Routes>
@@ -270,12 +270,11 @@ function App() {
             </Routes>
 
             <Footer />
-
             <SignUpModal
               isOpen={activeModal === "signup"}
               onClose={() => setActiveModal("")}
               onSubmit={handleSignUp}
-              onSwitch={handleSignUpModalSwitch}
+              onSwitch={handleModalSwitch} 
             />
             <LoginModal
               isOpen={activeModal === "login"}
@@ -288,7 +287,7 @@ function App() {
               setIsLoginModalOpen={setActiveModal}
               setIsSignUpModalOpen={() => setActiveModal("signup")}
               handleSignIn={handleSignIn}
-              handleLoginModalSwitch={handleLoginModalSwitch}
+              handleLoginModalSwitch={handleModalSwitch} 
             />
 
             <AddItemModal

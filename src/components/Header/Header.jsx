@@ -1,32 +1,13 @@
 import "./Header.css";
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-import LoginModal from "../LoginModal/LoginModal";
-import SignUpModal from "../SignUpModal/SignUpModal";
 import { jwtDecode } from "jwt-decode";
 
-function Header({
-  handleAddClick,
-  handleLogin,
-  handleSignUp,
-  city,
-  isLoading,
-  passwordColor,
-  setPasswordColor,
-}) {
+function Header({ handleAddClick, setActiveModal, city, isLoading }) {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const storedUser = useMemo(() => {
-    const token = localStorage.getItem("jwt");
-    return token ? jwtDecode(token) : null;
-  }, [isLoginModalOpen, isSignUpModalOpen]);
-
   const [date, setDate] = useState("");
 
   useEffect(() => {
@@ -42,97 +23,81 @@ function Header({
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
-    if (token) {
-      const decoded = jwtDecode(token);
-      setCurrentUser(decoded);
+    if (token && token.split(".").length === 3) {
+      try {
+        const decodedUser = jwtDecode(token);
+        setCurrentUser(decodedUser);
+      } catch (error) {
+        console.error("Error decoding JWT:", error);
+        setCurrentUser(null);
+      }
+    } else {
+      console.warn("Invalid or missing token in localStorage");
+      setCurrentUser(null);
     }
   }, [setCurrentUser]);
 
-  const displayLocation = useMemo(
-    () => (isLoading ? "Loading..." : city || "Unknown Location"),
-    [isLoading, city]
-  );
+  const displayLocation = isLoading ? "Loading..." : city || "Unknown Location";
 
   return (
-    <>
-      <header className="header">
-        <div className="logo">
-          <Link to="/">
-            <img className="header__logo" src={logo} alt="App logo" />
-          </Link>
-          <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
+    <header className="header">
+      <div className="logo">
+        <Link to="/">
+          <img className="header__logo" src={logo} alt="App logo" />
+        </Link>
+        <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
+      </div>
+
+      {currentUser ? (
+        <div className="header__user-container">
+          <ToggleSwitch />
+          <button
+            onClick={handleAddClick}
+            type="button"
+            className="header__add-clothes-btn"
+          >
+            + Add Clothes
+          </button>
+          <div className="header__profile-container">
+            <Link to="/profile" className="header__profile-link">
+              <span className="header__username">
+                {currentUser.name || "Profile"}
+              </span>
+              {currentUser.avatar ? (
+                <img
+                  src={currentUser.avatar}
+                  alt="User Avatar"
+                  className="header__avatar"
+                />
+              ) : (
+                <span className="header__avatar-placeholder">No Avatar</span>
+              )}
+            </Link>
+          </div>
         </div>
-
-        {currentUser || storedUser ? (
-          <div className="header__user-container">
-            <ToggleSwitch />
+      ) : (
+        <div className="header__right-container">
+          <ToggleSwitch />
+          <div className="header__auth-buttons">
             <button
-              onClick={() => {
-                console.log("Button clicked in Header");
-                handleAddClick();
-              }}
               type="button"
-              className="header__add-clothes-btn"
+              className="header__button"
+              onClick={() => setActiveModal("signup")}
             >
-              + Add Clothes
+              Sign Up
             </button>
-            <div className="header__profile-container">
-              <Link to="/profile" className="header__profile-link">
-                <span className="header__username">
-                  {currentUser?.name || storedUser?.name || "Profile"}
-                </span>
-                {currentUser?.avatar || storedUser?.avatar ? (
-                  <img
-                    src={currentUser?.avatar || storedUser?.avatar}
-                    alt="User Avatar"
-                    className="header__avatar"
-                  />
-                ) : (
-                  <span className="header__avatar-placeholder">No Avatar</span>
-                )}
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="header__right-container">
-            <ToggleSwitch />
-            <div className="header__auth-buttons">
-              <button
-                type="button"
-                className="header__button"
-                onClick={() => setIsSignUpModalOpen(true)}
-              >
-                Sign Up
-              </button>
-              <button
-                type="button"
-                className="header__button"
-                onClick={() => setIsLoginModalOpen(true)}
-              >
-                Log In
-              </button>
-            </div>
-          </div>
-        )}
-      </header>
 
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onSubmit={handleLogin}
-        passwordColor={passwordColor}
-        setPasswordColor={setPasswordColor}
-        setIsSignUpModalOpen={setIsSignUpModalOpen}
-        setIsLoginModalOpen={setIsLoginModalOpen}
-      />
-      <SignUpModal
-        isOpen={isSignUpModalOpen}
-        onClose={() => setIsSignUpModalOpen(false)}
-        onSubmit={handleSignUp}
-        setIsSignUpModalOpen={setIsSignUpModalOpen}
-        setIsLoginModalOpen={setIsLoginModalOpen}
-      />
-    </>
+            <button
+              type="button"
+              className="header__button"
+              onClick={() => setActiveModal("login")}
+            >
+              Log In
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }
 

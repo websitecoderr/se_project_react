@@ -9,28 +9,47 @@ const SignUpModal = ({
   setIsSignUpModalOpen,
   setIsLoginModalOpen,
 }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [name, setName] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    name: "",
+    avatar: "",
+  });
+
   const [error, setError] = useState("");
 
-  const isButtonDisabled = !email || !password || !name || !avatar;
+  // Function to update form values dynamically
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
+  // Check if all fields are filled to enable the submit button
+  const isButtonDisabled = () => {
+    return !formData.email || !formData.password || !formData.name || !formData.avatar;
+  };
+
+  // Switch between login and signup modals
   const handleSwitch = () => {
     setIsSignUpModalOpen(false);
     setIsLoginModalOpen(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!email || !password || !name || !avatar) {
+  // Handle form submission
+  const handleSubmit = (formData) => {
+    if (isButtonDisabled()) {
       setError("All fields are required.");
       return;
     }
 
-    onSubmit({ email, password, avatar, name });
+    if (!onSubmit || typeof onSubmit !== "function") {
+      console.error("onSubmit is not a function in SignUpModal!");
+      return;
+    }
+
+    onSubmit(formData);
   };
 
   return (
@@ -39,8 +58,8 @@ const SignUpModal = ({
       buttonText="Sign Up"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}
-      buttonDisabled={isButtonDisabled}
+      onSubmit={handleSubmit} // Corrected prop
+      buttonDisabled={isButtonDisabled()}
     >
       {error && <p className="modal__error">{error}</p>}
 
@@ -53,8 +72,8 @@ const SignUpModal = ({
             className="modal__input"
             placeholder="Email"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleInputChange}
           />
         </label>
 
@@ -66,8 +85,8 @@ const SignUpModal = ({
             className="modal__input"
             placeholder="Password"
             required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleInputChange}
           />
         </label>
 
@@ -79,8 +98,8 @@ const SignUpModal = ({
             className="modal__input"
             placeholder="Name"
             required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.name}
+            onChange={handleInputChange}
           />
         </label>
 
@@ -92,19 +111,14 @@ const SignUpModal = ({
             className="modal__input"
             placeholder="Avatar URL"
             required
-            value={avatar}
-            onChange={(e) => setAvatar(e.target.value)}
+            value={formData.avatar}
+            onChange={handleInputChange}
           />
         </label>
       </div>
-      
+
       <div className="modal__switch-container">
-      
-             <button
-          type="button"
-          className="modal__switch-link"
-          onClick={handleSwitch}
-        >
+        <button type="button" className="modal__switch-link" onClick={handleSwitch}>
           or Log in
         </button>
       </div>

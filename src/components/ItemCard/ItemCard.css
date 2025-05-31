@@ -86,7 +86,6 @@ p.cards__name span:first-child {
   top: 5px; 
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.8);
   color: black;
   padding: 8px;
   font-size: 14px;
@@ -96,7 +95,6 @@ p.cards__name span:first-child {
   display: flex; 
   align-items: center; 
   width: auto; 
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .like-button {
@@ -104,4 +102,9 @@ p.cards__name span:first-child {
   border: none;
   padding: 0;
   cursor: pointer;
+}
+
+.item-name {
+ background-color: rgba(255, 255, 255, 0.8);
+
 }

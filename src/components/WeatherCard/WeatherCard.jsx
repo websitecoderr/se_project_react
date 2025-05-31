@@ -55,13 +55,13 @@ const WeatherCard = ({ weatherData, isLoading }) => {
       typeof weatherData.temp !== "object" ||
       (!("C" in weatherData.temp) && !("F" in weatherData.temp))
     ) {
-      return "Temperature unavailable"; // ✅ Return only when data is invalid
+      return "Temperature unavailable"; 
     }
 
     return currentTemperatureUnit === "C"
       ? `${Math.round(weatherData.temp.C)} ${TEMP_UNIT_C}`
       : `${Math.round(weatherData.temp.F)} ${TEMP_UNIT_F}`;
-  }, [currentTemperatureUnit, weatherData]); // ✅ Correct placement of dependencies
+  }, [currentTemperatureUnit, weatherData]); 
 
   console.log("Weather data:", weatherData);
 

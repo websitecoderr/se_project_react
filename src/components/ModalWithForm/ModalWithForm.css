@@ -220,3 +220,26 @@
 .modal__form:invalid .modal__submit-btn {
   background-color: gray;
 }
+
+.modal__switch-link span {
+margin-right: 2px;
+}
+
+.modal__switch-container {
+  text-align:none;
+  margin-top: 8px;
+  color: #808080;
+}
+
+.modal__switch-button {
+  background: none;
+  border: none;
+  color: #2F71E5;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+.modal__switch-button:hover {
+  opacity: 0.6;
+}

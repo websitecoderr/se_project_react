@@ -6,12 +6,20 @@ const LoginModal = ({
   isOpen,
   onClose,
   onLoginSuccess,
-  handleSignIn, 
+  handleSignIn,
   setIsLoginModalOpen,
   setIsSignUpModalOpen,
 }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  console.log("LoginModal props:", { 
+    handleSignIn, 
+    handleSignInType: typeof handleSignIn 
+  }); 
+
+  if (!handleSignIn || typeof handleSignIn !== "function") {
+    console.error("Error: handleSignIn is not a valid function!", handleSignIn);
+  }
+
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const emailRef = useRef(null);
 
@@ -21,28 +29,38 @@ const LoginModal = ({
     }
   }, [isOpen]);
 
-  const isButtonDisabled = !email || !password;
-
-  const handleSwitch = () => {
-    setIsLoginModalOpen(false);
-    setIsSignUpModalOpen(true);
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!email || !password) {
-    setErrorMessage("Both fields are required.");
-    return;
-  }
-
-  try {
-    const userData = await handleSignIn(email, password); 
-    onLoginSuccess(userData); 
-  } catch (error) {
-    setErrorMessage("Login failed. Please check your credentials.");
-  }
+  const isButtonDisabled = (dataToCheck = {}) => {
+    return !dataToCheck.email || !dataToCheck.password;
+  };
+const handleSwitch = () => {
+  setIsLoginModalOpen(""); // Corrected to reset modal state properly
+  setIsSignUpModalOpen("signup"); // Opens the signup modal
 };
 
+  const handleSubmit = async (formData) => {
+    console.log("LoginModal received formData:", formData);
+
+    if (!formData || isButtonDisabled(formData)) { 
+      setErrorMessage("Both fields are required.");
+      return;
+    }
+
+    try {
+      console.log("Attempting to call handleSignIn with:", formData);
+      const userData = await handleSignIn(formData.email, formData.password);
+      onLoginSuccess(userData);
+    } catch (error) {
+      console.error("Login failed:", error);
+      setErrorMessage(error.message || "Login failed. Please check your credentials.");
+    }
+  };
 
   return (
     <ModalWithForm
@@ -51,7 +69,7 @@ const LoginModal = ({
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonDisabled={isButtonDisabled}
+      buttonDisabled={isButtonDisabled(formData)} // Ensure button disables correctly
     >
       {errorMessage && <div className="modal__error-text">{errorMessage}</div>}
 
@@ -64,8 +82,8 @@ const LoginModal = ({
             className="modal__input"
             placeholder="Email"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleInputChange}
             ref={emailRef}
           />
         </label>
@@ -78,18 +96,14 @@ const LoginModal = ({
             className="modal__input"
             placeholder="Password"
             required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleInputChange}
           />
         </label>
       </div>
 
       <div className="modal__switch-container">
-        <button
-          type="button"
-          className="modal__switch-link"
-          onClick={handleSwitch}
-        >
+        <button type="button" className="modal__switch-link" onClick={handleSwitch}>
           or <span>Sign up</span>
         </button>
       </div>

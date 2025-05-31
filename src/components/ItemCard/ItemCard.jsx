@@ -1,54 +1,21 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
-import { jwtDecode } from "jwt-decode";
-import { checkResponse } from "../../utils/Api";
 import "./ItemCard.css";
 
-const API_BASE_URL = "http://localhost:3001";
+function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
+  const { currentUser } = useContext(CurrentUserContext); // Get user from context
 
-function ItemCard({ item, onCardClick, setClothingItems, onCardDelete }) {
-  const currentUser = useContext(CurrentUserContext);
   console.log("Current user in ItemCard:", currentUser);
-
   console.log("Item data:", item);
 
-  const token = localStorage.getItem("jwt");
-  const decodedToken = token ? jwtDecode(token) : null;
-  const isLiked = item.likes?.some((likeId) => decodedToken?._id === likeId);
-  const isOwner = decodedToken?._id === item.userId;
+  const isLiked = item.likes?.some((likeId) => currentUser?._id === likeId);
+  const isOwner = currentUser?._id === item.userId;
 
   console.log("Debug owner check:", {
-    decodedTokenId: decodedToken?._id,
+    currentUserId: currentUser?._id,
     itemOwnerId: item.userId,
     isOwner: isOwner,
   });
-
-  const [liked, setLiked] = useState(isLiked);
-
-  const onCardLike = async () => {
-    const newLikedState = !liked;
-    setLiked(newLikedState);
-    const method = newLikedState ? "PUT" : "DELETE";
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/items/${item._id}/likes`, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const updatedItem = await checkResponse(response);
-      setClothingItems((prevItems) =>
-        prevItems.map((prevItem) =>
-          prevItem._id === item._id ? updatedItem : prevItem
-        )
-      );
-    } catch (error) {
-      console.error("Error liking item:", error);
-    }
-  };
 
   const handleDeleteClick = () => {
     if (isOwner) {
@@ -70,15 +37,15 @@ function ItemCard({ item, onCardClick, setClothingItems, onCardDelete }) {
           <span className="item-name">{item.name}</span>
 
           <button
-            className={`like-button ${liked ? "liked" : ""}`}
-            onClick={onCardLike}
+            className={`like-button ${isLiked ? "liked" : ""}`}
+            onClick={() => onCardLike(item)}
             style={{
               cursor: "pointer",
               border: "none",
               background: "transparent",
             }}
           >
-            {liked ? "❤️" : "🤍"}
+            {isLiked ? "❤️" : "🤍"}
           </button>
         </div>
       </div>

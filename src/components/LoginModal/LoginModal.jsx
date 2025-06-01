@@ -1,24 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
+import { useNavigate } from 'react-router-dom';
+
 import "./LoginModal.css";
 
 const LoginModal = ({
   isOpen,
   onClose,
-  onLoginSuccess,
   handleSignIn,
-  setIsLoginModalOpen,
   setIsSignUpModalOpen,
+   setCurrentUser,
+  setIsLoggedIn,
 }) => {
-  console.log("LoginModal props:", { 
-    handleSignIn, 
-    handleSignInType: typeof handleSignIn 
-  }); 
+  console.log("LoginModal props:", {
+    handleSignIn,
+    handleSignInType: typeof handleSignIn,
+  });
+
 
   if (!handleSignIn || typeof handleSignIn !== "function") {
     console.error("Error: handleSignIn is not a valid function!", handleSignIn);
   }
 
+   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const emailRef = useRef(null);
@@ -36,26 +40,29 @@ const LoginModal = ({
     });
   };
 
-  const isButtonDisabled = (dataToCheck = {}) => {
-    return !dataToCheck.email || !dataToCheck.password;
+  const isButtonDisabled = () => {
+    return !formData.email || !formData.password;
   };
-const handleSwitch = () => {
-  setIsLoginModalOpen(""); // Corrected to reset modal state properly
-  setIsSignUpModalOpen("signup"); // Opens the signup modal
-};
 
-  const handleSubmit = async (formData) => {
-    console.log("LoginModal received formData:", formData);
+  const handleSwitch = () => {
+    onClose(); 
+    setIsSignUpModalOpen("signup"); 
+  };
 
-    if (!formData || isButtonDisabled(formData)) { 
-      setErrorMessage("Both fields are required.");
-      return;
-    }
+const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try {
       console.log("Attempting to call handleSignIn with:", formData);
-      const userData = await handleSignIn(formData.email, formData.password);
-      onLoginSuccess(userData);
+      const userData = await handleSignIn(formData);
+      console.log("About to call onLoginSuccess with:", userData);
+
+      if (userData) {
+        setCurrentUser(userData);
+        setIsLoggedIn(true);
+        onClose();
+        navigate("/profile"); 
+      }
     } catch (error) {
       console.error("Login failed:", error);
       setErrorMessage(error.message || "Login failed. Please check your credentials.");
@@ -69,7 +76,7 @@ const handleSwitch = () => {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonDisabled={isButtonDisabled(formData)} // Ensure button disables correctly
+      buttonDisabled={isButtonDisabled()}
     >
       {errorMessage && <div className="modal__error-text">{errorMessage}</div>}
 
@@ -103,7 +110,11 @@ const handleSwitch = () => {
       </div>
 
       <div className="modal__switch-container">
-        <button type="button" className="modal__switch-link" onClick={handleSwitch}>
+        <button
+          type="button"
+          className="modal__switch-link"
+          onClick={handleSwitch}
+        >
           or <span>Sign up</span>
         </button>
       </div>
@@ -112,3 +123,5 @@ const handleSwitch = () => {
 };
 
 export default LoginModal;
+
+

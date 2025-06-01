@@ -51,11 +51,9 @@ function ModalWithForm({
             console.log("styleState:", styleState);
             console.log("onSubmit function:", onSubmit);
             console.log("typeof onSubmit:", typeof onSubmit);
-            if (styleState) {
-              const formData = Object.fromEntries(
-                new FormData(e.target).entries()
-              );
-              onSubmit(formData); 
+
+            if (styleState && typeof onSubmit === "function") {
+              onSubmit(e);
             }
           }}
         >

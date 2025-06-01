@@ -5,8 +5,11 @@ import logo from "../../assets/logo.svg";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import { jwtDecode } from "jwt-decode";
+import { getToken } from "../../utils/Api.js";
 
 function Header({ handleAddClick, setActiveModal, city, isLoading }) {
+  const displayLocation = isLoading ? "Loading..." : city || "Unknown Location";
+
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [date, setDate] = useState("");
 
@@ -22,22 +25,11 @@ function Header({ handleAddClick, setActiveModal, city, isLoading }) {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token && token.split(".").length === 3) {
-      try {
-        const decodedUser = jwtDecode(token);
-        setCurrentUser(decodedUser);
-      } catch (error) {
-        console.error("Error decoding JWT:", error);
-        setCurrentUser(null);
-      }
-    } else {
-      console.warn("Invalid or missing token in localStorage");
-      setCurrentUser(null);
-    }
-  }, [setCurrentUser]);
-
-  const displayLocation = isLoading ? "Loading..." : city || "Unknown Location";
+  const token = getToken();
+  if (!token) {
+    setCurrentUser(null);
+  }
+}, [setCurrentUser]);
 
   return (
     <header className="header">

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CurrentUserProvider } from "../../Context/CurrentUserContext";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute.jsx";
 import { CurrentTemperatureUnitProvider } from "../../Context/CurrentTemperatureUnitContext.jsx";
+
 import {
   fetchItemsFromApi,
   likeItem,
@@ -123,19 +124,6 @@ function App() {
     }
   };
 
-  const handleSignIn = async (userData) => {
-    try {
-      const loggedInUser = await signin(userData);
-      setToken(loggedInUser.token);
-      setCurrentUser(loggedInUser.user);
-      setIsLoggedIn(true);
-      setActiveModal("");
-    } catch (error) {
-      console.error("Error logging in:", error);
-      setErrorMessage("Login failed. Please try again.");
-    }
-  };
-
   const handleAddItem = async (itemData) => {
     try {
       const newItem = await addItemToApi(itemData);
@@ -220,6 +208,23 @@ function App() {
     setActiveModal("preview");
   };
 
+  const handleSignIn = async (userData) => {
+  try {
+    const loggedInUser = await signin(userData);
+    setToken(loggedInUser.token);
+    setCurrentUser(loggedInUser.user);
+    setIsLoggedIn(true);
+    setActiveModal("");
+
+    return loggedInUser;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    setErrorMessage("Login failed. Please try again.");
+    return null;
+  }
+};
+
+
   return (
     <div className="app">
       <BrowserRouter>
@@ -274,20 +279,17 @@ function App() {
               isOpen={activeModal === "signup"}
               onClose={() => setActiveModal("")}
               onSubmit={handleSignUp}
-              onSwitch={handleModalSwitch} 
+              onSwitch={handleModalSwitch}
             />
             <LoginModal
               isOpen={activeModal === "login"}
               onClose={() => setActiveModal("")}
-              onLoginSuccess={(userData) => {
-                setCurrentUser(userData);
-                setIsLoggedIn(true);
-                setActiveModal("");
-              }}
+              setCurrentUser={setCurrentUser}
+              setIsLoggedIn={setIsLoggedIn}
               setIsLoginModalOpen={setActiveModal}
               setIsSignUpModalOpen={() => setActiveModal("signup")}
               handleSignIn={handleSignIn}
-              handleLoginModalSwitch={handleModalSwitch} 
+              handleLoginModalSwitch={handleModalSwitch}
             />
 
             <AddItemModal

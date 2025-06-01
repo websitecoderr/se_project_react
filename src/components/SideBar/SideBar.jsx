@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./SideBar.css";
 import avatarDefault from "../../assets/avatar.svg";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
@@ -8,12 +8,14 @@ const SideBar = ({ handleSignOut }) => {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const [changeProfile, setChangeProfile] = useState(false);
-  const [avatar, setAvatar] = useState(currentUser?.avatar || "");
-  const [name, setName] = useState(currentUser?.name || "");
+  const [avatar, setAvatar] = useState(currentUser?.avatar || avatarDefault);
+  const [name, setName] = useState(currentUser?.name || "User");
   const [errorMessage, setErrorMessage] = useState("");
 
   const updateUser = async (userData) => {
     try {
+      if (!userData.name || !userData.avatar) throw new Error("Invalid user data");
+
       const requestBody = {
         name: userData.name,
         avatar: userData.avatar,
@@ -43,15 +45,22 @@ const SideBar = ({ handleSignOut }) => {
     }
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      setAvatar(currentUser.avatar || avatarDefault);
+      setName(currentUser.name || "User");
+    }
+  }, [currentUser]);
+
   return (
     <div className="sidebar">
       <div className="sidebar__user">
         <img
-          src={currentUser?.avatar || avatarDefault}
+          src={avatar}
           alt="User avatar"
           className="sidebar__avatar"
         />
-        <p className="sidebar__username">{currentUser?.name || "User"}</p>
+        <p className="sidebar__username">{name}</p>
       </div>
 
       {errorMessage && <p className="sidebar__error">{errorMessage}</p>}

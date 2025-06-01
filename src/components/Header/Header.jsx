@@ -1,35 +1,27 @@
 import "./Header.css";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
-import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-import { jwtDecode } from "jwt-decode";
-import { getToken } from "../../utils/Api.js";
+import Avatar from "../Avatar/Avatar"; 
 
-function Header({ handleAddClick, setActiveModal, city, isLoading }) {
-  const displayLocation = isLoading ? "Loading..." : city || "Unknown Location";
+function Header({ handleAddClick, setActiveModal, city, isLoading, currentUser }) {
+  const displayLocation = useMemo(() => {
+    return isLoading ? "Loading..." : city || "Unknown Location";
+  }, [isLoading, city]);
 
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [date, setDate] = useState("");
 
   useEffect(() => {
-    const updateDate = () => {
-      const options = { month: "long", day: "numeric" };
-      setDate(new Date().toLocaleDateString("en-US", options));
-    };
+    const options = { month: "long", day: "numeric" };
+    setDate(new Date().toLocaleDateString("en-US", options));
 
-    updateDate();
-    const interval = setInterval(updateDate, 60000);
+    const interval = setInterval(() => {
+      setDate(new Date().toLocaleDateString("en-US", options));
+    }, 60000);
+
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-  const token = getToken();
-  if (!token) {
-    setCurrentUser(null);
-  }
-}, [setCurrentUser]);
 
   return (
     <header className="header">
@@ -53,17 +45,9 @@ function Header({ handleAddClick, setActiveModal, city, isLoading }) {
           <div className="header__profile-container">
             <Link to="/profile" className="header__profile-link">
               <span className="header__username">
-                {currentUser.name || "Profile"}
+                {currentUser.name || "Terrence Tegegne"}
               </span>
-              {currentUser.avatar ? (
-                <img
-                  src={currentUser.avatar}
-                  alt="User Avatar"
-                  className="header__avatar"
-                />
-              ) : (
-                <span className="header__avatar-placeholder">No Avatar</span>
-              )}
+              <Avatar avatarUrl={currentUser?.avatar} name={currentUser?.name} /> 
             </Link>
           </div>
         </div>

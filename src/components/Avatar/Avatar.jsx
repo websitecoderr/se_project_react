@@ -1,17 +1,18 @@
 import React from "react";
 import "./Avatar.css";
+import avatarDefault from "../../assets/avatar.svg"; 
 
-const API_BASE_URL = 'http://localhost:3001'; 
+const API_BASE_URL = "http://localhost:3001";
+
 const normalizeAvatarUrl = (url) => {
   console.log("Received URL:", url);
-  if (!url) return null;
-
+  if (!url) return avatarDefault; 
 
   if (url.startsWith("http://") || url.startsWith("https://")) {
     return url;
   }
 
-  return `${API_BASE_URL}/${url.replace(/^\/+/, "")}`;
+  return `${API_BASE_URL}/${url.replace(/^\/+/, "")}`; 
 };
 
 function Avatar({ avatarUrl, name = "" }) {
@@ -19,7 +20,6 @@ function Avatar({ avatarUrl, name = "" }) {
   const normalizedUrl = normalizeAvatarUrl(avatarUrl);
   console.log("2. After normalization:", normalizedUrl);
   console.log("Avatar Debug:", {
-
     receivedUrl: avatarUrl,
     normalizedUrl: normalizedUrl,
     urlType: typeof avatarUrl,
@@ -42,16 +42,16 @@ function Avatar({ avatarUrl, name = "" }) {
       {normalizedUrl ? (
         <img
           src={normalizedUrl}
-          alt={`${name}'s avatar`}
-          className="avatar__image"
+          alt={`${name}'s avatar`} 
+          className="avatar__image" 
           onError={(e) => {
-            console.error("Failed to load avatar:", e.target.src); 
-            e.target.onerror = null; 
-            e.target.src = "https://shorturl.at/R5xe8"; 
+            console.error("Failed to load avatar:", e.target.src);
+            e.target.onerror = null;
+            e.target.src = avatarDefault; 
           }}
         />
       ) : (
-        <div className="avatar__placeholder">{getInitials(name)}</div>
+        <div className="avatar__placeholder">{getInitials(name)}</div> 
       )}
     </div>
   );

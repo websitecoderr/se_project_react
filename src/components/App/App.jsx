@@ -209,21 +209,20 @@ function App() {
   };
 
   const handleSignIn = async (userData) => {
-  try {
-    const loggedInUser = await signin(userData);
-    setToken(loggedInUser.token);
-    setCurrentUser(loggedInUser.user);
-    setIsLoggedIn(true);
-    setActiveModal("");
+    try {
+      const loggedInUser = await signin(userData);
+      setToken(loggedInUser.token);
+      setCurrentUser(loggedInUser.user);
+      setIsLoggedIn(true);
+      setActiveModal("");
 
-    return loggedInUser;
-  } catch (error) {
-    console.error("Error logging in:", error);
-    setErrorMessage("Login failed. Please try again.");
-    return null;
-  }
-};
-
+      return loggedInUser;
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setErrorMessage("Login failed. Please try again.");
+      return null;
+    }
+  };
 
   return (
     <div className="app">
@@ -238,6 +237,7 @@ function App() {
               isLoggedIn={isLoggedIn}
               setActiveModal={setActiveModal}
               handleModalSwitch={handleModalSwitch}
+              currentUser={currentUser} 
             />
 
             <Routes>
@@ -268,6 +268,7 @@ function App() {
                       handleSignOut={handleSignOut}
                       setActiveModal={setActiveModal}
                       handleAddClick={handleAddClick}
+                      currentUser={currentUser}
                     />
                   </ProtectedRoute>
                 }

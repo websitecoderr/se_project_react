@@ -3,7 +3,7 @@ import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import "./ItemCard.css";
 
 function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
-  const { currentUser } = useContext(CurrentUserContext); // Get user from context
+  const { currentUser } = useContext(CurrentUserContext); 
 
   console.log("Current user in ItemCard:", currentUser);
   console.log("Item data:", item);
@@ -68,3 +68,5 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
 }
 
 export default ItemCard;
+
+

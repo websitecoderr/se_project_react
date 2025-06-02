@@ -45,12 +45,13 @@ const SideBar = ({ handleSignOut }) => {
     }
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      setAvatar(currentUser.avatar || avatarDefault);
-      setName(currentUser.name || "User");
-    }
-  }, [currentUser]);
+useEffect(() => {
+  if (currentUser) {
+    console.log("Current user avatar:", currentUser.avatar); 
+    setAvatar(currentUser.avatar || avatarDefault);
+    setName(currentUser.name || "User");
+  }
+}, [currentUser]);
 
   return (
     <div className="sidebar">

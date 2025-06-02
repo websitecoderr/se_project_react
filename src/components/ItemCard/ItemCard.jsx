@@ -1,25 +1,41 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import "./ItemCard.css";
 
 function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
-  const { currentUser } = useContext(CurrentUserContext); 
+  const { currentUser } = useContext(CurrentUserContext);
+
+  useEffect(() => {
+    if (!currentUser) {
+      console.warn(
+        "No current user detected! Make sure authentication is working."
+      );
+    }
+  }, [currentUser]);
 
   console.log("Current user in ItemCard:", currentUser);
   console.log("Item data:", item);
 
   const isLiked = item.likes?.some((likeId) => currentUser?._id === likeId);
-  const isOwner = currentUser?._id === item.userId;
+  const isOwner = currentUser && currentUser._id === item.owner;
 
   console.log("Debug owner check:", {
-    currentUserId: currentUser?._id,
-    itemOwnerId: item.userId,
+    currentUserId: currentUser?._id || "No user logged in",
+    itemOwnerId: item.owner,
     isOwner: isOwner,
   });
 
   const handleDeleteClick = () => {
+    if (!currentUser) {
+      console.warn("Cannot delete item - no user logged in!");
+      return;
+    }
+
+    console.log(`Attempting to delete item: ${item._id}`);
     if (isOwner) {
-      onCardDelete(item);
+      onCardDelete(item._id);
+    } else {
+      console.warn("Delete button clicked, but user is not the owner!");
     }
   };
 
@@ -50,23 +66,19 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
         </div>
       </div>
 
-      <div className="cards__info">
-        {currentUser && isOwner && (
-          <div className="modal">
-            <button
-              type="button"
-              className="modal__delete-button"
-              onClick={handleDeleteClick}
-            >
-              Delete item
-            </button>
-          </div>
-        )}
-      </div>
+      {isOwner && (
+        <div className="cards__info">
+          <button
+            type="button"
+            className="modal__delete-button"
+            onClick={handleDeleteClick}
+          >
+            Delete item
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
 export default ItemCard;
-
-

@@ -22,12 +22,20 @@
   margin: 0;
 }
 
-.change{
+.change {
   width: 100%;
   text-align: start;
-  margin: 20px 0px;
+  margin: 5px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; 
+  position: relative;
+  margin-left: -15px;
 }
 
 .sign-out{
   padding: 0px;
+  text-align: start;
+  margin: 5px 0px;
 }
+

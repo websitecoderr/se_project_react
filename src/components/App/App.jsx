@@ -85,23 +85,24 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const checkUserSession = async () => {
-      const token = getToken();
-      if (!token) return;
+  const checkUserSession = async () => {
+    const token = getToken();
+    if (!token) return;
 
-      try {
-        const userData = await checkToken();
-        setCurrentUser(userData);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error("Error checking user session:", error);
-        removeToken();
-        setCurrentUser(null);
-        setIsLoggedIn(false);
-      }
-    };
-    checkUserSession();
-  }, []);
+    try {
+      const userData = await checkToken();
+      console.log("Current user data from API:", userData); // ← Move it here
+      setCurrentUser(userData);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error("Error checking user session:", error);
+      removeToken();
+      setCurrentUser(null);
+      setIsLoggedIn(false);
+    }
+  };
+  checkUserSession();
+}, []);
 
   const handleSignOut = () => {
     removeToken();
@@ -172,21 +173,25 @@ function App() {
   };
 
   const handleCardLike = async (card) => {
-    if (!isLoggedIn) {
-      setErrorMessage("You must be logged in to like an item.");
-      return;
-    }
-    try {
-      const isLiked = card.likes?.some((id) => id === currentUser?._id);
-      const updatedCard = await likeItem(card._id, isLiked);
-      setClothingItems((prevItems) =>
-        prevItems.map((item) => (item._id === card._id ? updatedCard : item))
-      );
-    } catch (error) {
-      console.error("Error liking item:", error.message);
-      setErrorMessage("Error updating like status.");
-    }
-  };
+  const isLiked = card.likes.some((id) => id === currentUser._id);
+  
+  try {
+    await likeItem(card._id, isLiked);
+    
+    const updatedCard = {
+      ...card,  
+      likes: isLiked 
+        ? card.likes.filter((id) => id !== currentUser._id)  
+        : [...card.likes, currentUser._id]  
+    };
+    
+    setClothingItems((prevItems) =>
+      prevItems.map((item) => (item._id === card._id ? updatedCard : item))
+    );
+  } catch (error) {
+    console.error("Error liking item:", error);
+  }
+};
 
   const handleAddClick = () => {
     console.log("Add button clicked in App");

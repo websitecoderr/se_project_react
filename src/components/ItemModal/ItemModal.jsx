@@ -17,6 +17,10 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
   };
 
   const isOwn = currentUser && item?.owner === currentUser._id;
+  console.log("Current user:", currentUser);
+  console.log("Item owner:", item?.owner);
+  console.log("Current user ID:", currentUser?._id);
+  console.log("Is own item:", isOwn);
 
   if (!isOpen || !item) return null;
 

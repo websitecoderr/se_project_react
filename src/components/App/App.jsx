@@ -83,38 +83,43 @@ function App() {
     };
     fetchItems();
   }, []);
-  useEffect(() => {
-    console.log("useEffect is running");
 
-    const checkUserSession = async () => {
-      console.log("checkUserSession function is running");
-      const token = getToken();
-      console.log("Token from getToken():", token);
+   useEffect(() => {
+  console.log("useEffect is running");
 
-      if (!token) {
-        console.log("No token found, returning early");
-        return;
-      }
+  const checkUserSession = async () => {
+    console.log("checkUserSession function is running");
 
-      console.log("About to call checkToken() with token:", token);
+    const token = localStorage.getItem("jwt");
+    console.log("Token from localStorage:", token);
 
-      try {
-        const userData = await checkToken();
-        console.log("SUCCESS - Current user data from API:", userData);
-        setCurrentUser(userData);
-        setIsLoggedIn(true);
-        console.log("Setting currentUser to:", userData);
-      } catch (error) {
-        console.error("ERROR in checkUserSession:", error);
-        console.error("Error details:", error.message);
-        removeToken();
-        setCurrentUser(null);
-        setIsLoggedIn(false);
-      }
-    };
+    if (!token) {
+      console.log("🚫 No token found, returning early");
+      return;
+    }
 
-    checkUserSession();
-  }, []);
+    console.log("🔍 About to call checkToken() with token:", token);
+
+    try {
+      const userData = await checkToken(token);
+      console.log("✅ SUCCESS - Current user data from API:", userData);
+
+      setCurrentUser(userData);
+      setIsLoggedIn(true);
+
+      console.log("🔄 Updated currentUser state:", userData);
+    } catch (error) {
+      console.error("❌ ERROR in checkUserSession:", error);
+      console.error("Error details:", error.message);
+
+      removeToken();
+      setCurrentUser(null);
+      setIsLoggedIn(false);
+    }
+  };
+
+  checkUserSession();
+}, [setCurrentUser, setIsLoggedIn]); // Fix: Adding dependencies
 
 
 
@@ -234,35 +239,33 @@ function App() {
 
     setIsLoading(false);
   };
-const handleSignIn = async (userData) => {
-  setIsLoading(true);
-  
-  let loggedInUser = null; 
+ const handleSignIn = async (userData) => {
+    setIsLoading(true);
+    let loggedInUser = null;
 
-  try {
-    loggedInUser = await signin(userData);
-    
-    console.log("🔍 What signin returned:", loggedInUser);
-    console.log("🔍 loggedInUser.token:", loggedInUser.token);
-    console.log("🔍 loggedInUser.user:", loggedInUser.user);
-    
-    setToken(loggedInUser.token);
-    setCurrentUser(loggedInUser.user);
-    setIsLoggedIn(true);
-    setErrorMessage("");
+    try {
+      loggedInUser = await signin(userData);
 
-    console.log("✅ SUCCESS - Login completed, user set:", loggedInUser.user);
-    
-  } catch (error) {
-    console.error("❌ Error logging in:", error);
-    setErrorMessage("Login failed. Please try again.");
-  } finally {
-    setIsLoading(false);
-    console.log("ℹ️ Final check - loggedInUser:", loggedInUser); 
-  }
+      console.log("🔍 What signin returned:", loggedInUser);
+      console.log("🔍 loggedInUser.token:", loggedInUser.token);
+      console.log("🔍 loggedInUser.user:", loggedInUser.user);
 
-  return loggedInUser; 
-};
+      setToken(loggedInUser.token);
+      setCurrentUser(loggedInUser.user);
+      setIsLoggedIn(true);
+      setErrorMessage("");
+
+      console.log("SUCCESS - Login completed, user set:", loggedInUser.user);
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setErrorMessage("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+      console.log("ℹ️ Final check - loggedInUser:", loggedInUser);
+    }
+
+    return loggedInUser;
+  };
 
 
   return (

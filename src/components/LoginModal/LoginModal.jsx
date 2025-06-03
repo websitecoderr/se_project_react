@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import "./LoginModal.css";
 
@@ -8,21 +8,18 @@ const LoginModal = ({
   isOpen,
   onClose,
   handleSignIn,
-  setIsSignUpModalOpen,
-   setCurrentUser,
+  setCurrentUser,
   setIsLoggedIn,
+  setIsSignUpModalOpen,
+  setIsLoginModalOpen,
 }) => {
-  console.log("LoginModal props:", {
-    handleSignIn,
-    handleSignInType: typeof handleSignIn,
-  });
-
+  console.log("LoginModal props:", { handleSignIn });
 
   if (!handleSignIn || typeof handleSignIn !== "function") {
     console.error("Error: handleSignIn is not a valid function!", handleSignIn);
   }
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const emailRef = useRef(null);
@@ -40,43 +37,45 @@ const LoginModal = ({
     });
   };
 
-  const isButtonDisabled = () => {
-    return !formData.email || !formData.password;
-  };
+  const isButtonDisabled = () => !formData.email || !formData.password;
 
-  const handleSwitch = () => {
-    onClose(); 
-    setIsSignUpModalOpen("signup"); 
-  };
-
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       console.log("Attempting to call handleSignIn with:", formData);
       const userData = await handleSignIn(formData);
-      console.log("About to call onLoginSuccess with:", userData);
+      console.log("About to update current user:", userData);
 
       if (userData) {
         setCurrentUser(userData);
         setIsLoggedIn(true);
         onClose();
-        navigate("/profile"); 
+        navigate("/profile");
       }
     } catch (error) {
       console.error("Login failed:", error);
-      setErrorMessage(error.message || "Login failed. Please check your credentials.");
+      setErrorMessage(
+        error.message || "Login failed. Please check your credentials."
+      );
     }
+  };
+
+  const handleSwitch = () => {
+    setIsLoginModalOpen(false);
+    setIsSignUpModalOpen(true);
   };
 
   return (
     <ModalWithForm
       title="Log In"
-      buttonText="Log In"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}
-      buttonDisabled={isButtonDisabled()}
+      onSubmit={handleSubmit} 
+      onSwitch={handleSwitch}
+      switchText="Sign Up"
+      buttonText="Log In"
+      buttonDisabled={isButtonDisabled()} 
     >
       {errorMessage && <div className="modal__error-text">{errorMessage}</div>}
 
@@ -108,20 +107,8 @@ const handleSubmit = async (e) => {
           />
         </label>
       </div>
-
-      <div className="modal__switch-container">
-        <button
-          type="button"
-          className="modal__switch-link"
-          onClick={handleSwitch}
-        >
-          or <span>Sign up</span>
-        </button>
-      </div>
     </ModalWithForm>
   );
 };
 
 export default LoginModal;
-
-

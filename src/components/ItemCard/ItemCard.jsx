@@ -6,36 +6,39 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
   const { currentUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
+    console.log("🌀 ItemCard Mounted");
+
     if (!currentUser) {
-      console.warn(
-        "No current user detected! Make sure authentication is working."
-      );
+      console.warn("No current user detected! Check authentication.");
+    } else {
+      console.log(" Current user loaded:", currentUser);
     }
   }, [currentUser]);
 
-  console.log("Current user in ItemCard:", currentUser);
-  console.log("Item data:", item);
+  console.log("🔍 Current user in ItemCard:", currentUser);
+  console.log("📌 Item data:", item);
 
   const isLiked = item.likes?.some((likeId) => currentUser?._id === likeId);
-  const isOwner = currentUser && currentUser._id === item.owner;
+  
+  const isOwner = currentUser && currentUser._id === item.userId;
 
-  console.log("Debug owner check:", {
+  console.log("🛠️ Debug Owner Check:", {
     currentUserId: currentUser?._id || "No user logged in",
-    itemOwnerId: item.owner,
+    itemOwnerId: item.userId,
     isOwner: isOwner,
   });
 
   const handleDeleteClick = () => {
     if (!currentUser) {
-      console.warn("Cannot delete item - no user logged in!");
+      console.warn("❌ Cannot delete item - no user logged in!");
       return;
     }
 
-    console.log(`Attempting to delete item: ${item._id}`);
+    console.log(`🗑️ Attempting to delete item:`, item);
     if (isOwner) {
-      onCardDelete(item._id);
+      onCardDelete(item); 
     } else {
-      console.warn("Delete button clicked, but user is not the owner!");
+      console.warn("🚫 Delete button clicked, but user is not the owner!");
     }
   };
 
@@ -63,6 +66,7 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
           >
             {isLiked ? "❤️" : "🤍"}
           </button>
+
           {isOwner && (
             <div className="cards__info">
               <button

@@ -59,26 +59,28 @@ function ModalWithForm({
         >
           {children}
 
-          <button
-            type="submit"
-            className="modal__submit-button"
-            disabled={buttonDisabled}
-          >
-            {buttonText}
-          </button>
+          <div className="modal__buttons-container">
+            <button
+              type="submit"
+              className="modal__submit-button"
+              disabled={buttonDisabled}
+            >
+              {buttonText}
+            </button>
 
-          {onSwitch && (
-            <div className="modal__switch-container">
-              <span>or</span>
-              <button
-                type="button"
-                className="modal__switch-link"
-                onClick={onSwitch}
-              >
-                <strong>{switchText}</strong>
-              </button>
-            </div>
-          )}
+            {onSwitch && (
+              <div className="modal__switch-container">
+                <span>or</span>
+                <button
+                  type="button"
+                  className="modal__switch-link"
+                  onClick={onSwitch}
+                >
+                  <strong>{switchText}</strong>
+                </button>
+              </div>
+            )}
+          </div>
         </form>
       </div>
     </div>

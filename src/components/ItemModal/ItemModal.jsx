@@ -75,7 +75,7 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
                   color: "red",
                 }}
               >
-                🗑️ Delete item
+                 Delete item
               </button>
             </div>
           )}
@@ -86,3 +86,4 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
 }
 
 export default ItemModal;
+

@@ -38,7 +38,9 @@ const SignUpModal = ({
   };
 
   // Handle form submission
-  const handleSubmit = (formData) => {
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent default behavior
+
     if (isButtonDisabled()) {
       setError("All fields are required.");
       return;
@@ -55,11 +57,13 @@ const SignUpModal = ({
   return (
     <ModalWithForm
       title="Sign Up"
-      buttonText="Sign Up"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit} // Corrected prop
-      buttonDisabled={isButtonDisabled()}
+      onSubmit={handleSubmit} 
+      onSwitch={handleSwitch}
+      switchText="Log In"
+      buttonText="Sign Up"
+      buttonDisabled={isButtonDisabled()} 
     >
       {error && <p className="modal__error">{error}</p>}
 
@@ -115,12 +119,6 @@ const SignUpModal = ({
             onChange={handleInputChange}
           />
         </label>
-      </div>
-
-      <div className="modal__switch-container">
-        <button type="button" className="modal__switch-link" onClick={handleSwitch}>
-          or Log in
-        </button>
       </div>
     </ModalWithForm>
   );

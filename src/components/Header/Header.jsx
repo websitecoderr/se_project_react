@@ -5,10 +5,13 @@ import logo from "../../assets/logo.svg";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import Avatar from "../Avatar/Avatar"; 
 
-function Header({ handleAddClick, setActiveModal, city, isLoading, currentUser }) {
+function Header({ handleAddClick, setActiveModal, city, isLoggedIn, currentUser }) {
+  console.log("Header - isLoggedIn:", isLoggedIn);
+  console.log("Header - currentUser:", currentUser);
+
   const displayLocation = useMemo(() => {
-    return isLoading ? "Loading..." : city || "Unknown Location";
-  }, [isLoading, city]);
+    return city || "Unknown Location";
+  }, [city]);
 
   const [date, setDate] = useState("");
 
@@ -32,7 +35,7 @@ function Header({ handleAddClick, setActiveModal, city, isLoading, currentUser }
         <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
       </div>
 
-      {currentUser ? (
+      {isLoggedIn && currentUser ? (
         <div className="header__user-container">
           <ToggleSwitch />
           <button

@@ -22,9 +22,7 @@ button {
   cursor: pointer;
   width: max-content;
 }
-button:hover {
-  background: #000000ab;
-} 
+
 
 .app {
   background-color: #f3f3f3;

@@ -49,7 +49,7 @@ export const checkToken = async () => {
     return checkResponse(response);
   } catch (error) {
     console.error("Token validation failed:", error.message);
-    return { success: false, message: error.message };
+    return Promise.reject(error);
   }
 };
 

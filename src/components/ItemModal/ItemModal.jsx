@@ -16,11 +16,11 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
       : `http://localhost:3001${imageUrl}`;
   };
 
-  const isOwn = currentUser && item?.owner === currentUser._id;
+  const isOwner = currentUser && item?.owner === currentUser._id;
   console.log("Current user:", currentUser);
   console.log("Item owner:", item?.owner);
   console.log("Current user ID:", currentUser?._id);
-  console.log("Is own item:", isOwn);
+  console.log("Is owner:", isOwner);
 
   if (!isOpen || !item) return null;
 
@@ -62,14 +62,22 @@ function ItemModal({ isOpen, onClose, item, onDelete }) {
             </p>
           </div>
 
-          {isOwn && (
-            <button
-              type="button"
-              className="modal__delete-button"
-              onClick={() => onDelete(item)}
-            >
-              Delete item
-            </button>
+          {isOwner && (
+            <div className="modal__actions">
+              <button
+                type="button"
+                className="modal__delete-button"
+                onClick={() => onDelete(item)}
+                style={{
+                  cursor: "pointer",
+                  border: "none",
+                  background: "transparent",
+                  color: "red",
+                }}
+              >
+                🗑️ Delete item
+              </button>
+            </div>
           )}
         </div>
       </div>

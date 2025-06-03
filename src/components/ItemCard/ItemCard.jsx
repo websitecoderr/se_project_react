@@ -63,20 +63,19 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
           >
             {isLiked ? "❤️" : "🤍"}
           </button>
+          {isOwner && (
+            <div className="cards__info">
+              <button
+                type="button"
+                className="modal__delete-button"
+                onClick={handleDeleteClick}
+              >
+                Delete item
+              </button>
+            </div>
+          )}
         </div>
       </div>
-
-      {isOwner && (
-        <div className="cards__info">
-          <button
-            type="button"
-            className="modal__delete-button"
-            onClick={handleDeleteClick}
-          >
-            Delete item
-          </button>
-        </div>
-      )}
     </div>
   );
 }

@@ -20,7 +20,7 @@ import {
 } from "../../utils/Api";
 import { getWeather } from "../../utils/weatherApi";
 import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
+import Footer from "../Footer/Footer.jsx";
 import Profile from "../Profile/Profile";
 import Main from "../Main/Main";
 import EditProfileModal from "../EditProfileModal/EditProfileModal";
@@ -83,26 +83,40 @@ function App() {
     };
     fetchItems();
   }, []);
-
   useEffect(() => {
-  const checkUserSession = async () => {
-    const token = getToken();
-    if (!token) return;
+    console.log("useEffect is running");
 
-    try {
-      const userData = await checkToken();
-      console.log("Current user data from API:", userData); // ← Move it here
-      setCurrentUser(userData);
-      setIsLoggedIn(true);
-    } catch (error) {
-      console.error("Error checking user session:", error);
-      removeToken();
-      setCurrentUser(null);
-      setIsLoggedIn(false);
-    }
-  };
-  checkUserSession();
-}, []);
+    const checkUserSession = async () => {
+      console.log("checkUserSession function is running");
+      const token = getToken();
+      console.log("Token from getToken():", token);
+
+      if (!token) {
+        console.log("No token found, returning early");
+        return;
+      }
+
+      console.log("About to call checkToken() with token:", token);
+
+      try {
+        const userData = await checkToken();
+        console.log("SUCCESS - Current user data from API:", userData);
+        setCurrentUser(userData);
+        setIsLoggedIn(true);
+        console.log("Setting currentUser to:", userData);
+      } catch (error) {
+        console.error("ERROR in checkUserSession:", error);
+        console.error("Error details:", error.message);
+        removeToken();
+        setCurrentUser(null);
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkUserSession();
+  }, []);
+
+
 
   const handleSignOut = () => {
     removeToken();
@@ -110,30 +124,6 @@ function App() {
     setIsLoggedIn(false);
     setActiveModal("");
     window.location.href = "/";
-  };
-
-  const handleSignUp = async (userData) => {
-    try {
-      const newUser = await registerUser(userData);
-      setToken(newUser.token);
-      setCurrentUser(newUser.user);
-      setIsLoggedIn(true);
-      setActiveModal("");
-    } catch (error) {
-      console.error("Error signing up:", error);
-      setErrorMessage("Signup failed. Please try again.");
-    }
-  };
-
-  const handleAddItem = async (itemData) => {
-    try {
-      const newItem = await addItemToApi(itemData);
-      setClothingItems((prevItems) => [newItem, ...prevItems]);
-      setActiveModal("");
-    } catch (error) {
-      console.error("Error adding item:", error);
-      setErrorMessage("Failed to add item. Please try again.");
-    }
   };
 
   const handleUpdateProfile = async (userData) => {
@@ -173,25 +163,25 @@ function App() {
   };
 
   const handleCardLike = async (card) => {
-  const isLiked = card.likes.some((id) => id === currentUser._id);
-  
-  try {
-    await likeItem(card._id, isLiked);
-    
-    const updatedCard = {
-      ...card,  
-      likes: isLiked 
-        ? card.likes.filter((id) => id !== currentUser._id)  
-        : [...card.likes, currentUser._id]  
-    };
-    
-    setClothingItems((prevItems) =>
-      prevItems.map((item) => (item._id === card._id ? updatedCard : item))
-    );
-  } catch (error) {
-    console.error("Error liking item:", error);
-  }
-};
+    const isLiked = card.likes.some((id) => id === currentUser._id);
+
+    try {
+      await likeItem(card._id, isLiked);
+
+      const updatedCard = {
+        ...card,
+        likes: isLiked
+          ? card.likes.filter((id) => id !== currentUser._id)
+          : [...card.likes, currentUser._id],
+      };
+
+      setClothingItems((prevItems) =>
+        prevItems.map((item) => (item._id === card._id ? updatedCard : item))
+      );
+    } catch (error) {
+      console.error("Error liking item:", error);
+    }
+  };
 
   const handleAddClick = () => {
     console.log("Add button clicked in App");
@@ -213,21 +203,67 @@ function App() {
     setActiveModal("preview");
   };
 
-  const handleSignIn = async (userData) => {
+  const handleSignUp = async (userData) => {
+    setIsLoading(true);
+
     try {
-      const loggedInUser = await signin(userData);
-      setToken(loggedInUser.token);
-      setCurrentUser(loggedInUser.user);
+      const newUser = await registerUser(userData);
+      setToken(newUser.token);
+      setCurrentUser(newUser.user);
       setIsLoggedIn(true);
       setActiveModal("");
-
-      return loggedInUser;
     } catch (error) {
-      console.error("Error logging in:", error);
-      setErrorMessage("Login failed. Please try again.");
-      return null;
+      console.error("Error signing up:", error);
+      setErrorMessage("Signup failed. Please try again.");
     }
+
+    setIsLoading(false);
   };
+
+  const handleAddItem = async (itemData) => {
+    setIsLoading(true);
+
+    try {
+      const newItem = await addItemToApi(itemData);
+      setClothingItems((prevItems) => [newItem, ...prevItems]);
+      setActiveModal("");
+    } catch (error) {
+      console.error("Error adding item:", error);
+      setErrorMessage("Failed to add item. Please try again.");
+    }
+
+    setIsLoading(false);
+  };
+const handleSignIn = async (userData) => {
+  setIsLoading(true);
+  
+  let loggedInUser = null; 
+
+  try {
+    loggedInUser = await signin(userData);
+    
+    console.log("🔍 What signin returned:", loggedInUser);
+    console.log("🔍 loggedInUser.token:", loggedInUser.token);
+    console.log("🔍 loggedInUser.user:", loggedInUser.user);
+    
+    setToken(loggedInUser.token);
+    setCurrentUser(loggedInUser.user);
+    setIsLoggedIn(true);
+    setErrorMessage("");
+
+    console.log("✅ SUCCESS - Login completed, user set:", loggedInUser.user);
+    
+  } catch (error) {
+    console.error("❌ Error logging in:", error);
+    setErrorMessage("Login failed. Please try again.");
+  } finally {
+    setIsLoading(false);
+    console.log("ℹ️ Final check - loggedInUser:", loggedInUser); 
+  }
+
+  return loggedInUser; 
+};
+
 
   return (
     <div className="app">
@@ -242,7 +278,7 @@ function App() {
               isLoggedIn={isLoggedIn}
               setActiveModal={setActiveModal}
               handleModalSwitch={handleModalSwitch}
-              currentUser={currentUser} 
+              currentUser={currentUser}
             />
 
             <Routes>

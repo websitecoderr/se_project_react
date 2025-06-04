@@ -10,7 +10,6 @@ import {
   likeItem,
   deleteItemFromApi,
   addItemToApi,
-  getToken,
   checkToken,
   removeToken,
   registerUser,
@@ -119,7 +118,7 @@ function App() {
   };
 
   checkUserSession();
-}, [setCurrentUser, setIsLoggedIn]); // Fix: Adding dependencies
+}, [setCurrentUser, setIsLoggedIn]); 
 
 
 

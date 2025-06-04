@@ -48,12 +48,13 @@ p.cards__name span:first-child {
   width: 18px;
   height: 20px;
   border-width: 2px;
-  border: 2px solid #00000099;
-
+  border: 2px solid #000000ff;
+  background-color: red;
 }
 
 .like-button.liked {
-  background: transparent;
+    background: transparent;
+
 }
 
 .cards__item {
@@ -91,4 +92,3 @@ p.cards__name span:first-child {
 .item-name {
   background-color: rgba(255, 255, 255, 0.8);
 }
-

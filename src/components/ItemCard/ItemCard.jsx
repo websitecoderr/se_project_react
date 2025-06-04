@@ -19,7 +19,7 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
   console.log("📌 Item data:", item);
 
   const isLiked = item.likes?.some((likeId) => currentUser?._id === likeId);
-  
+
   const isOwner = currentUser && currentUser._id === item.userId;
 
   console.log("🛠️ Debug Owner Check:", {
@@ -36,7 +36,7 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
 
     console.log(`🗑️ Attempting to delete item:`, item);
     if (isOwner) {
-      onCardDelete(item); 
+      onCardDelete(item);
     } else {
       console.warn("🚫 Delete button clicked, but user is not the owner!");
     }
@@ -58,14 +58,7 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
           <button
             className={`like-button ${isLiked ? "liked" : ""}`}
             onClick={() => onCardLike(item)}
-            style={{
-              cursor: "pointer",
-              border: "none",
-              background: "transparent",
-            }}
-          >
-            {isLiked ? "❤️" : "🤍"}
-          </button>
+          ></button>
 
           {isOwner && (
             <div className="cards__info">

@@ -11,14 +11,19 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
     if (!currentUser) {
       console.warn("No current user detected! Check authentication.");
     } else {
-      console.log(" Current user loaded:", currentUser);
+      console.log("✅ Current user loaded:", currentUser);
     }
   }, [currentUser]);
 
   console.log("🔍 Current user in ItemCard:", currentUser);
   console.log("📌 Item data:", item);
 
-  const isLiked = item.likes?.some((likeId) => currentUser?._id === likeId);
+  console.log("🔍 Item likes array:", item.likes);
+
+  const isLiked = currentUser?._id &&
+    item.likes?.filter(Boolean).some((likeId) => likeId === currentUser._id);
+
+  console.log("🔍 Is liked result:", isLiked);
 
   const isOwner = currentUser && currentUser._id === item.userId;
 
@@ -34,12 +39,18 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
       return;
     }
 
-    console.log(`🗑️ Attempting to delete item:`, item);
+    console.log("🗑️ Attempting to delete item:", item);
     if (isOwner) {
       onCardDelete(item);
     } else {
       console.warn("🚫 Delete button clicked, but user is not the owner!");
     }
+  };
+
+  const handleLikeClick = () => {
+    console.log("🔥 Like button clicked!");
+    console.log("🔥 About to call onCardLike with:", item);
+    onCardLike(item);
   };
 
   return (
@@ -57,7 +68,7 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
 
           <button
             className={`like-button ${isLiked ? "liked" : ""}`}
-            onClick={() => onCardLike(item)}
+            onClick={handleLikeClick}
           ></button>
 
           {isOwner && (

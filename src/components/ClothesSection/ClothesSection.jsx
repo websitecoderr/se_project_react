@@ -6,6 +6,7 @@ function ClothesSection({
   onCardDelete,
   filteredClothingItems,
   handleAddClick,
+  onCardLike, 
 }) {
   return (
     <div className="clothes-section">
@@ -27,6 +28,7 @@ function ClothesSection({
               item={card}
               onCardClick={onCardClick} 
               onCardDelete={onCardDelete}
+              onCardLike={onCardLike} 
             />
           ))
         ) : (

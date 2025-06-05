@@ -11,8 +11,8 @@ const Profile = ({
   handleAddClick,
   handleSignOut,
   setActiveModal,
-  onCardClick  
-
+  onCardClick,
+  onCardLike 
 }) => {  
   
   const filteredClothingItems = useMemo(() => {
@@ -33,7 +33,7 @@ const Profile = ({
         filteredClothingItems={filteredClothingItems}
         handleAddClick={handleAddClick}
         onCardClick={onCardClick}
-
+        onCardLike={onCardLike} 
       />
     </div>
   );

@@ -68,8 +68,7 @@
 }
 
 
-.modal__switch-link strong {
-  color: #000; 
+.modal__switch-link {
   text-decoration: none;
   margin-left: 4px;
 }

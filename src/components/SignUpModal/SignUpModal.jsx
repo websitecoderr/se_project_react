@@ -18,7 +18,6 @@ const SignUpModal = ({
 
   const [error, setError] = useState("");
 
-  // Function to update form values dynamically
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -26,20 +25,17 @@ const SignUpModal = ({
     });
   };
 
-  // Check if all fields are filled to enable the submit button
   const isButtonDisabled = () => {
     return !formData.email || !formData.password || !formData.name || !formData.avatar;
   };
 
-  // Switch between login and signup modals
   const handleSwitch = () => {
     setIsSignUpModalOpen(false);
     setIsLoginModalOpen(true);
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default behavior
+    e.preventDefault(); 
 
     if (isButtonDisabled()) {
       setError("All fields are required.");

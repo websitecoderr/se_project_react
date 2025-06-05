@@ -42,19 +42,19 @@ p.cards__name span:first-child {
 }
 
 .like-button {
-  background: transparent;
   padding: 0;
   margin-left: 8px;
   width: 18px;
-  height: 20px;
+  height: 15px;
   border-width: 2px;
-  border: 2px solid #000000ff;
-  background-color: red;
+  background-image: url("../../assets/like.svg");
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 .like-button.liked {
-    background: transparent;
-
+  background-image: url("../../assets/likebutton.svg");
 }
 
 .cards__item {

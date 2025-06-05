@@ -7,8 +7,8 @@ import { useMemo } from "react";
 function Main({
   weatherData = {},
   onCardClick,
-  onCardLike,   // ✅ Passed down like function
-  onCardDelete, // ✅ Passed down delete function
+  onCardLike,   
+  onCardDelete, 
   isLoading,
   clothingItems = [],
   setClothingItems,
@@ -39,8 +39,8 @@ function Main({
                 <ItemCard
                   item={item}
                   onCardClick={onCardClick}
-                  onCardLike={onCardLike}   // ✅ Now passing the like function
-                  onCardDelete={onCardDelete} // ✅ Now passing the delete function
+                  onCardLike={onCardLike}   
+                  onCardDelete={onCardDelete} 
                   setClothingItems={setClothingItems}
                 />
               </li>

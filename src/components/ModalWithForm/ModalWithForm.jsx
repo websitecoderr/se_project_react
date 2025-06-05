@@ -76,7 +76,7 @@ function ModalWithForm({
                   className="modal__switch-link"
                   onClick={onSwitch}
                 >
-                  <strong>{switchText}</strong>
+                  {switchText}
                 </button>
               </div>
             )}

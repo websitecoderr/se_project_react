@@ -83,44 +83,42 @@ function App() {
     fetchItems();
   }, []);
 
-   useEffect(() => {
-  console.log("useEffect is running");
+  useEffect(() => {
+    console.log("useEffect is running");
 
-  const checkUserSession = async () => {
-    console.log("checkUserSession function is running");
+    const checkUserSession = async () => {
+      console.log("checkUserSession function is running");
 
-    const token = localStorage.getItem("jwt");
-    console.log("Token from localStorage:", token);
+      const token = localStorage.getItem("jwt");
+      console.log("Token from localStorage:", token);
 
-    if (!token) {
-      console.log("🚫 No token found, returning early");
-      return;
-    }
+      if (!token) {
+        console.log("🚫 No token found, returning early");
+        return;
+      }
 
-    console.log("🔍 About to call checkToken() with token:", token);
+      console.log("🔍 About to call checkToken() with token:", token);
 
-    try {
-      const userData = await checkToken(token);
-      console.log("✅ SUCCESS - Current user data from API:", userData);
+      try {
+        const userData = await checkToken(token);
+        console.log("✅ SUCCESS - Current user data from API:", userData);
 
-      setCurrentUser(userData);
-      setIsLoggedIn(true);
+        setCurrentUser(userData);
+        setIsLoggedIn(true);
 
-      console.log("🔄 Updated currentUser state:", userData);
-    } catch (error) {
-      console.error("❌ ERROR in checkUserSession:", error);
-      console.error("Error details:", error.message);
+        console.log("🔄 Updated currentUser state:", userData);
+      } catch (error) {
+        console.error("❌ ERROR in checkUserSession:", error);
+        console.error("Error details:", error.message);
 
-      removeToken();
-      setCurrentUser(null);
-      setIsLoggedIn(false);
-    }
-  };
+        removeToken();
+        setCurrentUser(null);
+        setIsLoggedIn(false);
+      }
+    };
 
-  checkUserSession();
-}, [setCurrentUser, setIsLoggedIn]); 
-
-
+    checkUserSession();
+  }, [setCurrentUser, setIsLoggedIn]);
 
   const handleSignOut = () => {
     removeToken();
@@ -167,6 +165,9 @@ function App() {
   };
 
   const handleCardLike = async (card) => {
+    console.log("🔍 handleCardLike called with:", card);
+    console.log("🔍 Current user in handleCardLike:", currentUser);
+    console.log("🔍 Card likes array:", card.likes);
     const isLiked = card.likes.some((id) => id === currentUser._id);
 
     try {
@@ -238,7 +239,7 @@ function App() {
 
     setIsLoading(false);
   };
- const handleSignIn = async (userData) => {
+  const handleSignIn = async (userData) => {
     setIsLoading(true);
     let loggedInUser = null;
 
@@ -265,7 +266,6 @@ function App() {
 
     return loggedInUser;
   };
-
 
   return (
     <div className="app">
@@ -324,6 +324,8 @@ function App() {
               onClose={() => setActiveModal("")}
               onSubmit={handleSignUp}
               onSwitch={handleModalSwitch}
+              setIsLoginModalOpen={() => setActiveModal("login")} 
+              setIsSignUpModalOpen={() => setActiveModal("signup")}
             />
             <LoginModal
               isOpen={activeModal === "login"}

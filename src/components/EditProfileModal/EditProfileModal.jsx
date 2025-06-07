@@ -9,6 +9,13 @@ const EditProfileModal = ({ isOpen, onClose, onSubmit, currentUser }) => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
+    if (currentUser) {
+      setName(currentUser.name || "");
+      setAvatar(currentUser.avatar || "");
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
     setIsFormValid(name.trim() !== "" && avatar.trim() !== "");
   }, [name, avatar]);
 
@@ -20,7 +27,7 @@ const EditProfileModal = ({ isOpen, onClose, onSubmit, currentUser }) => {
 
     try {
       await onSubmit({ name: name.trim(), avatar: avatar.trim() });
-      onClose(); 
+      onClose();
     } catch (error) {
       console.error("Error updating profile:", error);
       setError("Failed to update profile. Please try again.");
@@ -28,7 +35,7 @@ const EditProfileModal = ({ isOpen, onClose, onSubmit, currentUser }) => {
   };
 
   return (
-    <ModalWithForm 
+    <ModalWithForm
       title="Edit Profile"
       isOpen={isOpen}
       onClose={onClose}

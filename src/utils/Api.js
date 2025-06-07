@@ -34,24 +34,6 @@ export const getToken = () => {
 export const setToken = (token) => localStorage.setItem("jwt", token);
 export const removeToken = () => localStorage.removeItem("jwt");
 
-export const checkToken = async () => {
-  const token = getToken();
-  if (!token) return { success: false, message: "No token found" };
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return checkResponse(response);
-  } catch (error) {
-    console.error("Token validation failed:", error.message);
-    return Promise.reject(error);
-  }
-};
 
 export const fetchItemsFromApi = async () => {
   try {

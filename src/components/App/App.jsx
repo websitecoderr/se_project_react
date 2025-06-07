@@ -10,7 +10,6 @@ import {
   likeItem,
   deleteItemFromApi,
   addItemToApi,
-  checkToken,
   removeToken,
   registerUser,
   setToken,
@@ -29,6 +28,7 @@ import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmati
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import SignUpModal from "../SignUpModal/SignUpModal";
 import LoginModal from "../LoginModal/LoginModal";
+import { checkToken } from "../../utils/auth.js";
 
 function App() {
   const [activeModal, setActiveModal] = useState("");
@@ -168,6 +168,13 @@ function App() {
     console.log("🔍 handleCardLike called with:", card);
     console.log("🔍 Current user in handleCardLike:", currentUser);
     console.log("🔍 Card likes array:", card.likes);
+
+    if (!currentUser || !currentUser._id) {
+      setErrorMessage("User is not logged in.");
+      setActiveModal("error");
+      return;
+    }
+
     const isLiked = card.likes.some((id) => id === currentUser._id);
 
     try {
@@ -324,7 +331,7 @@ function App() {
               onClose={() => setActiveModal("")}
               onSubmit={handleSignUp}
               onSwitch={handleModalSwitch}
-              setIsLoginModalOpen={() => setActiveModal("login")} 
+              setIsLoginModalOpen={() => setActiveModal("login")}
               setIsSignUpModalOpen={() => setActiveModal("signup")}
             />
             <LoginModal

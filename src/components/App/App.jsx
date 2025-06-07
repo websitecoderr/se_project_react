@@ -265,7 +265,7 @@ function App() {
       console.log("SUCCESS - Login completed, user set:", loggedInUser.user);
     } catch (error) {
       console.error("Error logging in:", error);
-      setErrorMessage("Login failed. Please try again.");
+      setErrorMessage(error.response?.data?.error || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
       console.log("ℹ️ Final check - loggedInUser:", loggedInUser);
@@ -273,6 +273,8 @@ function App() {
 
     return loggedInUser;
   };
+
+  
 
   return (
     <div className="app">

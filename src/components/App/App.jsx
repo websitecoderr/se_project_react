@@ -279,7 +279,7 @@ function App() {
   return (
     <div className="app">
       <BrowserRouter>
-        <CurrentUserProvider value={{ currentUser, setCurrentUser }}>
+          <CurrentUserProvider currentUser={currentUser} setCurrentUser={setCurrentUser}>
           <CurrentTemperatureUnitProvider>
             <Header
               handleAddClick={handleAddClick}

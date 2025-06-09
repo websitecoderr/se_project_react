@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
+import { useCurrentUser } from "../../Context/CurrentUserContext"; // Fix context path
 import "./EditProfileModal.css";
 
-const EditProfileModal = ({ isOpen, onClose, onSubmit, currentUser }) => {
+const EditProfileModal = ({ isOpen, onClose, onSubmit }) => {
+  const { currentUser, setCurrentUser } = useCurrentUser(); // Get user from Context
   const [name, setName] = useState(currentUser?.name || "");
   const [avatar, setAvatar] = useState(currentUser?.avatar || "");
   const [error, setError] = useState("");
@@ -26,7 +28,9 @@ const EditProfileModal = ({ isOpen, onClose, onSubmit, currentUser }) => {
     if (!isFormValid) return;
 
     try {
-      await onSubmit({ name: name.trim(), avatar: avatar.trim() });
+      const updatedUser = { name: name.trim(), avatar: avatar.trim() };
+      await onSubmit(updatedUser);
+      setCurrentUser(updatedUser); // Update user in Context
       onClose();
     } catch (error) {
       console.error("Error updating profile:", error);

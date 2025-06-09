@@ -20,16 +20,17 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
 
   console.log("🔍 Item likes array:", item.likes);
 
-  const isLiked = currentUser?._id &&
+  const isLiked =
+    currentUser?._id &&
     item.likes?.filter(Boolean).some((likeId) => likeId === currentUser._id);
 
   console.log("🔍 Is liked result:", isLiked);
 
-  const isOwner = currentUser && currentUser._id === item.userId;
+  const isOwner = currentUser && currentUser._id === item.owner;
 
   console.log("🛠️ Debug Owner Check:", {
     currentUserId: currentUser?._id || "No user logged in",
-    itemOwnerId: item.userId,
+    itemOwnerId: item.owner,
     isOwner: isOwner,
   });
 
@@ -71,17 +72,7 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
             onClick={handleLikeClick}
           ></button>
 
-          {isOwner && (
-            <div className="cards__info">
-              <button
-                type="button"
-                className="modal__delete-button"
-                onClick={handleDeleteClick}
-              >
-                Delete item
-              </button>
-            </div>
-          )}
+          {isOwner && <div className="cards__info"></div>}
         </div>
       </div>
     </div>

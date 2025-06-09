@@ -7,6 +7,8 @@ import ChangeProfileModal from "../ChangeProfileModal/ChangeProfileModal";
 const SideBar = ({ handleSignOut }) => { 
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
+  console.log("Context values:", { currentUser, setCurrentUser });
+
   const [changeProfile, setChangeProfile] = useState(false);
   const [avatar, setAvatar] = useState(currentUser?.avatar || avatarDefault);
   const [name, setName] = useState(currentUser?.name || "User");
@@ -35,7 +37,9 @@ const SideBar = ({ handleSignOut }) => {
       }
 
       const updatedData = await response.json();
+      
       setCurrentUser(updatedData);
+
       setChangeProfile(false);
       setErrorMessage("");
       alert("Profile updated successfully!");
@@ -45,13 +49,12 @@ const SideBar = ({ handleSignOut }) => {
     }
   };
 
-useEffect(() => {
-  if (currentUser) {
-    console.log("Current user avatar:", currentUser.avatar); 
-    setAvatar(currentUser.avatar || avatarDefault);
-    setName(currentUser.name || "User");
-  }
-}, [currentUser]);
+  useEffect(() => {
+    if (currentUser) {
+      setAvatar(currentUser.avatar || avatarDefault);
+      setName(currentUser.name || "User");
+    }
+  }, [currentUser]);
 
   return (
     <div className="sidebar">

@@ -52,8 +52,7 @@
   height: 25;
   top: 8px;
   left: 1151px;
-  color:  rgba(0, 0, 0, 1);
-
+  color: rgba(0, 0, 0, 1);
 }
 
 .header__avatar-placeholder {
@@ -87,6 +86,11 @@
 }
 
 .header__button {
+  font-family: "Cabinet Grotesk", "Arial", "Helvetica", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0%;
   background: transparent;
   border: none;
   border-radius: 3px;

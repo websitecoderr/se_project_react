@@ -17,16 +17,19 @@
 
 .sidebar__username {
   font-family: Cabinet Grotesk;
-font-weight: 700;
-font-size: 20px;
-line-height: 100%;
-letter-spacing: 0%;
-border: rgba(0, 0, 0, 0.5)
-
- 
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  border: rgba(0, 0, 0, 0.5);
 }
 
 .change {
+  font-family: "Cabinet Grotesk", "Arial", "Helvetica", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
   width: 100%;
   text-align: start;
   margin: 5px 0px;
@@ -38,7 +41,15 @@ border: rgba(0, 0, 0, 0.5)
 }
 
 .sign-out {
-  padding: 0px;
-  text-align: start;
-  margin: 5px 0px;
+  font-family: "Cabinet Grotesk", "Arial", "Helvetica", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  width: 130px;
+  height: 25px;
+  top: 200px;
+  left: 18px;
+  color: rgba(0, 0, 0, 1);
+  position: absolute;
 }

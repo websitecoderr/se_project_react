@@ -79,7 +79,7 @@ const SideBar = ({ handleSignOut }) => {
         type="button"
         className="header__button sign-out"
       >
-        Sign Out
+        Log Out
       </button>
 
       <ChangeProfileModal

@@ -63,8 +63,8 @@
   text-align: center;
   border-radius: 4px;
   transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  left: -230px;
-  top: 30px;
+  left: -25px;
+  top: -8px;
 }
 
 .sign-out:hover {

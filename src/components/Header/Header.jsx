@@ -3,9 +3,15 @@ import { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
-import Avatar from "../Avatar/Avatar"; 
+import Avatar from "../Avatar/Avatar";
 
-function Header({ handleAddClick, setActiveModal, city, isLoggedIn, currentUser }) {
+function Header({
+  handleAddClick,
+  setActiveModal,
+  city,
+  isLoggedIn,
+  currentUser,
+}) {
   console.log("Header - isLoggedIn:", isLoggedIn);
   console.log("Header - currentUser:", currentUser);
 
@@ -50,7 +56,10 @@ function Header({ handleAddClick, setActiveModal, city, isLoggedIn, currentUser 
               <span className="header__username">
                 {currentUser.name || "Terrence Tegegne"}
               </span>
-              <Avatar avatarUrl={currentUser?.avatar} name={currentUser?.name} /> 
+              <Avatar
+                avatarUrl={currentUser?.avatar}
+                name={currentUser?.name}
+              />
             </Link>
           </div>
         </div>

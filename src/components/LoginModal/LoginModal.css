@@ -18,7 +18,7 @@
   padding: 0 0 8px;
   font-size: 16px;
   line-height: 20px;
-  width: 100%; 
+  width: 100%;
 }
 
 .modal__input:focus {
@@ -60,13 +60,9 @@
   flex-direction: row;
 }
 
-
-
-
 .modal__switch-link:hover {
   opacity: 0.6;
 }
-
 
 .modal__switch-link {
   text-decoration: none;
@@ -76,4 +72,3 @@
 .modal__switch-link:hover strong {
   opacity: 0.6;
 }
-

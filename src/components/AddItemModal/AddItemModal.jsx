@@ -31,7 +31,7 @@ const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
     });
     onSubmit({ name, weather, imageUrl });
     onClose();
-  }; 
+  };
 
   return (
     <ModalWithForm
@@ -92,7 +92,6 @@ const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
           <img src={imageUrl} alt="Preview" className="modal__preview-image" />
         </div>
       )}
-      
     </ModalWithForm>
   );
 };

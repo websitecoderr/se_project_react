@@ -1,7 +1,7 @@
 .modal__radio-group {
   display: flex;
-  flex-direction: column; 
-  gap: 8px;  
+  flex-direction: column;
+  gap: 8px;
   margin-top: 8px;
 }
 
@@ -37,29 +37,29 @@
 }
 
 .avatar-preview {
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .avatar-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.modal__button{
-    background-color: #000;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.modal__button {
+  background-color: #000;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .modal__button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }

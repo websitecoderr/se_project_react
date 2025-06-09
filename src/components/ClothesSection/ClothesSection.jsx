@@ -2,11 +2,11 @@ import ItemCard from "../ItemCard/ItemCard";
 import "./ClothesSection.css";
 
 function ClothesSection({
-  onCardClick, 
+  onCardClick,
   onCardDelete,
   filteredClothingItems,
   handleAddClick,
-  onCardLike, 
+  onCardLike,
 }) {
   return (
     <div className="clothes-section">
@@ -15,7 +15,7 @@ function ClothesSection({
         <button
           onClick={handleAddClick}
           type="button"
-          className="header__add-clothes-btn"
+          className="clothes-section__add-button "
         >
           + Add New
         </button>
@@ -26,9 +26,9 @@ function ClothesSection({
             <ItemCard
               key={card._id}
               item={card}
-              onCardClick={onCardClick} 
+              onCardClick={onCardClick}
               onCardDelete={onCardDelete}
-              onCardLike={onCardLike} 
+              onCardLike={onCardLike}
             />
           ))
         ) : (

@@ -5,11 +5,11 @@ const CurrentTemperatureUnitContext = createContext();
 export { CurrentTemperatureUnitContext };
 
 export const CurrentTemperatureUnitProvider = ({ children }) => {
-    const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
-  
-    const handleToggleSwitchChange = () => {
-      setCurrentTemperatureUnit(currentTemperatureUnit === "F" ? "C" : "F");
-    };
+  const [currentTemperatureUnit, setCurrentTemperatureUnit] = useState("F");
+
+  const handleToggleSwitchChange = () => {
+    setCurrentTemperatureUnit(currentTemperatureUnit === "F" ? "C" : "F");
+  };
 
   return (
     <CurrentTemperatureUnitContext.Provider
@@ -29,4 +29,3 @@ export const useCurrentTemperatureUnit = () => {
   }
   return context;
 };
-

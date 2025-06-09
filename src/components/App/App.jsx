@@ -100,17 +100,15 @@ function App() {
       console.log("🔍 About to call checkToken() with token:", token);
 
       try {
-        const userData = await checkToken(token);
-        console.log("✅ SUCCESS - Current user data from API:", userData);
+        const response = await checkToken(token);
+        console.log("✅ SUCCESS - API Response:", response);
 
-        setCurrentUser(userData);
+        setCurrentUser(response);
         setIsLoggedIn(true);
 
-        console.log("🔄 Updated currentUser state:", userData);
+        console.log("🔄 Updated currentUser state:", response);
       } catch (error) {
-        console.error("❌ ERROR in checkUserSession:", error);
-        console.error("Error details:", error.message);
-
+        console.error("❌ ERROR - Failed to verify token:", error);
         removeToken();
         setCurrentUser(null);
         setIsLoggedIn(false);
@@ -265,7 +263,9 @@ function App() {
       console.log("SUCCESS - Login completed, user set:", loggedInUser.user);
     } catch (error) {
       console.error("Error logging in:", error);
-      setErrorMessage(error.response?.data?.error || "Login failed. Please try again.");
+      setErrorMessage(
+        error.response?.data?.error || "Login failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
       console.log("ℹ️ Final check - loggedInUser:", loggedInUser);
@@ -274,12 +274,13 @@ function App() {
     return loggedInUser;
   };
 
-  
-
   return (
     <div className="app">
       <BrowserRouter>
-          <CurrentUserProvider currentUser={currentUser} setCurrentUser={setCurrentUser}>
+        <CurrentUserProvider
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+        >
           <CurrentTemperatureUnitProvider>
             <Header
               handleAddClick={handleAddClick}

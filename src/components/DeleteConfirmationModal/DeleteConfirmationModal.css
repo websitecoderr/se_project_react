@@ -26,9 +26,9 @@
   width: 100%;
 }
 
-.modal__confirmation-buttons_rows{
-    text-align: center;
-    margin: 0 0 10px;
+.modal__confirmation-buttons_rows {
+  text-align: center;
+  margin: 0 0 10px;
 }
 
 .modal__confirmation-button {
@@ -47,16 +47,16 @@
 }
 
 .modal__confirmation-button_type_cancel:hover {
-    background-color: #f7f2f2;
-  }
+  background-color: #f7f2f2;
+}
 
 .modal__confirmation-button_type_confirm {
   background-color: white;
-  color: #FF4D00;
+  color: #ff4d00;
 }
 
-.modal__confirmation-button_type_confirm:hover{
-    background-color: #f7f2f2;
+.modal__confirmation-button_type_confirm:hover {
+  background-color: #f7f2f2;
 }
 
 .modal__confirmation-button:hover {

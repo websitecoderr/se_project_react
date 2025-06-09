@@ -1,5 +1,5 @@
 footer {
-  background-color: #F3F3F3;
+  background-color: #f3f3f3;
   color: #333;
   text-align: center;
   padding: 10px 0;
@@ -15,12 +15,9 @@ footer .page__content {
   font-family: "Cabinet Grotesk", sans-serif;
   font-weight: 700;
   justify-content: space-between;
-  padding: 0 5px; 
-
+  padding: 0 5px;
 }
-
 
 footer p {
   margin: 5px 0;
 }
-

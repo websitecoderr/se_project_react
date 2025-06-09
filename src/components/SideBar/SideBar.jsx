@@ -4,7 +4,7 @@ import avatarDefault from "../../assets/avatar.svg";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ChangeProfileModal from "../ChangeProfileModal/ChangeProfileModal";
 
-const SideBar = ({ handleSignOut }) => { 
+const SideBar = ({ handleSignOut }) => {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   console.log("Context values:", { currentUser, setCurrentUser });
@@ -16,7 +16,8 @@ const SideBar = ({ handleSignOut }) => {
 
   const updateUser = async (userData) => {
     try {
-      if (!userData.name || !userData.avatar) throw new Error("Invalid user data");
+      if (!userData.name || !userData.avatar)
+        throw new Error("Invalid user data");
 
       const requestBody = {
         name: userData.name,
@@ -37,7 +38,7 @@ const SideBar = ({ handleSignOut }) => {
       }
 
       const updatedData = await response.json();
-      
+
       setCurrentUser(updatedData);
 
       setChangeProfile(false);
@@ -59,11 +60,7 @@ const SideBar = ({ handleSignOut }) => {
   return (
     <div className="sidebar">
       <div className="sidebar__user">
-        <img
-          src={avatar}
-          alt="User avatar"
-          className="sidebar__avatar"
-        />
+        <img src={avatar} alt="User avatar" className="sidebar__avatar" />
         <p className="sidebar__username">{name}</p>
       </div>
 
@@ -76,9 +73,9 @@ const SideBar = ({ handleSignOut }) => {
       >
         Change profile data
       </button>
-      
+
       <button
-        onClick={handleSignOut}  
+        onClick={handleSignOut}
         type="button"
         className="header__button sign-out"
       >

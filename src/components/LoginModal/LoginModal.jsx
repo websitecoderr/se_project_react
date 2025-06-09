@@ -48,7 +48,7 @@ const LoginModal = ({
       console.log("About to update current user:", userData);
 
       if (userData) {
-        setCurrentUser(userData);
+        setCurrentUser(userData.user);
         setIsLoggedIn(true);
         onClose();
         navigate("/profile");
@@ -71,11 +71,11 @@ const LoginModal = ({
       title="Log In"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit} 
+      onSubmit={handleSubmit}
       onSwitch={handleSwitch}
       switchText="Sign Up"
       buttonText="Log In"
-      buttonDisabled={isButtonDisabled()} 
+      buttonDisabled={isButtonDisabled()}
     >
       {errorMessage && <div className="modal__error-text">{errorMessage}</div>}
 

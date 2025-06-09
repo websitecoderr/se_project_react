@@ -51,8 +51,8 @@ const ChangeProfileModal = ({
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText="Save Changes" 
-      buttonDisabled={!isFormValid} 
+      buttonText="Save Changes"
+      buttonDisabled={!isFormValid}
     >
       {error && <p className="modal__error">{error}</p>}
 

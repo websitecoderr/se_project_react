@@ -26,7 +26,12 @@ const SignUpModal = ({
   };
 
   const isButtonDisabled = () => {
-    return !formData.email || !formData.password || !formData.name || !formData.avatar;
+    return (
+      !formData.email ||
+      !formData.password ||
+      !formData.name ||
+      !formData.avatar
+    );
   };
 
   const handleSwitch = () => {
@@ -35,7 +40,7 @@ const SignUpModal = ({
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     if (isButtonDisabled()) {
       setError("All fields are required.");
@@ -55,11 +60,11 @@ const SignUpModal = ({
       title="Sign Up"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit} 
+      onSubmit={handleSubmit}
       onSwitch={handleSwitch}
       switchText="Log In"
       buttonText="Sign Up"
-      buttonDisabled={isButtonDisabled()} 
+      buttonDisabled={isButtonDisabled()}
     >
       {error && <p className="modal__error">{error}</p>}
 

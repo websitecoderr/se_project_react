@@ -16,12 +16,13 @@
 }
 
 .sidebar__username {
-  font-family: Cabinet Grotesk;
+  font-family: "Cabinet Grotesk";
   font-weight: 700;
   font-size: 20px;
   line-height: 100%;
   letter-spacing: 0%;
   border: rgba(0, 0, 0, 0.5);
+  margin-top: 15px;
 }
 
 .change {
@@ -29,15 +30,22 @@
   font-weight: 700;
   font-size: 20px;
   line-height: 100%;
-  letter-spacing: 0%;
-  width: 100%;
-  text-align: start;
+  text-align: left;
   margin: 5px 0px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: inline-block;
+  width: auto;
+  padding: 5px 10px;
+  border-radius: 4px;
   position: relative;
-  margin-left: -15px;
+  left: -10px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  white-space: pre-line;
+}
+
+.change:hover {
+  background: black;
+  color: white;
+  transform: scale(1.05);
 }
 
 .sign-out {
@@ -45,11 +53,22 @@
   font-weight: 700;
   font-size: 20px;
   line-height: 100%;
-  letter-spacing: 0%;
   width: 130px;
-  height: 25px;
-  top: 200px;
-  left: 18px;
+  height: 40px;
   color: rgba(0, 0, 0, 1);
-  position: absolute;
+  padding: 8px 15px;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  left: -230px;
+  top: 30px;
+}
+
+.sign-out:hover {
+  background: black;
+  color: white;
+  transform: scale(1.05);
 }

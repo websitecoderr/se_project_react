@@ -27,21 +27,20 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
           </p>
           <div className="modal__confirmation-buttons">
             <div className="modal__confirmation-buttons_rows">
-                <button 
-                className="modal__confirmation-button modal__confirmation-button_type_confirm" 
+              <button
+                className="modal__confirmation-button modal__confirmation-button_type_confirm"
                 onClick={onConfirm}
-                >
+              >
                 Yes, delete item
-                </button>
+              </button>
             </div>
             <div className="modal__confirmation-buttons_rows">
-                <button 
-                className="modal__confirmation-button modal__confirmation-button_type_cancel" 
+              <button
+                className="modal__confirmation-button modal__confirmation-button_type_cancel"
                 onClick={onClose}
-                >
+              >
                 Cancel
-                </button>
-
+              </button>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 .modal__button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .modal__input-error {
@@ -20,10 +20,10 @@
 }
 
 .modal__label {
-  margin-bottom: 24px;  
+  margin-bottom: 24px;
   display: block;
 }
 
 .avatar-preview {
-  margin-bottom: 24px;  
+  margin-bottom: 24px;
 }

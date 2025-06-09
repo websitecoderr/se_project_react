@@ -6,7 +6,9 @@ export const checkResponse = async (response) => {
   if (response.ok) return data;
 
   throw new Error(
-    `Error: ${response.status} ${response.statusText} | URL: ${response.url} | Details: ${JSON.stringify(data)}`
+    `Error: ${response.status} ${response.statusText} | URL: ${
+      response.url
+    } | Details: ${JSON.stringify(data)}`
   );
 };
 
@@ -34,7 +36,6 @@ export const getToken = () => {
 export const setToken = (token) => localStorage.setItem("jwt", token);
 export const removeToken = () => localStorage.removeItem("jwt");
 
-
 export const fetchItemsFromApi = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/items`);
@@ -45,22 +46,22 @@ export const fetchItemsFromApi = async () => {
   }
 };
 
-export const addItemToApi = async ({name, weather, imageUrl}) => {
-  const token = getToken()
+export const addItemToApi = async ({ name, weather, imageUrl }) => {
+  const token = getToken();
   if (!token) return Promise.reject("Unauthorized: No token provided.");
 
   try {
     const response = await fetch(`${API_BASE_URL}/items`, {
       method: "POST",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name,
         weather,
-        imageUrl
-      })
+        imageUrl,
+      }),
     });
 
     return checkResponse(response);
@@ -70,11 +71,10 @@ export const addItemToApi = async ({name, weather, imageUrl}) => {
   }
 };
 
-
-
 export const deleteItemFromApi = async (id) => {
   const token = getToken();
-  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+  if (!token)
+    return { success: false, message: "Unauthorized: No token provided." };
 
   try {
     const response = await fetch(`${API_BASE_URL}/items/${id}`, {
@@ -93,7 +93,8 @@ export const deleteItemFromApi = async (id) => {
 
 export const likeItem = async (id, isLiked) => {
   const token = getToken();
-  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+  if (!token)
+    return { success: false, message: "Unauthorized: No token provided." };
 
   try {
     const method = isLiked ? "DELETE" : "PUT";
@@ -113,7 +114,8 @@ export const likeItem = async (id, isLiked) => {
 
 export const updateItemWeather = async (itemId, weatherType) => {
   const token = getToken();
-  if (!token) return { success: false, message: "Unauthorized: No token provided." };
+  if (!token)
+    return { success: false, message: "Unauthorized: No token provided." };
 
   try {
     const response = await fetch(`${API_BASE_URL}/items/${itemId}/weather`, {
@@ -146,7 +148,10 @@ export const signin = async ({ email, password }) => {
     return { success: true, ...data };
   } catch (error) {
     console.error("❌ Login request failed:", error.message);
-    return { success: false, message: error.message || "Unexpected error occurred." };
+    return {
+      success: false,
+      message: error.message || "Unexpected error occurred.",
+    };
   }
 };
 
@@ -166,7 +171,10 @@ export const registerUser = async ({ name, email, password, avatar }) => {
     return { success: true, ...data };
   } catch (error) {
     console.error("❌ Registration error:", error.message);
-    return { success: false, message: error.message || "Unexpected error occurred." };
+    return {
+      success: false,
+      message: error.message || "Unexpected error occurred.",
+    };
   }
 };
 

@@ -15,7 +15,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
       return;
     }
     const formData = new FormData();
-    formData.append('image', avatar);
+    formData.append("image", avatar);
 
     try {
       const response = await fetch("http://localhost:3001/register", {
@@ -32,7 +32,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
 
       setErrorMessage("");
       alert("Registration successful!");
-      
+
       onClose();
     } catch (error) {
       setErrorMessage(error.message);

@@ -34,11 +34,11 @@ function Avatar({ avatarUrl, name = "" }) {
   const normalizedUrl = normalizeAvatarUrl(avatarUrl);
   console.log("2. After normalization:", normalizedUrl);
   console.log("Avatar Debug:", {
-    receivedUrl: avatarUrl,
-    normalizedUrl,
+   receivedUrl: avatarUrl,
+   normalizedUrl,
     urlType: typeof avatarUrl,
-    name: name,
-  });
+   name: name,
+   });
 
   const getInitials = (userName) => {
     if (!userName?.trim()) return "👤";

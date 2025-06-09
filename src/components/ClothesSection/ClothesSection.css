@@ -18,19 +18,29 @@
 }
 
 .clothes-section__add-button {
-  background-color: transparent;
-  border: none;
+  font-family: "Cabinet Grotesk", "Arial", "Helvetica", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 100%;
+  display: inline-block;
+  width: auto;
+  padding: 10px 20px;
+  margin: 0;
+  background: none;
+  border: 0;
   color: #000;
-  font-size: 16px;
-  line-height: 1.2;
   cursor: pointer;
-  padding: 0;
-  margin-left: 20px;
+  white-space: nowrap;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  margin-top: -8px;
+  position: relative;
+  left: 5px;
 }
 
 .clothes-section__add-button:hover {
-  opacity: 0.6;
-  background-color: white;
+  background: black;
+  color: white;
 }
 
 .clothes-section__cards {
@@ -41,5 +51,4 @@
   padding: 0;
   margin: 0;
   flex-wrap: wrap;
-  
 }

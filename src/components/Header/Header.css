@@ -18,15 +18,24 @@
 }
 
 .header__add-clothes-btn {
+  display: inline-block;
+  width: auto;
+  padding: 10px 20px;
   margin: 0;
   background: none;
   border: 0;
   font-weight: 700;
   color: #000;
   cursor: pointer;
-  padding: 8px 16px;
-  width: 116px;
   white-space: nowrap;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.header__add-clothes-btn:hover {
+  background: black;
+  color: white;
+  transform: scale(1.05);
 }
 
 .header__profile-link {
@@ -43,16 +52,31 @@
 }
 
 .header__username {
+  font-family: "Cabinet Grotesk", "Arial", "Helvetica", sans-serif;
   font-weight: 700;
   font-size: 20px;
   line-height: 100%;
-  margin-right: 12px;
   color: black;
-  width: 157;
-  height: 25;
-  top: 8px;
-  left: 1151px;
-  color: rgba(0, 0, 0, 1);
+  max-width: 200px;
+  height: auto;
+  padding: 5px 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.header__username:hover {
+  background: black;
+  color: white;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.header-container {
+  position: relative;
+  width: 100%;
 }
 
 .header__avatar-placeholder {

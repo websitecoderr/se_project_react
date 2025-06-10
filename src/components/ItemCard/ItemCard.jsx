@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import "./ItemCard.css";
 
-function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
+function ItemCard({ item, onCardClick, onCardLike}) {
   const { currentUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
@@ -34,19 +34,6 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
     isOwner: isOwner,
   });
 
-  const handleDeleteClick = () => {
-    if (!currentUser) {
-      console.warn("❌ Cannot delete item - no user logged in!");
-      return;
-    }
-
-    console.log("🗑️ Attempting to delete item:", item);
-    if (isOwner) {
-      onCardDelete(item);
-    } else {
-      console.warn("🚫 Delete button clicked, but user is not the owner!");
-    }
-  };
 
   const handleLikeClick = () => {
     console.log("🔥 Like button clicked!");
@@ -72,7 +59,6 @@ function ItemCard({ item, onCardClick, onCardLike, onCardDelete }) {
             onClick={handleLikeClick}
           ></button>
 
-          {isOwner && <div className="cards__info"></div>}
         </div>
       </div>
     </div>

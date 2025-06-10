@@ -32,7 +32,7 @@
   line-height: 100%;
   text-align: left;
   margin: 20px 0px;
-  display: inline-block;
+  display: block;
   width: auto;
   padding: 5px 10px;
   border-radius: 4px;
@@ -58,13 +58,10 @@
   color: rgba(0, 0, 0, 1);
   padding: 8px 15px;
   background: transparent;
-  position: relative;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 4px;
   transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
-  left: -30px;
-  top: -20px;
+  position: relative;
+  left: -33px;
+  top: -22px;
 }
 
 .sign-out:hover {

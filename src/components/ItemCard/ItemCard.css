@@ -23,6 +23,8 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  position: relative;
+  top: -5px;
 }
 
 p.cards__weather {

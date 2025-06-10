@@ -15,6 +15,8 @@
   font-size: 20px;
   line-height: 1.2;
   font-weight: 700;
+  position: relative;
+  top: -8px;
 }
 
 .clothes-section__add-button {
@@ -36,6 +38,7 @@
   margin-top: -8px;
   position: relative;
   left: 5px;
+  top: -8px;
 }
 
 .clothes-section__add-button:hover {

@@ -11,6 +11,8 @@
 
 .header__logo {
   margin-right: 24px;
+  position: relative;
+  top: -12px;
 }
 
 .header__date-and-location {

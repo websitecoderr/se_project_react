@@ -56,6 +56,11 @@ p.cards__name span:first-child {
   border: none;
 }
 
+.like-button:hover {
+  opacity: 0.7;
+}
+
+
 .like-button.liked {
   background-image: url("../../assets/likebutton.svg");
 }

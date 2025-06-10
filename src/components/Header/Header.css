@@ -37,7 +37,7 @@
 .header__add-clothes-btn:hover {
   background: black;
   color: white;
-  transform: scale(1.05);
+  opacity: 0.7;
 }
 
 .header__profile-link {
@@ -72,8 +72,8 @@
 .header__username:hover {
   background: black;
   color: white;
-  transform: scale(1.05);
   cursor: pointer;
+  opacity: 0.7;
 }
 
 .header-container {
@@ -130,6 +130,7 @@
 .header__button:hover {
   background: black;
   color: white;
+  opacity: 0.7;
 }
 
 .logo {

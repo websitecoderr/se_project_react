@@ -65,6 +65,7 @@
   color: white;
   cursor: pointer;
   transition: background 0.3s ease;
+  border-radius: 4px;
 }
 
 .modal__submit-button:disabled {

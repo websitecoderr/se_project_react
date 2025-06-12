@@ -30,7 +30,7 @@ const AddItemModal = ({ isOpen, onSubmit, onClose }) => {
       imageUrl: imageUrl,
     });
     onSubmit({ name, weather, imageUrl });
-    onClose();
+    onClose()
   };
 
   return (

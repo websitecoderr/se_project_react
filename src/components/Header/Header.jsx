@@ -4,20 +4,18 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import ToggleSwitch from "../ToggleSwitch/ToggleSwitch";
 import Avatar from "../Avatar/Avatar";
+import { useCurrentUser } from "../../Context/CurrentUserContext";
 
-function Header({
-  handleAddClick,
-  setActiveModal,
-  city,
-  isLoggedIn,
-  currentUser,
-}) {
-  console.log("Header - isLoggedIn:", isLoggedIn);
-  console.log("Header - currentUser:", currentUser);
 
-  const displayLocation = useMemo(() => {
-    return city || "Unknown Location";
-  }, [city]);
+function Header({ handleAddClick, setActiveModal, city, isLoggedIn }) {
+  const { currentUser: contextCurrentUser } = useCurrentUser();
+
+  useEffect(() => {
+    console.log("Header - isLoggedIn:", isLoggedIn);
+    console.log("Header - currentUser from context:", contextCurrentUser);
+  }, [isLoggedIn, contextCurrentUser]);
+
+  const displayLocation = useMemo(() => city || "Unknown Location", [city]);
 
   const [date, setDate] = useState("");
 
@@ -41,7 +39,7 @@ function Header({
         <p className="header__date-location">{`${date}, ${displayLocation}`}</p>
       </div>
 
-      {isLoggedIn && currentUser ? (
+      {isLoggedIn && contextCurrentUser ? (
         <div className="header__user-container">
           <ToggleSwitch />
           <button
@@ -54,11 +52,11 @@ function Header({
           <div className="header__profile-container">
             <Link to="/profile" className="header__profile-link">
               <span className="header__username">
-                {currentUser.name || "Terrence Tegegne"}
+                {contextCurrentUser.name || "Guest"}
               </span>
               <Avatar
-                avatarUrl={currentUser?.avatar}
-                name={currentUser?.name}
+                avatarUrl={contextCurrentUser.avatar}
+                name={contextCurrentUser.name}
               />
             </Link>
           </div>
@@ -74,7 +72,6 @@ function Header({
             >
               Sign Up
             </button>
-
             <button
               type="button"
               className="header__button"

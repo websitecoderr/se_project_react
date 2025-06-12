@@ -1,8 +1,8 @@
-import "./Main.css";
+import { useMemo } from "react";
 import WeatherCard from "../WeatherCard/WeatherCard";
 import ItemCard from "../ItemCard/ItemCard";
 import { useCurrentTemperatureUnit } from "../../Context/CurrentTemperatureUnitContext";
-import { useMemo } from "react";
+import "./Main.css";
 
 function Main({
   weatherData = {},
@@ -25,6 +25,16 @@ function Main({
       : `${Math.round(weatherData.temp?.F || 0)} ${TEMP_UNIT_F}`;
   }, [currentTemperatureUnit, weatherData]);
 
+  const filteredClothingItems = useMemo(() => {
+    const temperatureF = weatherData.temp?.F || 0;
+    return clothingItems.filter(
+      (item) =>
+        (temperatureF > 75 && item.weather === "hot") ||
+        (temperatureF <= 75 && temperatureF >= 59 && item.weather === "warm") ||
+        (temperatureF < 59 && item.weather === "cold")
+    );
+  }, [weatherData.temp, clothingItems]);
+
   return (
     <main>
       <WeatherCard weatherData={weatherData} isLoading={isLoading} />
@@ -33,8 +43,8 @@ function Main({
           Today is {displayTemperature} / You may want to wear:
         </p>
         <ul className="cards__list">
-          {clothingItems.length > 0 ? (
-            clothingItems.map((item) => (
+          {filteredClothingItems.length > 0 ? (
+            filteredClothingItems.map((item) => (
               <li key={item._id || item.id}>
                 <ItemCard
                   item={item}

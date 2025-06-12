@@ -103,7 +103,7 @@ function App() {
         const response = await checkToken(token);
         console.log("✅ SUCCESS - API Response:", response);
 
-        setCurrentUser(response);
+        setCurrentUser(response); 
         setIsLoggedIn(true);
 
         console.log("🔄 Updated currentUser state:", response);
@@ -274,7 +274,7 @@ function App() {
     return loggedInUser;
   };
 
-  return (
+   return (
     <div className="app">
       <BrowserRouter>
         <CurrentUserProvider
@@ -290,7 +290,6 @@ function App() {
               isLoggedIn={isLoggedIn}
               setActiveModal={setActiveModal}
               handleModalSwitch={handleModalSwitch}
-              currentUser={currentUser}
             />
 
             <Routes>
@@ -321,7 +320,6 @@ function App() {
                       handleSignOut={handleSignOut}
                       setActiveModal={setActiveModal}
                       handleAddClick={handleAddClick}
-                      currentUser={currentUser}
                     />
                   </ProtectedRoute>
                 }
@@ -357,7 +355,6 @@ function App() {
               isOpen={activeModal === "edit-profile"}
               onClose={() => setActiveModal("")}
               onSubmit={handleUpdateProfile}
-              currentUser={currentUser}
               isLoading={isLoading}
             />
             <ItemModal

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import "./ItemCard.css";
 
-function ItemCard({ item, onCardClick, onCardLike}) {
+function ItemCard({ item, onCardClick, onCardLike }) {
   const { currentUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
@@ -15,29 +15,13 @@ function ItemCard({ item, onCardClick, onCardLike}) {
     }
   }, [currentUser]);
 
-  console.log("🔍 Current user in ItemCard:", currentUser);
-  console.log("📌 Item data:", item);
-
-  console.log("🔍 Item likes array:", item.likes);
-
   const isLiked =
     currentUser?._id &&
     item.likes?.filter(Boolean).some((likeId) => likeId === currentUser._id);
 
-  console.log("🔍 Is liked result:", isLiked);
-
-  const isOwner = currentUser && currentUser._id === item.owner;
-
-  console.log("🛠️ Debug Owner Check:", {
-    currentUserId: currentUser?._id || "No user logged in",
-    itemOwnerId: item.owner,
-    isOwner: isOwner,
-  });
-
 
   const handleLikeClick = () => {
     console.log("🔥 Like button clicked!");
-    console.log("🔥 About to call onCardLike with:", item);
     onCardLike(item);
   };
 
@@ -54,11 +38,15 @@ function ItemCard({ item, onCardClick, onCardLike}) {
         <div className="overlay">
           <span className="item-name">{item.name}</span>
 
-          <button
-            className={`like-button ${isLiked ? "liked" : ""}`}
-            onClick={handleLikeClick}
-          ></button>
-
+          {currentUser && (
+            <button
+              className={`like-button ${isLiked ? "liked" : ""}`}
+              onClick={handleLikeClick}
+              aria-label="Like this item"
+            >
+              
+            </button>
+          )}
         </div>
       </div>
     </div>

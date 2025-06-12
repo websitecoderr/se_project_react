@@ -103,7 +103,7 @@ function App() {
         const response = await checkToken(token);
         console.log("✅ SUCCESS - API Response:", response);
 
-        setCurrentUser(response); 
+        setCurrentUser(response);
         setIsLoggedIn(true);
 
         console.log("🔄 Updated currentUser state:", response);
@@ -274,7 +274,7 @@ function App() {
     return loggedInUser;
   };
 
-   return (
+  return (
     <div className="app">
       <BrowserRouter>
         <CurrentUserProvider
@@ -287,6 +287,7 @@ function App() {
               handleSignOut={handleSignOut}
               onSignUpClick={handleSignUp}
               city={weatherData?.city}
+              temperature={weatherData?.temp}
               isLoggedIn={isLoggedIn}
               setActiveModal={setActiveModal}
               handleModalSwitch={handleModalSwitch}

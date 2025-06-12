@@ -1,11 +1,4 @@
-const BASE_URL = "http://localhost:3001";
-
-const checkResponse = async (response) => {
-  if (!response.ok) {
-    throw new Error(`Error: ${response.status} - ${response.statusText}`);
-  }
-  return response.json();
-};
+import { API_BASE_URL, checkResponse } from "./Api"; 
 
 export const checkToken = (token) => {
   console.log("🔍 checkToken function started with token:", token);
@@ -15,7 +8,7 @@ export const checkToken = (token) => {
     return Promise.reject("No token found");
   }
 
-  return fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${API_BASE_URL}/users/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -31,3 +24,5 @@ export const checkToken = (token) => {
       return Promise.reject("Invalid or expired token.");
     });
 };
+
+

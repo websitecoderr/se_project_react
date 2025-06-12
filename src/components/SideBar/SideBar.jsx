@@ -3,52 +3,15 @@ import "./SideBar.css";
 import avatarDefault from "../../assets/avatar.svg";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import ChangeProfileModal from "../ChangeProfileModal/ChangeProfileModal";
+import { updateProfile } from "../../utils/Api"; // ✅ Correct import
 
 const SideBar = ({ handleSignOut }) => {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-
-  console.log("Context values:", { currentUser, setCurrentUser });
 
   const [changeProfile, setChangeProfile] = useState(false);
   const [avatar, setAvatar] = useState(currentUser?.avatar || avatarDefault);
   const [name, setName] = useState(currentUser?.name || "User");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const updateUser = async (userData) => {
-    try {
-      if (!userData.name || !userData.avatar)
-        throw new Error("Invalid user data");
-
-      const requestBody = {
-        name: userData.name,
-        avatar: userData.avatar,
-      };
-
-      const response = await fetch("http://localhost:3001/users/me", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const updatedData = await response.json();
-
-      setCurrentUser(updatedData);
-
-      setChangeProfile(false);
-      setErrorMessage("");
-      alert("Profile updated successfully!");
-    } catch (error) {
-      setErrorMessage(error.message);
-      console.error("Update error:", error);
-    }
-  };
 
   useEffect(() => {
     if (currentUser) {
@@ -56,6 +19,19 @@ const SideBar = ({ handleSignOut }) => {
       setName(currentUser.name || "User");
     }
   }, [currentUser]);
+
+  const handleUpdateUser = async ({ name, avatar }) => {
+    try {
+      const updatedData = await updateProfile({ name, avatarUrl: avatar });
+      setCurrentUser(updatedData);
+      setChangeProfile(false);
+      setErrorMessage("");
+      alert("Profile updated successfully!");
+    } catch (error) {
+      setErrorMessage(error.message || "Something went wrong.");
+      console.error("Update error:", error);
+    }
+  };
 
   return (
     <div className="sidebar">
@@ -85,7 +61,7 @@ const SideBar = ({ handleSignOut }) => {
       <ChangeProfileModal
         isOpen={changeProfile}
         onClose={() => setChangeProfile(false)}
-        onSubmit={updateUser}
+        onSubmit={handleUpdateUser}
         avatar={avatar}
         setAvatar={setAvatar}
         name={name}

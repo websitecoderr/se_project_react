@@ -1,4 +1,5 @@
-import { API_BASE_URL, checkResponse } from "./Api"; 
+import { API_BASE_URL, checkResponse, setToken } from "./Api";
+
 
 export const checkToken = (token) => {
   console.log("🔍 checkToken function started with token:", token);
@@ -25,4 +26,48 @@ export const checkToken = (token) => {
     });
 };
 
+
+export const signup = async ({ name, email, password, avatar }) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, avatar, email, password }),
+    });
+
+    const data = await checkResponse(response);
+    if (data.token) setToken(data.token);
+
+    return { success: true, ...data };
+  } catch (error) {
+    console.error("❌ Signup error:", error.message);
+    return {
+      success: false,
+      message: error.message || "Unexpected error occurred.",
+    };
+  }
+};
+
+export const signin = async ({ email, password }) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/signin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await checkResponse(response);
+    if (data.token) setToken(data.token);
+
+    return { success: true, ...data };
+  } catch (error) {
+    console.error("❌ Login error:", error.message);
+    return {
+      success: false,
+      message: error.message || "Unexpected error occurred.",
+    };
+  }
+};
 

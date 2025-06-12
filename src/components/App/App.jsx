@@ -11,9 +11,7 @@ import {
   deleteItemFromApi,
   addItemToApi,
   removeToken,
-  registerUser,
   setToken,
-  signin,
   updateProfile,
 } from "../../utils/Api";
 import { getWeather } from "../../utils/weatherApi";
@@ -28,7 +26,8 @@ import DeleteConfirmationModal from "../DeleteConfirmationModal/DeleteConfirmati
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import SignUpModal from "../SignUpModal/SignUpModal";
 import LoginModal from "../LoginModal/LoginModal";
-import { checkToken } from "../../utils/auth.js";
+import { checkToken, signup} from "../../utils/auth.js";
+
 
 function App() {
   const [activeModal, setActiveModal] = useState("");
@@ -217,7 +216,7 @@ function App() {
     setIsLoading(true);
 
     try {
-      const newUser = await registerUser(userData);
+      const newUser = await signup(userData);
       setToken(newUser.token);
       setCurrentUser(newUser.user);
       setIsLoggedIn(true);

@@ -38,30 +38,33 @@ function Main({
   return (
     <main>
       <WeatherCard weatherData={weatherData} isLoading={isLoading} />
-      <section className="cards">
-        <p className="cards__text">
-          Today is {displayTemperature} / You may want to wear:
-        </p>
-        <ul className="cards__list">
-          {filteredClothingItems.length > 0 ? (
-            filteredClothingItems.map((item) => (
-              <li key={item._id || item.id}>
-                <ItemCard
-                  item={item}
-                  onCardClick={onCardClick}
-                  onCardLike={onCardLike}
-                  onCardDelete={onCardDelete}
-                  setClothingItems={setClothingItems}
-                />
+
+      {!isLoading && (
+        <section className="cards">
+          <p className="cards__text">
+            Today is {displayTemperature} / You may want to wear:
+          </p>
+          <ul className="cards__list">
+            {filteredClothingItems.length > 0 ? (
+              filteredClothingItems.map((item) => (
+                <li key={item._id || item.id}>
+                  <ItemCard
+                    item={item}
+                    onCardClick={onCardClick}
+                    onCardLike={onCardLike}
+                    onCardDelete={onCardDelete}
+                    setClothingItems={setClothingItems}
+                  />
+                </li>
+              ))
+            ) : (
+              <li className="cards__empty-text">
+                No clothing suggestions available for this weather.
               </li>
-            ))
-          ) : (
-            <li className="cards__empty-text">
-              No clothing suggestions available for this weather.
-            </li>
-          )}
-        </ul>
-      </section>
+            )}
+          </ul>
+        </section>
+      )}
     </main>
   );
 }

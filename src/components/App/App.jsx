@@ -57,13 +57,18 @@ function App() {
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) =>
-          fetchWeather(position.coords.latitude, position.coords.longitude),
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          fetchWeather(latitude, longitude);
+        },
         (error) => {
-          console.error("Error getting user location:", error.message);
+          console.error("Geolocation error:", error.message);
           setIsLoading(false);
         }
       );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      setIsLoading(false);
     }
   }, []);
 
@@ -126,8 +131,13 @@ function App() {
 
   const handleUpdateProfile = async (userData) => {
     setIsLoading(true);
+    setErrorMessage("");
+
     try {
-      const updatedUser = await updateProfile(userData);
+      const response = await updateProfile(userData);
+
+      const updatedUser = response.user || response;
+
       setCurrentUser(updatedUser);
       setActiveModal("");
     } catch (error) {

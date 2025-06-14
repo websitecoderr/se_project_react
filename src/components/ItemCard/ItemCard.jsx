@@ -2,12 +2,17 @@ import React, { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../Context/CurrentUserContext";
 import "./ItemCard.css";
 
-function ItemCard({ item, onCardClick, onCardLike }) {
+function ItemCard({
+  item,
+  onCardClick,
+  onCardLike,
+  setCardToDelete,
+  setActiveModal,
+}) {
   const { currentUser } = useContext(CurrentUserContext);
 
   useEffect(() => {
     console.log("🌀 ItemCard Mounted");
-
     if (!currentUser) {
       console.warn("No current user detected! Check authentication.");
     } else {
@@ -19,10 +24,17 @@ function ItemCard({ item, onCardClick, onCardLike }) {
     currentUser?._id &&
     item.likes?.filter(Boolean).some((likeId) => likeId === currentUser._id);
 
+  const isOwner = currentUser?._id === item.owner;
 
   const handleLikeClick = () => {
     console.log("🔥 Like button clicked!");
     onCardLike(item);
+  };
+
+  const handleDeleteClick = () => {
+    console.log("🗑️ Delete button clicked!");
+    setCardToDelete(item);
+    setActiveModal("confirmDelete");
   };
 
   return (
@@ -43,9 +55,7 @@ function ItemCard({ item, onCardClick, onCardLike }) {
               className={`like-button ${isLiked ? "liked" : ""}`}
               onClick={handleLikeClick}
               aria-label="Like this item"
-            >
-              
-            </button>
+            ></button>
           )}
         </div>
       </div>

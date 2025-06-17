@@ -49,10 +49,18 @@ export const updateProfile = async ({ name, avatarUrl }) => {
       body: JSON.stringify({ name, avatar: avatarUrl }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Server responded with error:", errorData);
+      return Promise.reject(
+        `Error: ${errorData.message || response.statusText}`
+      );
+    }
+
     return checkResponse(response);
   } catch (error) {
     console.error("Error updating profile:", error);
-    return Promise.reject(error);
+    return Promise.reject("Network or unexpected error: " + error.message);
   }
 };
 

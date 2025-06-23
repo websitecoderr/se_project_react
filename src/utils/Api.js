@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 
-export const API_BASE_URL = "http://localhost:3001";
+export const API_BASE_URL = process.env.NODE_ENV === "production" ? "https://api.codecave.pakasak.com" : "http://localhost:3001";
 
 export const getToken = () => {
   const token = localStorage.getItem("jwt")?.trim();

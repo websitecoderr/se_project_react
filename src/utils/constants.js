@@ -1,4 +1,4 @@
-export const BASE_URL = "https://wtwr.codecave.pakasak.com/api";
+export const BASE_URL = "https://wtwr.codecave.pakasak.org/api";
 
 export const checkResponse = (response) => {
   if (response.ok) {

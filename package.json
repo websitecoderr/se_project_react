@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "jest",
-    "deploy": "npm run build && scp -r ./dist/* opportunities91@wtwr.codecave.pakasak.org:/home/opportunities91/frontend"
+    "deploy": "scp -r dist/* opportunities91@wtwr.codecave.pakasak.org:/home/opportunities91/frontend"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
@@ -30,5 +30,3 @@
     "vite": "^6.3.5"
   }
 }
-
-

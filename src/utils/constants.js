@@ -1,7 +1,4 @@
-export const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://api.codecave.pakasak.org" 
-    : "http://localhost:3001";
+export const BASE_URL = "https://wtwr.codecave.pakasak.com/api";
 
 export const checkResponse = (response) => {
   if (response.ok) {

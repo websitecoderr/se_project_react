@@ -113,7 +113,7 @@ export const updateProfile = async ({ name, avatarUrl }) => {
 
 export const fetchItemsFromApi = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/api/items`);
+    const response = await fetch(`${BASE_URL}/items`);
     return await checkResponse(response);
   } catch (error) {
     console.error("Error fetching items:", error.message);

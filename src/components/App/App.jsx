@@ -40,51 +40,97 @@ function App() {
   const [weatherData, setWeatherData] = useState({ temp: 0, city: "Unknown" });
 
   useEffect(() => {
+    console.log("🌤️ Weather useEffect started");
+
     const fetchWeather = async (lat, lon) => {
+      console.log("🌤️ fetchWeather called with lat:", lat, "lon:", lon);
       try {
+        console.log("🌤️ About to call getWeather API...");
         const data = await getWeather(lat, lon);
-        setWeatherData({
-          temp: data.temp,
-          type: data.temp >= 86 ? "hot" : data.temp >= 59 ? "warm" : "cold",
-          city: data.name,
-        });
+        console.log("🌤️ Weather API response:", data);
+
+        if (data && data.temp?.F !== undefined) {
+          setWeatherData({
+            temp: data.temp, 
+            type:
+              data.temp.F >= 86 ? "hot" : data.temp.F >= 59 ? "warm" : "cold",
+            city: data.name || "Unknown",
+          });
+          console.log("🌤️ Weather data updated successfully");
+        } else {
+          console.warn("🌤️ No valid temperature data found in response.");
+          setWeatherData({
+            temp: null,
+            type: "unknown",
+            city: "Unavailable",
+          });
+        }
       } catch (error) {
-        console.error("Error fetching weather data:", error.message);
+        console.error("🌤️ Error fetching weather data:", error.message);
+        setWeatherData({
+          temp: null,
+          type: "unknown",
+          city: "Unavailable",
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
     if (navigator.geolocation) {
+      console.log("🌤️ Geolocation is supported, requesting position...");
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log("🌤️ Geolocation success:", position);
           const { latitude, longitude } = position.coords;
+          console.log("🌤️ Coordinates:", latitude, longitude);
           fetchWeather(latitude, longitude);
         },
         (error) => {
-          console.error("Geolocation error:", error.message);
+          console.error("🌤️ Geolocation error:", error.message);
+          setWeatherData({
+            temp: null,
+            type: "unknown",
+            city: "Unavailable",
+          });
           setIsLoading(false);
         }
       );
     } else {
-      console.error("Geolocation is not supported by this browser.");
+      console.error("🌤️ Geolocation is not supported by this browser.");
+      setWeatherData({
+        temp: null,
+        type: "unknown",
+        city: "Unavailable",
+      });
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
+    if (!isLoggedIn) return;
+
     const fetchItems = async () => {
       try {
-        const items = await fetchItemsFromApi();
-        setClothingItems(
-          items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        );
+        const result = await fetchItemsFromApi();
+
+        if (Array.isArray(result)) {
+          const sorted = result.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setClothingItems(sorted);
+        } else if (result?.message) {
+          console.warn("Item fetch warning:", result.message);
+        } else {
+          console.error("Unexpected response:", result);
+        }
       } catch (error) {
         console.error("Error fetching items:", error.message);
       }
     };
+
     fetchItems();
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     console.log("useEffect is running");

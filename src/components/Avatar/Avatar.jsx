@@ -2,7 +2,7 @@ import React from "react";
 import "./Avatar.css";
 import avatarDefault from "../../assets/avatar.svg";
 
-const API_BASE_URL = "http://localhost:3001";
+// import base url here
 
 const isValidImageUrl = (url) => {
   return url.startsWith("http://") || url.startsWith("https://");

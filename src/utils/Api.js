@@ -1,6 +1,8 @@
+// api.js
 import { jwtDecode } from "jwt-decode";
 import { BASE_URL } from "./constants";
 
+// Token Utilities
 export const setToken = (token) => localStorage.setItem("jwt", token);
 export const removeToken = () => localStorage.removeItem("jwt");
 
@@ -23,6 +25,7 @@ export const getToken = () => {
   }
 };
 
+// Handle API response
 export const checkResponse = async (response) => {
   const data = await response.json();
   if (response.ok) return data;
@@ -34,6 +37,7 @@ export const checkResponse = async (response) => {
   );
 };
 
+// Auth: Validate Token
 export const checkToken = async () => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -54,6 +58,7 @@ export const checkToken = async () => {
   }
 };
 
+// Auth: Signup
 export const signup = async ({ name, email, password, avatar }) => {
   try {
     const response = await fetch(`${BASE_URL}/api/signup`, {
@@ -72,6 +77,7 @@ export const signup = async ({ name, email, password, avatar }) => {
   }
 };
 
+// Auth: Signin
 export const signin = async ({ email, password }) => {
   try {
     const response = await fetch(`${BASE_URL}/api/signin`, {
@@ -90,6 +96,7 @@ export const signin = async ({ email, password }) => {
   }
 };
 
+// User Profile
 export const updateProfile = async ({ name, avatarUrl }) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -111,9 +118,19 @@ export const updateProfile = async ({ name, avatarUrl }) => {
   }
 };
 
+// Items: Fetch All
 export const fetchItemsFromApi = async () => {
+  const token = getToken();
+  if (!token) return { success: false, message: "No token provided." };
+
   try {
-    const response = await fetch(`${BASE_URL}/items`);
+    const response = await fetch(`${BASE_URL}/api/items`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
     return await checkResponse(response);
   } catch (error) {
     console.error("Error fetching items:", error.message);
@@ -121,6 +138,7 @@ export const fetchItemsFromApi = async () => {
   }
 };
 
+// Items: Add New
 export const addItemToApi = async ({ name, weather, imageUrl }) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -142,6 +160,7 @@ export const addItemToApi = async ({ name, weather, imageUrl }) => {
   }
 };
 
+// Items: Delete
 export const deleteItemFromApi = async (id) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -162,6 +181,7 @@ export const deleteItemFromApi = async (id) => {
   }
 };
 
+// Items: Like / Unlike
 export const likeItem = async (id, isLiked) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -184,6 +204,7 @@ export const likeItem = async (id, isLiked) => {
   }
 };
 
+// Items: Update Weather Tag
 export const updateItemWeather = async (itemId, weatherType) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");

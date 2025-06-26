@@ -1,4 +1,7 @@
-export const BASE_URL = "http://localhost:3001"; 
+export const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://api.codecave.pakasak.org" 
+    : "http://localhost:3001";
 
 export const checkResponse = (response) => {
   if (response.ok) {
@@ -6,4 +9,3 @@ export const checkResponse = (response) => {
   }
   return Promise.reject(`Error: ${response.status}`);
 };
-

@@ -1,6 +1,8 @@
 import { jwtDecode } from "jwt-decode";
+import { BASE_URL } from "./constants";
 
-export const API_BASE_URL = process.env.NODE_ENV === "production" ? "https://api.codecave.pakasak.com" : "http://localhost:3001";
+export const setToken = (token) => localStorage.setItem("jwt", token);
+export const removeToken = () => localStorage.removeItem("jwt");
 
 export const getToken = () => {
   const token = localStorage.getItem("jwt")?.trim();
@@ -21,9 +23,6 @@ export const getToken = () => {
   }
 };
 
-export const setToken = (token) => localStorage.setItem("jwt", token);
-export const removeToken = () => localStorage.removeItem("jwt");
-
 export const checkResponse = async (response) => {
   const data = await response.json();
   if (response.ok) return data;
@@ -35,12 +34,68 @@ export const checkResponse = async (response) => {
   );
 };
 
-export const updateProfile = async ({ name, avatarUrl }) => {
+export const checkToken = async () => {
   const token = getToken();
-  if (!token) return Promise.reject("Unauthorized: No token provided.");
+  if (!token) return Promise.reject("No token provided.");
 
   try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
+    const response = await fetch(`${BASE_URL}/api/users/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await checkResponse(response);
+  } catch (error) {
+    console.error("Token validation failed:", error.message);
+    return Promise.reject("Invalid or expired token.");
+  }
+};
+
+export const signup = async ({ name, email, password, avatar }) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password, avatar }),
+    });
+
+    const data = await checkResponse(response);
+    if (data.token) setToken(data.token);
+
+    return { success: true, ...data };
+  } catch (error) {
+    console.error("Signup error:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+export const signin = async ({ email, password }) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/signin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await checkResponse(response);
+    if (data.token) setToken(data.token);
+
+    return { success: true, ...data };
+  } catch (error) {
+    console.error("Signin error:", error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+export const updateProfile = async ({ name, avatarUrl }) => {
+  const token = getToken();
+  if (!token) return Promise.reject("No token provided.");
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/me`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -49,25 +104,17 @@ export const updateProfile = async ({ name, avatarUrl }) => {
       body: JSON.stringify({ name, avatar: avatarUrl }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Server responded with error:", errorData);
-      return Promise.reject(
-        `Error: ${errorData.message || response.statusText}`
-      );
-    }
-
-    return checkResponse(response);
+    return await checkResponse(response);
   } catch (error) {
-    console.error("Error updating profile:", error);
-    return Promise.reject("Network or unexpected error: " + error.message);
+    console.error("Profile update error:", error.message);
+    return Promise.reject(error.message);
   }
 };
 
 export const fetchItemsFromApi = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/items`);
-    return checkResponse(response);
+    const response = await fetch(`${BASE_URL}/api/items`);
+    return await checkResponse(response);
   } catch (error) {
     console.error("Error fetching items:", error.message);
     return { success: false, message: error.message };
@@ -76,10 +123,10 @@ export const fetchItemsFromApi = async () => {
 
 export const addItemToApi = async ({ name, weather, imageUrl }) => {
   const token = getToken();
-  if (!token) return Promise.reject("Unauthorized: No token provided.");
+  if (!token) return Promise.reject("No token provided.");
 
   try {
-    const response = await fetch(`${API_BASE_URL}/items`, {
+    const response = await fetch(`${BASE_URL}/api/items`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -88,19 +135,19 @@ export const addItemToApi = async ({ name, weather, imageUrl }) => {
       body: JSON.stringify({ name, weather, imageUrl }),
     });
 
-    return checkResponse(response);
+    return await checkResponse(response);
   } catch (error) {
-    console.error("Error adding item:", error);
-    return Promise.reject(error);
+    console.error("Add item error:", error.message);
+    return Promise.reject(error.message);
   }
 };
 
 export const deleteItemFromApi = async (id) => {
   const token = getToken();
-  if (!token) return Promise.reject("Unauthorized: No token provided.");
+  if (!token) return Promise.reject("No token provided.");
 
   try {
-    const response = await fetch(`${API_BASE_URL}/items/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/items/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -108,20 +155,21 @@ export const deleteItemFromApi = async (id) => {
       },
     });
 
-    return checkResponse(response);
+    return await checkResponse(response);
   } catch (error) {
-    console.error("Error deleting item:", error.message);
-    return Promise.reject(error);
+    console.error("Delete item error:", error.message);
+    return Promise.reject(error.message);
   }
 };
 
 export const likeItem = async (id, isLiked) => {
   const token = getToken();
-  if (!token) return Promise.reject("Unauthorized: No token provided.");
+  if (!token) return Promise.reject("No token provided.");
 
   try {
     const method = isLiked ? "DELETE" : "PUT";
-    const response = await fetch(`${API_BASE_URL}/items/${id}/likes`, {
+
+    const response = await fetch(`${BASE_URL}/api/items/${id}/likes`, {
       method,
       headers: {
         Authorization: `Bearer ${token}`,
@@ -129,19 +177,19 @@ export const likeItem = async (id, isLiked) => {
       },
     });
 
-    return checkResponse(response);
+    return await checkResponse(response);
   } catch (error) {
-    console.error("Error liking item:", error.message);
-    return Promise.reject(error);
+    console.error("Like/unlike error:", error.message);
+    return Promise.reject(error.message);
   }
 };
 
 export const updateItemWeather = async (itemId, weatherType) => {
   const token = getToken();
-  if (!token) return Promise.reject("Unauthorized: No token provided.");
+  if (!token) return Promise.reject("No token provided.");
 
   try {
-    const response = await fetch(`${API_BASE_URL}/items/${itemId}/weather`, {
+    const response = await fetch(`${BASE_URL}/api/items/${itemId}/weather`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -150,9 +198,9 @@ export const updateItemWeather = async (itemId, weatherType) => {
       body: JSON.stringify({ weather: weatherType }),
     });
 
-    return checkResponse(response);
+    return await checkResponse(response);
   } catch (error) {
-    console.error("Error updating item weather:", error.message);
-    return Promise.reject(error);
+    console.error("Weather update error:", error.message);
+    return Promise.reject(error.message);
   }
 };

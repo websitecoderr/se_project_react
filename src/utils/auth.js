@@ -1,5 +1,19 @@
-import { API_BASE_URL, checkResponse, setToken } from "./Api";
+import { BASE_URL } from "./constants";
 
+export const checkResponse = (response) => {
+  if (response.ok) {
+    return response.json();
+  }
+  return Promise.reject(`Error: ${response.status}`);
+};
+
+export const setToken = (token) => {
+  localStorage.setItem("jwt", token);
+};
+
+export const getToken = () => {
+  return localStorage.getItem("jwt");
+};
 
 export const checkToken = (token) => {
   console.log("🔍 checkToken function started with token:", token);
@@ -9,27 +23,23 @@ export const checkToken = (token) => {
     return Promise.reject("No token found");
   }
 
-  return fetch(`${API_BASE_URL}/users/me`, {
+  return fetch(`${BASE_URL}/api/users/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   })
-    .then(async (response) => {
-      console.log("🔍 About to return from checkToken");
-      return await checkResponse(response);
-    })
+    .then(checkResponse)
     .catch((error) => {
-      console.error("❌ Token validation error:", error.message);
+      console.error("❌ Token validation error:", error.message || error);
       return Promise.reject("Invalid or expired token.");
     });
 };
 
-
 export const signup = async ({ name, email, password, avatar }) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/signup`, {
+    const response = await fetch(`${BASE_URL}/api/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +52,7 @@ export const signup = async ({ name, email, password, avatar }) => {
 
     return { success: true, ...data };
   } catch (error) {
-    console.error("❌ Signup error:", error.message);
+    console.error("❌ Signup error:", error.message || error);
     return {
       success: false,
       message: error.message || "Unexpected error occurred.",
@@ -52,7 +62,7 @@ export const signup = async ({ name, email, password, avatar }) => {
 
 export const signin = async ({ email, password }) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/signin`, {
+    const response = await fetch(`${BASE_URL}/api/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -63,11 +73,10 @@ export const signin = async ({ email, password }) => {
 
     return { success: true, ...data };
   } catch (error) {
-    console.error("❌ Login error:", error.message);
+    console.error("❌ Login error:", error.message || error);
     return {
       success: false,
       message: error.message || "Unexpected error occurred.",
     };
   }
 };
-

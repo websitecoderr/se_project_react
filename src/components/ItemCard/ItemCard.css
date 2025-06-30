@@ -60,7 +60,6 @@ p.cards__name span:first-child {
   opacity: 0.7;
 }
 
-
 .like-button.liked {
   background-image: url("../../assets/likebutton.svg");
 }

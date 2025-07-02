@@ -25,7 +25,6 @@ export const getToken = () => {
   }
 };
 
-// Handle API response
 export const checkResponse = async (response) => {
   const data = await response.json();
   if (response.ok) return data;
@@ -37,7 +36,6 @@ export const checkResponse = async (response) => {
   );
 };
 
-// Auth: Validate Token
 export const checkToken = async () => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -58,7 +56,6 @@ export const checkToken = async () => {
   }
 };
 
-// Auth: Signup
 export const signup = async ({ name, email, password, avatar }) => {
   try {
     const response = await fetch(`${BASE_URL}/api/signup`, {

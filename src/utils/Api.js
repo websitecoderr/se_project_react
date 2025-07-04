@@ -1,8 +1,6 @@
-// api.js
 import { jwtDecode } from "jwt-decode";
 import { BASE_URL } from "./constants";
 
-// Token Utilities
 export const setToken = (token) => localStorage.setItem("jwt", token);
 export const removeToken = () => localStorage.removeItem("jwt");
 
@@ -178,7 +176,6 @@ export const deleteItemFromApi = async (id) => {
   }
 };
 
-// Items: Like / Unlike
 export const likeItem = async (id, isLiked) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");

@@ -72,7 +72,6 @@ export const signup = async ({ name, email, password, avatar }) => {
   }
 };
 
-// Auth: Signin
 export const signin = async ({ email, password }) => {
   try {
     const response = await fetch(`${BASE_URL}/api/signin`, {
@@ -91,14 +90,13 @@ export const signin = async ({ email, password }) => {
   }
 };
 
-// User Profile
 export const updateProfile = async ({ name, avatarUrl }) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
 
   try {
     const response = await fetch(`${BASE_URL}/api/users/me`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -113,7 +111,6 @@ export const updateProfile = async ({ name, avatarUrl }) => {
   }
 };
 
-// Items: Fetch All
 export const fetchItemsFromApi = async () => {
   const token = getToken();
   if (!token) return { success: false, message: "No token provided." };
@@ -133,7 +130,6 @@ export const fetchItemsFromApi = async () => {
   }
 };
 
-// Items: Add New
 export const addItemToApi = async ({ name, weather, imageUrl }) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -155,7 +151,6 @@ export const addItemToApi = async ({ name, weather, imageUrl }) => {
   }
 };
 
-// Items: Delete
 export const deleteItemFromApi = async (id) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
@@ -198,7 +193,6 @@ export const likeItem = async (id, isLiked) => {
   }
 };
 
-// Items: Update Weather Tag
 export const updateItemWeather = async (itemId, weatherType) => {
   const token = getToken();
   if (!token) return Promise.reject("No token provided.");
